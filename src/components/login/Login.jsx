@@ -3,7 +3,7 @@ import useAuth from '../../hooks/useAuth';
 import axios from '../../api/axios';
 import { Paper, Grid, Typography, TextField, Button } from '@mui/material';
 import { useNavigate, useLocation } from 'react-router-dom';
-import logo from '../../Assets/logo.jpg';
+import logo from '../../Assets/logo.png';
 import './login.css';
 
 const LOGIN_URL = 'v1/login';
