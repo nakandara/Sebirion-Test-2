@@ -1,0 +1,8 @@
+.users{
+    flex: 4;
+    height: 375px;
+    margin: 5px;
+}
+.ag-header-cell-label {
+    justify-content: center;
+ }

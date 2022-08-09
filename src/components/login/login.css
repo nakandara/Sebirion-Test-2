@@ -1,0 +1,27 @@
+.login {
+    padding: 20px;
+    min-height: 70vh;
+    width: 480px;
+    display: flex;
+    flex-flow: column;
+    margin: 20px auto;
+}
+
+.errmsg{
+    text-align: center;
+    color: red;
+}
+
+.logo{
+    text-align: center;
+    height: 100px;
+}
+
+.login-paper {
+    padding: 10px;
+    justify-content: center;
+}
+
+hr{
+    margin-bottom: 5px;
+}

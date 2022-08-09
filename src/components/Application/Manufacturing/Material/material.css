@@ -1,0 +1,25 @@
+.material{
+    flex: 4;    
+    height: 580px;
+    margin: 5px;
+}
+
+.material-form{
+    margin-bottom: 15px;
+}
+.datePicker{
+    width: 100%;
+}
+
+.save-button{
+    margin-left: 20px;
+}
+
+.pageContent{
+    margin-top: 15px;
+    margin-right: 5px;
+}
+.tableContent{
+    margin-top: 15px;
+    margin-right: 5px;
+}
