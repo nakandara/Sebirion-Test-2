@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
-import useAxiosPrivate from '../../../../hooks/useAxiosPrivate';
+import useAxiosPrivate from '../../../../Application/fndbas/hooks/useAxiosPrivate';
 import CustomAgGrid from '../../Fndfw/GridList/AgGridTable/CustomAgGrid';
 import PageHeader from '../../Fndfw/PageHeader/PageHeader';
 

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react'
-import useAxiosPrivate from '../../../../hooks/useAxiosPrivate';
+import useAxiosPrivate from '../../../../Application/fndbas/hooks/useAxiosPrivate';
 import './fndUsers.css';
 import { useNavigate, useLocation } from 'react-router-dom';
 import PageHeader from '../../Fndfw/PageHeader/PageHeader';

@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 import "./widgetLg.css";
-import useAxiosPrivate from '../../hooks/useAxiosPrivate';
+import useAxiosPrivate from '../../Application/fndbas/hooks/useAxiosPrivate';
 import moment from "moment";
 import { Link } from 'react-router-dom';
 

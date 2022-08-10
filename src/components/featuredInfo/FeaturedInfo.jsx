@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import "./featuredInfo.css"
 import { ArrowDownward, ArrowUpward } from "@mui/icons-material";
-import useAxiosPrivate from '../../hooks/useAxiosPrivate';
+import useAxiosPrivate from '../../Application/fndbas/hooks/useAxiosPrivate';
 import { Link } from 'react-router-dom';
 
 const GET_USERS_URL = 'v1/FndUser/'

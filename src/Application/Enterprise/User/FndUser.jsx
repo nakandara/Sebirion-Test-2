@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react'
-import useAxiosPrivate from '../../../../hooks/useAxiosPrivate';
+import useAxiosPrivate from '../../../../Application/fndbas/hooks/useAxiosPrivate';
 import PageHeader from '../../Fndfw/PageHeader/PageHeader';
 import CrudActions from '../../Fndfw/CrudActions/CrudActions';
 import { Grid, Paper } from "@mui/material";

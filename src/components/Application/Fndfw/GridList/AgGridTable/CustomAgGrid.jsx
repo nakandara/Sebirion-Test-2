@@ -1,5 +1,5 @@
 import React, { useMemo, useState, useCallback } from 'react';
-import useAxiosPrivate from '../../../../../hooks/useAxiosPrivate';
+import useAxiosPrivate from '../../../../../Application/fndbas/hooks/useAxiosPrivate';
 import { Paper } from '@mui/material';
 import { AgGridReact } from "ag-grid-react";
 import ListCrudActions from '../ListCrudButtons/ListCrudActions';

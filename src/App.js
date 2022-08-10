@@ -1,6 +1,5 @@
 import React from 'react';
 import { Route, Routes } from 'react-router-dom';
-import Login from './components/login/Login';
 import Layout from './components/pages/Layout';
 
 import Unauthorized from './components/pages/Unauthorized';
@@ -17,6 +16,7 @@ import MaterialGroup from './components/Application/Manufacturing/MaterialGroup/
 import IsoUnit from './components/Application/AppBase/IsoUnit/IsoUnit';
 import Page404 from './components/pages/page404/Page404';
 import CoveringType from './components/Application/Invent/CoveringTypes/CoveringType';
+import Login from './Application/fndbas/Login/Login';
 
 function App() {
 
