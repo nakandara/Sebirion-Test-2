@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useMemo, useRef } from 'react'
-import useAxiosPrivate from '../../../../Application/fndbas/hooks/useAxiosPrivate';
-import PageHeader from '../../Fndfw/PageHeader/PageHeader';
-import CrudActions from '../../Fndfw/CrudActions/CrudActions';
+import React, { useState, useEffect,  useRef } from 'react'
+import useAxiosPrivate from '../../fndbas/hooks/useAxiosPrivate';
+import PageHeader from '../../fndbas/PageHeader/PageHeader';
+import CrudActions from '../../fndbas/CrudActions/CrudActions';
 import { Grid, Paper } from "@mui/material";
 import TextField from "@mui/material/TextField";
 

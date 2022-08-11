@@ -1,7 +1,7 @@
 import React, { useRef, useState, useEffect } from 'react';
 import useAxiosPrivate from '../../../../Application/fndbas/hooks/useAxiosPrivate';
 import CustomAgGrid from '../../Fndfw/GridList/AgGridTable/CustomAgGrid';
-import PageHeader from '../../Fndfw/PageHeader/PageHeader';
+import PageHeader from '../../../../Application/fndbas/PageHeader/PageHeader';
 import './materialGroup.css';
 
 const API_URL = "v1/MaterialGroup/";

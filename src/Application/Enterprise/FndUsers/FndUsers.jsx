@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useMemo } from 'react'
-import useAxiosPrivate from '../../../../Application/fndbas/hooks/useAxiosPrivate';
+import useAxiosPrivate from '../../fndbas/hooks/useAxiosPrivate';
 import './fndUsers.css';
 import { useNavigate, useLocation } from 'react-router-dom';
-import PageHeader from '../../Fndfw/PageHeader/PageHeader';
+import PageHeader from '../../fndbas/PageHeader/PageHeader';
 import { AgGridReact } from 'ag-grid-react';
 import moment from "moment";
 

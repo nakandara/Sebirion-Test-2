@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react';
-import CrudActions from '../../Fndfw/CrudActions/CrudActions';
-import PageHeader from '../../Fndfw/PageHeader/PageHeader';
+import CrudActions from '../../../../Application/fndbas/CrudActions/CrudActions';
+import PageHeader from '../../../../Application/fndbas/PageHeader/PageHeader';
 import useAxiosPrivate from '../../../../Application/fndbas/hooks/useAxiosPrivate';
 import './material.css';
 import Autocomplete from "@mui/material/Autocomplete";
