@@ -1,7 +1,7 @@
-import React from 'react'
+import React from 'react';
 import Chart from '../../chart/Chart';
 import FeaturedInfo from '../../featuredInfo/FeaturedInfo';
-import "./home.css"
+import "./home.css";
 import { userData } from "../../../userData"
 import WidgetSm from '../../widgetSm/WidgetSm';
 import WidgetLg from '../../widgetLg/WidgetLg';

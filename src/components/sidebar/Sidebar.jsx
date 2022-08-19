@@ -48,7 +48,7 @@ export default function Sidebar() {
                         </li>
                         <li className="sidebarListItem">
                             <Timelapse className='sidebarIcon' />
-                            <Link className='nav-link' to='/add_charges_per_covering_type'> - Add. Charges Per Covering Type</Link>
+                            <Link className='nav-link' to='/item_types'> - Item Types</Link>
                         </li>
                         <li className="sidebarListItem">
                             
@@ -56,11 +56,11 @@ export default function Sidebar() {
                         </li>
                         <li className="sidebarListItem">
                             <ColorizeOutlined className='sidebarIcon' />
-                            <Typography fontSize={18}> Sales</Typography>
+                            <Typography fontSize={18}> Inventory</Typography>
                         </li>
                         <li className="sidebarListItem">
                             <RowingOutlinedIcon className='sidebarIcon' />
-                            <Link className='nav-link' to='/customer_prospect/null'> - Customer Prospect</Link>
+                            <Link className='nav-link' to='/inventory_item/null'> - Inventory Item</Link>
                         </li>
                         <li className="sidebarListItem">
                             <RowingOutlinedIcon className='sidebarIcon' />

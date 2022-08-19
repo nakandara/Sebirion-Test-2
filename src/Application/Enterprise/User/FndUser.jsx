@@ -261,7 +261,6 @@ export default function FndUser() {
                     </fieldset>
                 </form>
             </Paper>
-
         </div>
     )
 }

@@ -1,0 +1,14 @@
+.inventory-item{
+    flex: 4;    
+    height: 580px;
+    margin: 5px;
+}
+
+.pageContent{
+    margin-top: 15px;
+    margin-right: 5px;
+}
+
+.form-group{
+    border: 0;
+}

@@ -16,7 +16,9 @@ import Page404 from './components/pages/page404/Page404';
 import CoveringType from './components/Application/Invent/CoveringTypes/CoveringType';
 import Login from './Application/fndbas/Login/Login';
 import FndUser from './Application/Enterprise/User/FndUser';
-import FndUsers from './Application/Enterprise/FndUsers/FndUsers'
+import FndUsers from './Application/Enterprise/FndUsers/FndUsers';
+import InventoryItem from './Application/Inventory/InventoryItem/InventoryItem';
+import ItemType from './Application/Inventory/ItemType/ItemType';
 
 function App() {
 
@@ -38,6 +40,8 @@ function App() {
             <Route path='material' element={<Material />} />
             <Route path='material_groups' element={<MaterialGroup />} />
             <Route path='unit_measure' element={<IsoUnit />} />
+            <Route path='inventory_item/:objId' element={<InventoryItem />} />
+            <Route path='item_types' element={<ItemType />} />
           </Route>
           <Route path="*" element={<Page404 />} />
         </Route>

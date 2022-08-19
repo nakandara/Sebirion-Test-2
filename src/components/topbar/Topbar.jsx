@@ -1,5 +1,5 @@
-import React from 'react'
-import "./topbar.css"
+import React from 'react';
+import "./topbar.css";
 import { MessageOutlined, NotificationsNone, Settings } from '@mui/icons-material';
 import userPic from '../../Assets/dinidu.jpg';
 import logo from '../../Assets/logo.png';
