@@ -29,7 +29,7 @@ export default function ItemType() {
                 const its = response.data.map((item, idx) => ({
                     index: idx + 1,
                     id: item.id,
-                    itemType: item.typeId,
+                    itemType: item.itemType,
                     description: item.description
                 }));
                 setItems(its);
@@ -44,10 +44,12 @@ export default function ItemType() {
     }, [axiosPrivate, objId]);
 
     const handleSave = async (e) => {
-        e.preventDefault();
+        
         gridRef.current.api.stopEditing();
 
         const selectedData = gridRef.current.api.getSelectedRows();
+
+        console.log(selectedData)
 
         await selectedData.forEach(item => {
             try {
@@ -55,12 +57,14 @@ export default function ItemType() {
                     API_URL + "save",
                     {
                         id: item.id,
-                        itemType: item.typeId.toUpperCase(),
+                        itemType: item.itemType.toUpperCase(),
                         description: item.description
                     }
                 );
             }
-            catch (err) { }
+            catch (err) {
+                console.log(err)
+             }
         });
     };
 

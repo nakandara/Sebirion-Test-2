@@ -8,7 +8,9 @@ import "ag-grid-community/dist/styles/ag-theme-alpine.css";
 import ListCrudActions from '../ListCrudActions/ListCrudActions';
 import DeleteModal from '../DeleteModal/DeleteModal';
 
-export default function CustomAgGrid({ api_url, handleSave, gridRef, items, columnDefs }) {
+export default function 
+
+CustomAgGrid({ api_url, handleSave, gridRef, items, columnDefs }) {
 
     const axiosPrivate = useAxiosPrivate();
     const [openDeleteDlg, setOpenDeleteDlg] = useState(false);
@@ -18,7 +20,6 @@ export default function CustomAgGrid({ api_url, handleSave, gridRef, items, colu
             add: [{}],
             addIndex: 0,
         });
-        printResult(res);
     }, []);
 
     const defaultColDef = useMemo(() => {
@@ -29,25 +30,7 @@ export default function CustomAgGrid({ api_url, handleSave, gridRef, items, colu
             editable: true,
         };
     }, []);
-
-    const printResult = (res) => {
-        if (res.add) {
-            res.add.forEach(function (rowNode) {
-                console.log('Added Row Node', rowNode);
-            });
-        }
-        if (res.remove) {
-            res.remove.forEach(function (rowNode) {
-                console.log('Removed Row Node', rowNode);
-            });
-        }
-        if (res.update) {
-            res.update.forEach(function (rowNode) {
-                console.log('Updated Row Node', rowNode);
-            });
-        }
-    };
-
+    
     const handleEdit = async (e) => {
         e.preventDefault();
     };
@@ -70,7 +53,6 @@ export default function CustomAgGrid({ api_url, handleSave, gridRef, items, colu
                 axiosPrivate.delete(api_url + "delete/" + selectedObj.id);
                 setOpenDeleteDlg(false);
                 const res = gridRef.current.api.applyTransaction({ remove: selectedData });
-                printResult(res);
             } catch (err) { }
         });
     };

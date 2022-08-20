@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import useAxiosPrivate from '../../fndbas/hooks/useAxiosPrivate';
 import PageHeader from '../../fndbas/PageHeader/PageHeader';
+import ItemTypeAutoComplete from '../ItemType/ItemTypeAutoComplete';
 import "./inventoryItem.css";
 
 const API_URL = "v1/inventoryItem/";
@@ -82,7 +83,7 @@ export default function InventoryItem() {
             <PageHeader title="Inventory Item" itemCount={itemCount} isMaster={true} />
             <Paper className="pageContent">
                 <form onSubmit={handleSave} className="prospect-form">
-                    <fieldset disabled={isDisabled} class="form-group">
+                    <fieldset disabled={isDisabled} className="form-group">
                         <Grid container spacing={2}>
                             <Grid item xs={3}>
                                 <TextField
@@ -119,6 +120,11 @@ export default function InventoryItem() {
                                     aria-invalid={validDescription ? "false" : "true"}
                                     margin="normal"
                                 />
+                            </Grid>
+                            <Grid item xs={3}>
+                                <ItemTypeAutoComplete
+                                    itemType={itemType}
+                                    setItemType={setItemType} />
                             </Grid>
                         </Grid>
                     </fieldset>
