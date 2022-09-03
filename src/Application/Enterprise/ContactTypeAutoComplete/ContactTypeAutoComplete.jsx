@@ -1,5 +1,6 @@
 import { Autocomplete, TextField } from '@mui/material';
 import React, { useState, useEffect } from 'react';
+import { useRef } from 'react';
 import useAxiosPrivate from '../../../../hooks/useAxiosPrivate';
 
 export default function ContactTypeAutoComplete({ contactType, setContactType, setDefaultContactType }) {
@@ -8,10 +9,10 @@ export default function ContactTypeAutoComplete({ contactType, setContactType, s
 
     const [contactTypes, setContactTypes] = useState([]);
     const [inputContactType, setInputContactType] = useState("");
+    const isMounted = useRef(true);
 
     useEffect(() => {
         const controller = new AbortController();
-        let isMounted = true;
         const getContactTypes = async () => {
             try {
                 const response = await axiosPrivate.get(
@@ -22,8 +23,8 @@ export default function ContactTypeAutoComplete({ contactType, setContactType, s
                         },
                     });
 
-                isMounted && setContactTypes(response.data);
-                isMounted &&
+                isMounted.current && setContactTypes(response.data);
+                isMounted.current &&
                     setDefaultContactType(
                         response.data.find((item) => item.contactType === "PHONE")
                     );
@@ -33,9 +34,9 @@ export default function ContactTypeAutoComplete({ contactType, setContactType, s
         contactTypes.length === 0 && getContactTypes();
         return () => {
             controller.abort();
-            isMounted = false;
+            isMounted.current = false;
         }
-    }, []);
+    }, [isMounted]);
 
     return (
         <Autocomplete

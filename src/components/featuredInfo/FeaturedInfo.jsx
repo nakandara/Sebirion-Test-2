@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import "./featuredInfo.css"
 import { ArrowDownward, ArrowUpward } from "@mui/icons-material";
 import useAxiosPrivate from '../../Application/fndbas/hooks/useAxiosPrivate';
@@ -9,32 +9,32 @@ const GET_USERS_URL = 'v1/FndUser/'
 export default function FeaturedInfo() {
     const [userCount, setUserCount] = useState();
     const axiosPrivate = useAxiosPrivate();
+    const isMounted = useRef(true);
 
     useEffect(() => {
-        let isMounted = true;
         const controller = new AbortController();
-        
+
         const getUserCount = async () => {
             try {
                 const response = await axiosPrivate.get(GET_USERS_URL + "get_user_count",
                     {
                         headers: {
-                            signal:controller.signal
+                            signal: controller.signal
                         }
                     }
                 );
                 console.log(response.data);
-                isMounted && setUserCount(response.data);
+                isMounted.current && setUserCount(response.data);
             } catch (err) {
                 console.error(err);
             }
         }
         getUserCount();
         return () => {
-            isMounted = false;
+            isMounted.current = false;
             controller.abort();
         }
-    }, [axiosPrivate])
+    }, [axiosPrivate, isMounted])
 
     return (
         <div className='featured'>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react'
+import React, { useState, useEffect, useMemo, useRef } from 'react'
 import useAxiosPrivate from '../../fndbas/hooks/useAxiosPrivate';
 import './fndUsers.css';
 import { useNavigate, useLocation } from 'react-router-dom';
@@ -17,6 +17,7 @@ export default function Users() {
     const axiosPrivate = useAxiosPrivate();
     const navigate = useNavigate();
     const location = useLocation();
+    const isMounted = useRef(true);
 
     const [columnDef] = useState([
         { field: 'id', headerName: 'ID', width: 70 },
@@ -41,8 +42,7 @@ export default function Users() {
         return moment(params.value).format("MM/DD/YYYY HH:mm");
     }    
 
-    useEffect(() => {
-        let isMounted = true;
+    useEffect(() => {        
         const controller = new AbortController();
 
         const getUsers = async () => {
@@ -79,7 +79,7 @@ export default function Users() {
                     dataArray = [...dataArray, dataElement]
                 });
 
-                isMounted && setUsers(dataArray);
+                isMounted.current && setUsers(dataArray);
             } catch (err) {
                 console.error(err);
                 navigate('/login', { state: { from: location }, replace: true })
@@ -87,10 +87,10 @@ export default function Users() {
         }
         getUsers();
         return () => {
-            isMounted = false;
+            isMounted.current = false;
             controller.abort();
         }
-    }, [axiosPrivate, navigate, location])
+    }, [axiosPrivate, navigate, location,isMounted])
 
     const defaultColDef = useMemo(() => ({
         resizable: true,

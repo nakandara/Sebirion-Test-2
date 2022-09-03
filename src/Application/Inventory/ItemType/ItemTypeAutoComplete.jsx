@@ -1,5 +1,5 @@
 import { Autocomplete, TextField } from '@mui/material';
-import React, { useEffect } from 'react'
+import React, { useEffect, useRef } from 'react'
 import { useState } from 'react';
 import useAxiosPrivate from '../../fndbas/hooks/useAxiosPrivate';
 
@@ -10,10 +10,10 @@ export default function ItemTypeAutoComplete({ itemType, setItemType }) {
 
   const [items, setItems] = useState([]);
   const [inputItem, setInputItem] = useState("");
+  const isMounted = useRef(true);
 
   useEffect(() => {
     const controller = new AbortController();
-    let isMounted = true;
     const getItemTypes = async () => {
       try {
         const response = await axiosPrivate.get(API_URL + "get_all", {
@@ -22,14 +22,14 @@ export default function ItemTypeAutoComplete({ itemType, setItemType }) {
           },
         });
 
-        isMounted && setItems(response.data);
+        isMounted.current && setItems(response.data);
       } catch (err) { }
     }
 
     items.length === 0 && getItemTypes();
     return () => {
       controller.abort();
-      isMounted = false;
+      isMounted.current = false;
     }
   }, []);
 

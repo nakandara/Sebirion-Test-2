@@ -9,6 +9,7 @@ const API_URL = "v1/MaterialGroup/";
 export default function MaterialGroup() {
     const gridRef = useRef();
     const axiosPrivate = useAxiosPrivate();
+    const isMounted = useRef(true);
 
     const [materialGroups, setMaterialGroups] = useState([]);
     const [objId] = useState('');
@@ -33,7 +34,7 @@ export default function MaterialGroup() {
                     unitPrice: materialGroup.unitPrice,
                     unitCost: materialGroup.unitCost
                 }));
-                setMaterialGroups(matGroups);
+                isMounted.current && setMaterialGroups(matGroups);
             } catch (err) {
                 console.error(err);
             }
@@ -41,8 +42,9 @@ export default function MaterialGroup() {
         getMaterialGroups();
         return () => {
             controller.abort();
+            isMounted.current = false;
         }
-    }, [axiosPrivate, objId])
+    }, [axiosPrivate, objId, isMounted])
 
     const handleSave = async (e) => {
         e.preventDefault();

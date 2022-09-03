@@ -11,12 +11,12 @@ export default function MaterialType() {
 
     const gridRef = useRef();
     const axiosPrivate = useAxiosPrivate();
+    const isMounted = useRef(true);
 
     const [materialTypes, setMaterialTypes] = useState([]);
     const [objId] = useState("");
 
     useEffect(() => {
-        let isMounted = true;
         const controller = new AbortController();
 
         const getMaterialTypes = async () => {
@@ -34,14 +34,14 @@ export default function MaterialType() {
                     materialType: materialType.materialType,
                     description: materialType.description
                 }));
-                isMounted && setMaterialTypes(matTypes);
+                isMounted.current && setMaterialTypes(matTypes);
             } catch (err) {
                 console.error(err);
             }
         }
         getMaterialTypes();
         return () => {
-            isMounted = false;
+            isMounted.current = false;
             controller.abort();
         }
     }, [axiosPrivate, objId]);

@@ -13,13 +13,14 @@ export default function CoveringType() {
 
     const [coveringTypes, setCoveringTypes] = useState([]);
     const [objId] = useState('');
+    const isMounted = useRef(true);
 
     useEffect(() => {
         const controller = new AbortController();
 
         const getCoveingTypes = async () => {
             try {
-                const response = await axiosPrivate.get(API_URL+"/get_all",
+                const response = await axiosPrivate.get(API_URL + "/get_all",
                     {
                         headers: {
                             signal: controller.signal
@@ -37,11 +38,12 @@ export default function CoveringType() {
                 console.error(err);
             }
         }
-        getCoveingTypes();
+        isMounted.current && getCoveingTypes();
         return () => {
             controller.abort();
+            isMounted.current = false;
         }
-    }, [axiosPrivate, objId]);
+    }, [axiosPrivate, objId, isMounted]);
 
     const handleSave = async (e) => {
         e.preventDefault();

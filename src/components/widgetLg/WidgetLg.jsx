@@ -1,8 +1,6 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react';
 import "./widgetLg.css";
 import useAxiosPrivate from '../../Application/fndbas/hooks/useAxiosPrivate';
-import moment from "moment";
-import { Link } from 'react-router-dom';
 
 const API_URL = "v1/Quotation/";
 
@@ -13,10 +11,9 @@ export default function WidgetLg() {
   }
 
   const [quotations, setQuotations] = useState([]);
-  const componentMounted = useRef(true);
+  const isMounted = useRef(true);
 
   useEffect(() => {
-    let isMounted = true;
     const controller = new AbortController();
 
     const getQuotations = async () => {
@@ -33,14 +30,14 @@ export default function WidgetLg() {
       } catch (err) {
         console.error(err);
       }
+
     }
-    getQuotations();
+    isMounted.current && getQuotations();
     return () => {
-      isMounted = false;
-      componentMounted.current = false;
+      isMounted.current = false;
       controller.abort();
     }
-  }, [])
+  }, [isMounted,axiosPrivate])
 
   return (
     <div className='widgetLg'>

@@ -10,6 +10,7 @@ const API_URL = "v1/inventoryItemType/";
 export default function ItemType() {
     const gridRef = useRef();
     const axiosPrivate = useAxiosPrivate();
+    const isMounted = useRef(true);
 
     const [objId] = useState('');
     const [items, setItems] = useState([]);
@@ -37,18 +38,16 @@ export default function ItemType() {
                 console.error(err);
             }
         }
-        getItems();
+        isMounted.current && getItems();
         return () => {
+            isMounted.current = false;
             controller.abort();
         }
-    }, [axiosPrivate, objId]);
+    }, [axiosPrivate, objId, isMounted]);
 
     const handleSave = async (e) => {
-        
         gridRef.current.api.stopEditing();
-
         const selectedData = gridRef.current.api.getSelectedRows();
-
         console.log(selectedData)
 
         await selectedData.forEach(item => {
@@ -64,7 +63,7 @@ export default function ItemType() {
             }
             catch (err) {
                 console.log(err)
-             }
+            }
         });
     };
 

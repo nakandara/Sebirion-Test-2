@@ -14,9 +14,9 @@ const ISO_UNIT_URL = "v1/IsoUnit/";
 const API_URL = "v1/Material/";
 
 export default function Material() {
-
     const axiosPrivate = useAxiosPrivate();
     const materialIdRef = useRef();
+    const isMounted = useRef(true);
 
     const initialState = {
         id: null,
@@ -97,10 +97,14 @@ export default function Material() {
                     },
                 });
                 console.log("Latedst id-->" + latestId.data);
-                setRequestObjId(latestId.data);
+                isMounted.current && setRequestObjId(latestId.data);
             } catch (err) { }
         };
         requestObjId == null && fetchLatestObjId();
+        return () => {
+            controller.abort();
+            isMounted.current = false;
+        }
     }, [requestObjId, axiosPrivate]);
 
     useEffect(() => {
@@ -116,15 +120,15 @@ export default function Material() {
                     }
                 );
                 console.log(response.data);
-                response.data && setCurrentObject(response.data);
-                response.data && setIsDeleteEnabled(true);
-                response.data && setIsEditEnabled(true);
+                isMounted.current && response.data && setCurrentObject(response.data);
+                isMounted.current && response.data && setIsDeleteEnabled(true);
+                isMounted.current && response.data && setIsEditEnabled(true);
             } catch (err) {
                 console.error(err);
             }
         };
         requestObjId && getCustomerProspect();
-    }, [requestObjId, axiosPrivate]);
+    }, [requestObjId, axiosPrivate, isMounted]);
 
     useEffect(() => {
         const setValues = () => {
@@ -140,12 +144,15 @@ export default function Material() {
             setUnitPrice(currentObject.id ? currentObject.unitPrice : null);
 
         };
-        setValues();
-    }, [currentObject]);
+        isMounted.current && setValues();
+        return () => {
+            controller.abort();
+            isMounted.current = false;
+        }
+    }, [currentObject, isMounted]);
 
     const fetchDefaults = async () => {
         const controller = new AbortController();
-        let isMounted = true;
 
         try {
             const resMaterialType = await axiosPrivate.get(MATERIAL_TYPE_URL + "get_material_types", {
@@ -174,14 +181,18 @@ export default function Material() {
 
 
             console.log(resMaterialType.data);
-            isMounted && setMaterialTypes(resMaterialType.data);
+            isMounted.current && setMaterialTypes(resMaterialType.data);
 
             console.log(resMaterialGroup.data);
-            isMounted && setMaterialGroups(resMaterialGroup.data);
+            isMounted.current && setMaterialGroups(resMaterialGroup.data);
 
             console.log(resIsoUnit.data);
-            isMounted && setIsoUnits(resIsoUnit.data);
+            isMounted.current && setIsoUnits(resIsoUnit.data);
         } catch (err) { }
+        return () => {
+            controller.abort();
+            isMounted.current = false;
+        }
     }
 
     useEffect(() => {
@@ -198,13 +209,17 @@ export default function Material() {
                         signal: controller.signal,
                     },
                 });
-                setItemCount(response.data);
+                isMounted.current && setItemCount(response.data);
             } catch (err) {
                 console.log(err);
             }
         };
         getCount();
-    }, [currentObject, axiosPrivate])
+        return () => {
+            controller.abort();
+            isMounted.current = false;
+        }
+    }, [currentObject, axiosPrivate, isMounted])
 
     const handleNew = async (e) => {
         e.preventDefault();

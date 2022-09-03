@@ -28,10 +28,11 @@ export default function IsoUnit() {
     const gridRef = useRef();
     const unitCodeRef = useRef();
     const axiosPrivate = useAxiosPrivate();
+    const isMounted = useRef(true);
 
     const [isoUnits, setIsoUnits] = useState([]);
     const [isoUnitTypes, setIsoUnitTypes] = useState([]);
-    const [objId,setObjId] = useState('');
+    const [objId, setObjId] = useState('');
     const [currentObject, setCurrentObject] = useState(initialState);
     const [openNewItemDlg, setOpenNewItemDlg] = useState(false);
     const [openDeleteDlg, setOpenDeleteDlg] = useState(false);
@@ -87,11 +88,12 @@ export default function IsoUnit() {
                 console.error(err);
             }
         }
-        getIsoUnits();
+        isMounted.current && getIsoUnits();
         return () => {
             controller.abort();
+            isMounted.current = false;
         }
-    }, [axiosPrivate, objId]);
+    }, [axiosPrivate, objId, isMounted]);
 
     useEffect(() => {
         const controller = new AbortController();
@@ -106,7 +108,7 @@ export default function IsoUnit() {
                     }
                 );
                 console.log(response.data);
-                setIsoUnitTypes(response.data);
+                isMounted.current && setIsoUnitTypes(response.data);
             } catch (err) {
                 console.error(err);
             }
@@ -114,9 +116,10 @@ export default function IsoUnit() {
         !isoUnitTypes.length && getUnitTypes();
         return () => {
             controller.abort();
+            isMounted.current = false;
         }
 
-    }, [isoUnitTypes]);
+    }, [isoUnitTypes,isMounted]);
 
     const handleSave = async () => {
         try {
@@ -181,7 +184,7 @@ export default function IsoUnit() {
         e.preventDefault();
         setOpenNewItemDlg(true);
         const selectedData = gridRef.current.api.getSelectedRows();
-        
+
     }
 
     const handleDelete = (e) => {

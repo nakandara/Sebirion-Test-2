@@ -11,6 +11,7 @@ const API_URL = 'v1/UserRole/';
 
 export default function UserRole() {
     const userRoleRef = useRef(); // allow to set the focus on user role field when the component loadsfor accessability
+    const isMounted = useRef(true);
 
     const [userRole, setUserRole] = useState(''); // tight to the user input
     const [validUserRole, setValidUserRole] = useState(false); // check wether the user role validate or not
@@ -55,8 +56,8 @@ export default function UserRole() {
                 }
             );
             console.log(response.data);
-            setUserRole(response.data.roleId);
-            setDescription(response.data.description);
+            isMounted.current && setUserRole(response.data.roleId);
+            isMounted.current && setDescription(response.data.description);
             toast.success('Successfully Saved.', {
                 position: "bottom-right",
                 autoClose: 5000,

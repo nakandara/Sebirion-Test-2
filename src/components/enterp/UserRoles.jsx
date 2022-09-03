@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef,useMemo } from 'react'
+import React, { useState, useEffect, useRef, useMemo } from 'react'
 import useAxiosPrivate from '../../Application/fndbas/hooks/useAxiosPrivate';
 import PageHeader from '../../Application/fndbas/PageHeader/PageHeader';
 import './userRoles.css';
@@ -18,9 +18,9 @@ export default function UserRoles() {
 
     const [userRoles, setUserRoles] = useState();
     const axiosPrivate = useAxiosPrivate();
+    const isMounted = useRef(true);
 
     useEffect(() => {
-        let isMounted = true;
         const controller = new AbortController();
 
         const getUserRolles = async () => {
@@ -33,7 +33,7 @@ export default function UserRoles() {
                     }
                 );
                 console.log(response.data);
-                isMounted && setUserRoles(response.data);
+                isMounted.current && setUserRoles(response.data);
             } catch (err) {
                 console.error(err);
                 // navigate('/login', { state: { from: location }, replace: true })
@@ -41,10 +41,10 @@ export default function UserRoles() {
         }
         getUserRolles();
         return () => {
-            isMounted = false;
+            isMounted.current = false;
             controller.abort();
         }
-    }, [axiosPrivate])    
+    }, [axiosPrivate, isMounted])
 
     const defaultColDef = useMemo(() => ({
         resizable: true,

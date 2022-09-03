@@ -1,4 +1,4 @@
-import React, { useState, useEffect,  useRef } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import useAxiosPrivate from '../../fndbas/hooks/useAxiosPrivate';
 import PageHeader from '../../fndbas/PageHeader/PageHeader';
 import CrudActions from '../../fndbas/CrudActions/CrudActions';
@@ -15,6 +15,7 @@ export default function FndUser() {
     const axiosPrivate = useAxiosPrivate();
     const userNameRef = useRef();
     const [objId, setObjId] = useState(null);
+    const isMounted = useRef(true);
 
     const [itemCount, setItemCount] = useState();
     const [currentObject, setCurrentObject] = useState();
@@ -69,8 +70,12 @@ export default function FndUser() {
                 console.log(err);
             }
         };
-        getCount();
-    }, [currentObject, axiosPrivate]);
+        isMounted.current && getCount();
+        return () => {
+            isMounted.current = false;
+            controller.abort();
+        }
+    }, [currentObject, axiosPrivate, isMounted]);
 
 
     const handleSave = async (e) => {
