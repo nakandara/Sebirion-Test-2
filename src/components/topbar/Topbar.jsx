@@ -1,8 +1,8 @@
 import React from 'react';
 import "./topbar.css";
 import { MessageOutlined, NotificationsNone, Settings } from '@mui/icons-material';
-import userPic from '../../Assets/dinidu.jpg';
-import logo from '../../Assets/logo.png';
+import userPic from '../../assets/dinidu.jpg';
+import logo from '../../assets/logo.png';
 import { Stack,Avatar } from '@mui/material';
 
 

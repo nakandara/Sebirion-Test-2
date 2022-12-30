@@ -57,8 +57,8 @@ export default function FndUser() {
     }, []);
 
     useEffect(() => {
-        const getCount = async () => {
-            const controller = new AbortController();
+        const controller = new AbortController();
+        const getCount = async () => {            
             try {
                 const response = await axiosPrivate.get(API_URL + "count", {
                     headers: {

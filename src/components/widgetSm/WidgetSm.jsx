@@ -1,7 +1,7 @@
 import React from 'react'
 import "./widgetSm.css"
 import {Visibility} from "@mui/icons-material";
-import userPic from '../../Assets/dinidu.jpg';
+import userPic from '../../assets/dinidu.jpg';
 
 export default function WidgetSm() {
   return (
