@@ -1,7 +1,4 @@
 import React from 'react';
-import Sidebar from '../../sidebar/Sidebar';
-import Topbar from '../../topbar/Topbar';
-import "./apphome.css";
 import { Outlet } from 'react-router-dom';
 import TopbarNew from '../../../app/global/Topbar/TopbarNew';
 import SidebarNew from '../../../app/global/Sidebar/SidebarNew';

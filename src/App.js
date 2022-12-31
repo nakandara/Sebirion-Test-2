@@ -11,7 +11,6 @@ import Dashboard from "./app/dashboard/Dashboard";
 // import IsoUnit from './components/Application/AppBase/IsoUnit/IsoUnit';
 
 const Page404 = lazy(() => import("./components/pages/page404/Page404"));
-const Home = lazy(() => import("./components/pages/home/Home"));
 const AppHome = lazy(() => import("./components/pages/home/AppHome"));
 const Unauthorized = lazy(() => import("./components/pages/Unauthorized"));
 // const UserRole = lazy(() => import('./components/enterp/UserRole'));
@@ -20,7 +19,7 @@ const Unauthorized = lazy(() => import("./components/pages/Unauthorized"));
 // const Material = lazy(() => import('./components/Application/Manufacturing/Material/Material'));
 // const MaterialGroup = lazy(() => import('./components/Application/Manufacturing/MaterialGroup/MaterialGroup'));
 // const CoveringType = lazy(() => import('./components/Application/Invent/CoveringTypes/CoveringType'));
-const Login = lazy(() => import("./Application/fndbas/Login/Login"));
+const Login = lazy(() => import("./app/login/Login"));
 const FndUser = lazy(() => import("./Application/Enterprise/User/FndUser"));
 const FndUsers = lazy(() =>
   import("./Application/Enterprise/FndUsers/FndUsers")

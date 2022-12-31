@@ -33,3 +33,7 @@ body,
 ::-webkit-scrollbar-thumb:hover {
     background: #555;
 }
+
+.text-purple {
+    color: #4B2883 !important;
+}
