@@ -1,7 +1,9 @@
 import React from 'react'
 
-export default function Company() {
+function Company() {
   return (
     <div>Company</div>
   )
 }
+
+export default Company

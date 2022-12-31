@@ -7,22 +7,7 @@ import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import { Link } from 'react-router-dom';
 import { tokens } from '../../../theme';
 import { BuildCircleOutlined } from '@mui/icons-material';
-import ProfileImg from '../../../assets/dinidu.jpg'
-
-function Item({ title, to, icon, selected, setSelected }) {
-    const theme = useTheme();
-    const colors = tokens(theme.palette.mode);
-    return (
-        <MenuItem
-            active={selected === title}
-            style={{ color: colors.grey[100], }}
-            onClick={() => setSelected(title)}
-            icon={icon}>
-            <Typography>{title}</Typography>
-            <Link to={{ to }} />
-        </MenuItem>
-    );
-}
+import ProfileImg from '../../../assets/dinidu.jpg';
 
 function SidebarNew() {
     const theme = useTheme();
@@ -33,103 +18,109 @@ function SidebarNew() {
     const { collapseSidebar } = useProSidebar();
 
     return (
-        // <Box sx={{
-        //     "& .pro-sidebar-inner": {
-        //         background: `${colors.primary[400]} !important`,
-        //     },
-        //     "& .pro-icon-wrapper": {
-        //         backgroundColor: "transparent !important",
-        //     },
-        //     "& .pro-inner-item": {
-        //         padding: "5px 35px 5px 20px !important",
-        //     },
-        //     "& .pro-inner-item:hover": {
-        //         color: "#868dfb !important",
-        //     },
-        //     "& .pro-menu-item.active": {
-        //         color: "#6870fa !important",
-        //     },
-        // }}>
-        <Sidebar backgroundColor={colors.primary[400]} collapsedWidth="8%">
-            <Menu iconShape="squre">
-                {/* LOGO AND MENU ICON */}
-                <MenuItem
-                    onClick={() => collapseSidebar(setIsCollapsed(!isCollapsed))}
-                    icon={isCollapsed ? <MenuOutlinedIcon /> : undefined}
-                    style={{
-                        margin: "10px 0 20px 0",
-                        color: colors.grey[100],
-                    }}
-                >
+        <Box sx={{
+            "& .pro-sidebar-inner": {
+                background: `${colors.primary[400]} !important`,
+            },
+            "& .pro-icon-wrapper": {
+                backgroundColor: "transparent !important",
+            },
+            "& .pro-inner-item": {
+
+                padding: "5px 35px 5px 20px !important",
+            },
+            "& .pro-inner-item:hover": {
+                color: "#868dfb !important",
+            },
+            "& .pro-menu-item.active": {
+                color: "#6870fa !important",
+            },
+        }}>
+            <Sidebar backgroundColor={colors.primary[400]} collapsedWidth="10%">
+                <Menu iconShape="squre">
+                    {/* LOGO AND MENU ICON */}
+                    <MenuItem
+                        onClick={() => collapseSidebar(setIsCollapsed(!isCollapsed))}
+                        icon={isCollapsed ? <MenuOutlinedIcon /> : undefined}
+                        style={{
+                            margin: "10px 0 20px 0",
+                            color: colors.grey[100],
+                        }}
+                    >
+                        {!isCollapsed && (
+                            <Box
+                                display="flex"
+                                justifyContent="space-between"
+                                alignItems="center"
+                                ml="15px"
+                            >
+                                <Typography variant='h3' color={colors.grey[100]}>
+                                    SIPSAYURI ERP
+                                </Typography>
+                                <IconButton onClick={() => setIsCollapsed(!isCollapsed)}>
+                                    <MenuOutlinedIcon />
+                                </IconButton>
+                            </Box>
+                        )}
+                    </MenuItem>
                     {!isCollapsed && (
-                        <Box
-                            display="flex"
-                            justifyContent="space-between"
-                            alignItems="center"
-                            ml="15px"
-                        >
-                            <Typography variant='h3' color={colors.grey[100]}>
-                                SIPSAYURI ERP
-                            </Typography>
-                            <IconButton onClick={() => setIsCollapsed(!isCollapsed)}>
-                                <MenuOutlinedIcon />
-                            </IconButton>
+                        <Box mb="25px">
+                            <Box display="flex" justifyContent="center" alignItems="center">
+                                <img
+                                    alt='profile-user'
+                                    width="100px"
+                                    height="100px"
+                                    src={ProfileImg}
+                                    style={{ cursor: "pointer", borderRadius: "50%" }} />
+                            </Box>
+                            <Box textAlign="center">
+                                <Typography
+                                    variant="h2"
+                                    color={colors.grey[100]}
+                                    fontWeight="bold"
+                                    sx={{ m: "10px 0 0 0" }}
+                                >
+                                    Dinidu Hewage
+                                </Typography>
+                                <Typography variant="h5" color={colors.greenAccent[500]}>
+                                    ADMIN
+                                </Typography>
+                            </Box>
                         </Box>
                     )}
-                </MenuItem>
-                {!isCollapsed && (
-                    <Box mb="25px">
-                        <Box display="flex" justifyContent="center" alignItems="center">
-                            <img
-                                alt='profile-user'
-                                width="100px"
-                                height="100px"
-                                src={ProfileImg}
-                                style={{ cursor: "pointer", borderRadius: "50%" }} />
-                        </Box>
-                        <Box textAlign="center">
+                    <Box paddingLeft={isCollapsed ? undefined : "25%"}>
+                        <MenuItem
+                            active={selected === "Dashboard"}
+                            style={{ color: colors.grey[100], }}
+                            onClick={() => setSelected("Dashboard")}
+                            icon={<HomeOutlinedIcon />}
+                            routerLink={<Link to={"/"} />}>
+                            <Typography>Dashboard</Typography>
+                        </MenuItem>
+                        <SubMenu label={
                             <Typography
-                                variant="h2"
-                                color={colors.grey[100]}
-                                fontWeight="bold"
-                                sx={{ m: "10px 0 0 0" }}
+                                variant="h6"
+                                color={colors.grey[300]}
+                                sx={{ m: "5px 0 5px 10px" }}
+                                icon={<BuildCircleOutlined />}
                             >
-                                Dinidu Hewage
+                                Enterprise
                             </Typography>
-                            <Typography variant="h5" color={colors.greenAccent[500]}>
-                                ADMIN
-                            </Typography>
-                        </Box>
+                        }>
+
+                            <MenuItem
+                                active={selected === "Company"}
+                                style={{ color: colors.grey[100], }}
+                                onClick={() => setSelected("Company")}
+                                icon={<BuildCircleOutlined />}
+                                routerLink={<Link to={"/company"} />}>
+                                <Typography>Company</Typography>
+                            </MenuItem>
+                        </SubMenu>
                     </Box>
-                )}
-                <Box paddingLeft={isCollapsed ? undefined : "10%"}>
-                    <Item
-                        title="Dashboard"
-                        to="/"
-                        icon={<HomeOutlinedIcon />}
-                        selected={selected}
-                        setSelected={setSelected} />
-                    <SubMenu label={
-                        <Typography
-                            variant="h6"
-                            color={colors.grey[300]}
-                            sx={{ m: "5px 0 5px 10px" }}
-                            icon={<BuildCircleOutlined />}
-                        >
-                            Settings
-                        </Typography>
-                    }>
-                        <Item
-                            title="Users"
-                            to="/users"
-                            icon={<BuildCircleOutlined />}
-                            selected={selected}
-                            setSelected={setSelected} />
-                    </SubMenu>
-                </Box>
-            </Menu>
-        </Sidebar>
-        // </Box>
+                </Menu>
+            </Sidebar>
+        </Box>
     )
 }
 

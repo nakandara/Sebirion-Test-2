@@ -32,6 +32,10 @@ const ItemType = lazy(() =>
   import("./Application/Inventory/ItemType/ItemType")
 );
 
+const Company = lazy(() =>
+  import("./app/bizapp/enterp/Company")
+);
+
 function App() {
   const [theme, colorMode] = useMode();
   return (
@@ -90,6 +94,14 @@ function App() {
                       element={
                         <Suspense fallback={<>...</>}>
                           <FndUser />
+                        </Suspense>
+                      }
+                    />
+                    <Route
+                      path="company"
+                      element={
+                        <Suspense fallback={<>...</>}>
+                          <Company />
                         </Suspense>
                       }
                     />
