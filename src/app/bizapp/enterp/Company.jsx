@@ -32,7 +32,7 @@ function Company() {
     };
 
     return (
-        <Box m="20px"
+        <Box m="10px" p="10px"
             backgroundColor={colors.primary[400]}>
             <Header title="Company" subTitle="" />
             <CrudActions handleNew={handleNew} isNewEnabled={isNewEnabled}
@@ -152,10 +152,7 @@ function Company() {
                         </Box>
                     </form>
                 )}
-
-
             </Formik>
-
         </Box>
     )
 }
