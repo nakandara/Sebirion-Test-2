@@ -7,7 +7,7 @@ import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import { Link } from 'react-router-dom';
 import { tokens } from '../../../theme';
 import { BuildCircleOutlined } from '@mui/icons-material';
-import ProfileImg from '../../../assets/dinidu.jpg';
+//import ProfileImg from '../../../assets/dinidu.jpg';
 
 function SidebarNew() {
     const theme = useTheme();
@@ -70,7 +70,7 @@ function SidebarNew() {
                                     alt='profile-user'
                                     width="100px"
                                     height="100px"
-                                    src={ProfileImg}
+                                    // src={ProfileImg}
                                     style={{ cursor: "pointer", borderRadius: "50%" }} />
                             </Box>
                             <Box textAlign="center">
