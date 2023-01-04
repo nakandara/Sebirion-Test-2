@@ -3,7 +3,7 @@ import { Route, Routes } from "react-router-dom";
 import Layout from "./components/pages/Layout";
 import { CssBaseline, ThemeProvider } from "@mui/material";
 import { ColorModeContext, useMode } from "./theme";
-import { ProSidebarProvider } from "react-pro-sidebar";
+
 
 import RequireAuth from "./components/pages/RequireAuth";
 import { AuthProvider } from "./context/AuthProvider";
@@ -42,18 +42,18 @@ function App() {
       <ThemeProvider theme={theme}>
         <CssBaseline />
         <AuthProvider>
-          <ProSidebarProvider>
-            <Routes>
-              <Route path="/" element={<Layout />}>
-                <Route path="login" element={<Login />} />
-                <Route
-                  path="unauthorized"
-                  element={
-                    <Suspense fallback={<>...</>}>
-                      <Unauthorized />
-                    </Suspense>
-                  }
-                />
+
+          <Routes>
+            <Route path="/" element={<Layout />}>
+              <Route path="login" element={<Login />} />
+              <Route
+                path="unauthorized"
+                element={
+                  <Suspense fallback={<>...</>}>
+                    <Unauthorized />
+                  </Suspense>
+                }
+              />
 
                 <Route >
                   <Route
@@ -113,19 +113,19 @@ function App() {
             <Route path='material_groups' element={<MaterialGroup />} />
             <Route path='unit_measure' element={<IsoUnit />} />            
             */}
-                  </Route>
-                  <Route
-                    path="*"
-                    element={
-                      <Suspense fallback={<>...</>}>
-                        <Page404 />
-                      </Suspense>
-                    }
-                  />
                 </Route>
+                <Route
+                  path="*"
+                  element={
+                    <Suspense fallback={<>...</>}>
+                      <Page404 />
+                    </Suspense>
+                  }
+                />
               </Route>
-            </Routes>
-          </ProSidebarProvider>
+            </Route>
+          </Routes>
+
         </AuthProvider>
       </ThemeProvider>
     </ColorModeContext.Provider>
