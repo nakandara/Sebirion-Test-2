@@ -34,6 +34,12 @@ const ItemType = lazy(() =>
 const Company = lazy(() =>
   import("./app/bizapp/enterp/Company")
 );
+const SalesRepOrder = lazy(() =>
+  import("./Application/Order/SalesROrder")
+);
+const IssueNote = lazy(() =>
+  import("./Application/Order/IssueNote")
+);
 
 function App() {
   const [theme, colorMode] = useMode();
@@ -55,56 +61,72 @@ function App() {
                 }
               />
 
-                <Route >
+              <Route >
+                <Route
+                  path="/"
+                  element={
+                    <Suspense fallback={<>...</>}>
+                      <AppHome />
+                    </Suspense>
+                  }
+                >
                   <Route
                     path="/"
                     element={
                       <Suspense fallback={<>...</>}>
-                        <AppHome />
+                        <Dashboard />
                       </Suspense>
                     }
-                  >
-                    <Route
-                      path="/"
-                      element={
-                        <Suspense fallback={<>...</>}>
-                          <Dashboard />
-                        </Suspense>
-                      }
-                    />
-                    <Route
-                      path="inventory_item/:objId"
-                      element={
-                        <Suspense fallback={<>...</>}>
-                          <InventoryItem />
-                        </Suspense>
-                      }
-                    />
-                    <Route
-                      path="item_types"
-                      element={
-                        <Suspense fallback={<>...</>}>
-                          <ItemType />
-                        </Suspense>
-                      }
-                    />
-                    <Route
-                      path="user"
-                      element={
-                        <Suspense fallback={<>...</>}>
-                          <FndUser />
-                        </Suspense>
-                      }
-                    />
-                    <Route
-                      path="company"
-                      element={
-                        <Suspense fallback={<>...</>}>
-                          <Company />
-                        </Suspense>
-                      }
-                    />
-                    {/*<Route path='users' element={<FndUsers />} />
+                  />
+                  <Route
+                    path="inventory_item/:objId"
+                    element={
+                      <Suspense fallback={<>...</>}>
+                        <InventoryItem />
+                      </Suspense>
+                    }
+                  />
+                  <Route
+                    path="item_types"
+                    element={
+                      <Suspense fallback={<>...</>}>
+                        <ItemType />
+                      </Suspense>
+                    }
+                  />
+                  <Route
+                    path="user"
+                    element={
+                      <Suspense fallback={<>...</>}>
+                        <FndUser />
+                      </Suspense>
+                    }
+                  />
+                  <Route
+                    path="company"
+                    element={
+                      <Suspense fallback={<>...</>}>
+                        <Company />
+                      </Suspense>
+                    }
+                  />
+                  <Route
+                    path="Salesreporder"
+                    element={
+                      <Suspense fallback={<>...</>}>
+                        <SalesRepOrder />
+                      </Suspense>
+                    }
+                  />
+                  <Route
+                    path="Issuenote"
+                    element={
+                      <Suspense fallback={<>...</>}>
+                        <IssueNote />
+                      </Suspense>
+                    }
+                  />
+                  {/*<Route path='users' element={<FndUsers />} />
             <Route path='user_role' element={<UserRole />} />
             <Route path='user_roles' element={<UserRoles />} />
             <Route path='project' element={<Project />} />

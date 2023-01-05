@@ -88,7 +88,7 @@ function Login() {
           style={sheet.mainTopic}
           className="text-purple f-shippori text-shadow-sm"
         >
-          WELCOME TO GMB
+          WELCOME TO SIPSAYURI
         </h1>
         {/* <h2 className='mt-1 f-courgette text-purple'>GMB Window coverings</h2> */}
       </div>

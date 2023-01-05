@@ -1,16 +1,16 @@
 import { Box, TextField, useMediaQuery, useTheme } from "@mui/material";
 import { Formik, useFormik } from "formik";
 import React, { useRef, useState } from "react";
-import Header from "../../components/Header";
+import Header from "../../app/components/Header";
 import * as yup from "yup";
 
-import { tokens } from "../../../theme";
-import CrudActions from "../../components/CrudActions";
+import { tokens } from "../../theme";
+import CrudActions from "../../app/components/CrudActions";
 
-function Company() {
-    const theme = useTheme();
-    const colors = tokens(theme.palette.mode);
-    const companyIdRef = useRef();
+const SalesROrder = () => {
+  const theme = useTheme();
+  const colors = tokens(theme.palette.mode);
+  const companyIdRef = useRef();
 
   const isNonMobile = useMediaQuery("(min-width:600px)");
   const [isNewEnabled, setIsNewEnabled] = useState(true);
@@ -33,7 +33,7 @@ function Company() {
 
   return (
     <Box m="20px" backgroundColor={colors.primary[400]}>
-      <Header title="Company" subTitle="" />
+      <Header title="Sales Rep Order" subTitle="" />
       <CrudActions
         handleNew={handleNew}
         isNewEnabled={isNewEnabled}
@@ -71,14 +71,14 @@ function Company() {
                 variant="outlined"
                 ref={companyIdRef}
                 type="text"
-                label="Company ID"
+                label="Oder ID"
                 onBlur={handleBlur}
                 onChange={handleChange}
-                value={values.companyId}
+                value={values.oderId}
                 InputProps={{ sx: { height: 40 } }}
-                name="companyId"
-                error={!!touched.companyId && !!errors.companyId}
-                helperText={touched.companyId && errors.companyId}
+                name="oderId"
+                error={!!touched.oderId && !!errors.oderId}
+                helperText={touched.oderId && errors.oderId}
                 sx={{
                   gridColumn: "span 1",
                   "& .MuiInputBase-root": {
@@ -90,13 +90,51 @@ function Company() {
                 fullWidth
                 variant="outlined"
                 type="text"
-                label="Name"
+                label="Description"
                 onBlur={handleBlur}
                 onChange={handleChange}
-                value={values.companyName}
-                name="companyName"
-                error={!!touched.companyName && !!errors.companyName}
-                helperText={touched.companyName && errors.companyName}
+                value={values.description}
+                name="description"
+                error={!!touched.description && !!errors.description}
+                helperText={touched.description && errors.description}
+                sx={{
+                  gridColumn: "span 2",
+                  "& .MuiInputBase-root": {
+                    height: 40,
+                  },
+                }}
+              />
+
+              <TextField
+                fullWidth
+                variant="outlined"
+                type="text"
+                label="SDO"
+                onBlur={handleBlur}
+                onChange={handleChange}
+                value={values.sdo}
+                name="sdo"
+                error={!!touched.sdo && !!errors.sdo}
+                helperText={touched.sdo && errors.sdo}
+                sx={{
+                  gridColumn: "span 2",
+                  "& .MuiInputBase-root": {
+                    height: 40,
+                  },
+                }}
+              />
+
+              <TextField
+                fullWidth
+                variant="outlined"
+                type="text"
+                label="Created At"
+                onBlur={handleBlur}
+                onChange={handleChange}
+                value={values.createdAt}
+                name="createdAt"
+                error={!!touched.createdAt && !!errors.createdAt}
+                helperText={touched.createdAt && errors.createdAt}
                 sx={{
                   gridColumn: "span 2",
                   "& .MuiInputBase-root": {
@@ -108,31 +146,13 @@ function Company() {
                 fullWidth
                 variant="outlined"
                 type="text"
-                label="Association No"
+                label="Created By"
                 onBlur={handleBlur}
                 onChange={handleChange}
-                value={values.associationNo}
-                name="associationNo"
-                error={!!touched.associationNo && !!errors.associationNo}
-                helperText={touched.associationNo && errors.associationNo}
-                sx={{
-                  gridColumn: "span 1",
-                  "& .MuiInputBase-root": {
-                    height: 40,
-                  },
-                }}
-              />
-              <TextField
-                fullWidth
-                variant="outlined"
-                type="text"
-                label="Web Address"
-                onBlur={handleBlur}
-                onChange={handleChange}
-                value={values.webAddress}
-                name="webAddress"
-                error={!!touched.webAddress && !!errors.webAddress}
-                helperText={touched.webAddress && errors.webAddress}
+                value={values.createdBy}
+                name="createdBy"
+                error={!!touched.createdBy && !!errors.createdBy}
+                helperText={touched.createdBy && errors.createdBy}
                 sx={{
                   gridColumn: "span 2",
                   "& .MuiInputBase-root": {
@@ -144,13 +164,13 @@ function Company() {
                 fullWidth
                 variant="outlined"
                 type="text"
-                label="Nature of Business"
+                label="Status"
                 onBlur={handleBlur}
                 onChange={handleChange}
-                value={values.businessNature}
-                name="businessNature"
-                error={!!touched.businessNature && !!errors.businessNature}
-                helperText={touched.businessNature && errors.businessNature}
+                value={values.status}
+                name="status"
+                error={!!touched.status && !!errors.status}
+                helperText={touched.status && errors.status}
                 sx={{
                   gridColumn: "span 2",
                   "& .MuiInputBase-root": {
@@ -164,22 +184,24 @@ function Company() {
       </Formik>
     </Box>
   );
-}
+};
 
 const checkoutSchema = yup.object().shape({
-  companyId: yup.string().required("Company Id is required"),
-  companyName: yup.string().required("Company Name is required"),
-  associationNo: yup.string().required(""),
-  webAddress: yup.string().required(""),
-  businessNature: yup.string().required(""),
+  oderId: yup.string().required("Issue Oder Id  is required"),
+  description: yup.string().required("Description  is required"),
+  sdo: yup.string().required(""),
+  createdAt: yup.string().required(""),
+  createdBy: yup.string().required(""),
+  status: yup.string().required(""),
 });
 
 const initialValues = {
-  companyId: "",
-  companyName: "",
-  associationNo: "",
-  webAddress: "",
-  businessNature: "",
+  oderId: "",
+  description: "",
+  sdo: "",
+  createdAt: "",
+  createdBy: "",
+  status: "",
 };
 
-export default Company;
+export default SalesROrder;
