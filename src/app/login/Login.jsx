@@ -11,8 +11,11 @@ import { useLocation, useNavigate } from "react-router-dom";
 import axios from "../../Application/fndbas/api/axios";
 import useAuth from "../../Application/fndbas/hooks/useAuth";
 //import logo from '../../assets/logo.png';
+
 import { PASSWORD, TEXT } from "./consts";
 import './login.css';
+import {tokens} from '../../theme';
+import { useEffect } from 'react';
 
 const LOGIN_URL = 'v1/login';
 const GET_ROLES_URL = 'v1/FndUser/'
@@ -24,6 +27,9 @@ const sheet = {
 }
 
 function Login() {
+    const theme = useTheme();
+    const colors = tokens(theme.palette.mode);
+
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [errMsg, setErrMsg] = useState('');
@@ -36,6 +42,15 @@ function Login() {
     const from = location.state?.from.pathname || "/";
     const userRef = useRef();
     const errRef = useRef();
+
+    useEffect(() => {
+        userRef.current.focus();
+    }, [])
+
+    useEffect(() => {
+        setErrMsg('');
+    }, [username, password])
+
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -112,7 +127,7 @@ function Login() {
                     <form className='w-75' onSubmit={handleSubmit}>
                         <div className='w-100'>
                             <div className='mb-2'>
-                                <label className='text-small-extra mb-1'>Username</label>
+                                <label className='text-small mb-1'>Username</label>
                                 <TextField
                                     type="text"
                                     align="center"
@@ -159,8 +174,8 @@ function Login() {
                         </div>
                     </form>
                 </Paper>
-            </div>
-        </div>
+            </Box>
+        </Box>
 
     )
 }

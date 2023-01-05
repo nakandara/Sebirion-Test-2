@@ -30,7 +30,6 @@ function Company() {
   const handleDelete = (e) => {
     companyIdRef.current.focus();
   };
-
   return (
     <Box m="20px" backgroundColor={colors.primary[400]}>
       <Header title="Company" subTitle="" />
