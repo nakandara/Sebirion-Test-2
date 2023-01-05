@@ -1,10 +1,10 @@
-import React, { useState, useEffect, useMemo, useRef } from 'react'
-import useAxiosPrivate from '../../fndbas/hooks/useAxiosPrivate';
-import './fndUsers.css';
-import { useNavigate, useLocation } from 'react-router-dom';
-import PageHeader from '../../fndbas/PageHeader/PageHeader';
-import { AgGridReact } from 'ag-grid-react';
-import moment from "moment";
+import React, { useState, useEffect, useMemo, useRef } from "react";
+import useAxiosPrivate from "../../fndbas/hooks/useAxiosPrivate";
+import "./fndUsers.css";
+import { useNavigate, useLocation } from "react-router-dom";
+import PageHeader from "../../fndbas/PageHeader/PageHeader";
+import { AgGridReact } from "ag-grid-react";
+//import moment from "moment";
 
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
@@ -38,9 +38,9 @@ export default function Users() {
         },
     ]);
 
-    function dateFormatter(params) {
-        return moment(params.value).format("MM/DD/YYYY HH:mm");
-    }    
+  function dateFormatter(params) {
+    // return moment(params.value).format("MM/DD/YYYY HH:mm");
+  }
 
     useEffect(() => {        
         const controller = new AbortController();

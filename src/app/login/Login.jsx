@@ -1,9 +1,17 @@
-import { Button, Paper, TextField, Checkbox, Typography, useTheme, Box } from '@mui/material'
-import React, { useState, useRef } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
-import axios from '../../Application/fndbas/api/axios';
-import useAuth from '../../Application/fndbas/hooks/useAuth';
-import logo from '../../assets/logo.png';
+import {
+  Box,
+  Button,
+  Paper,
+  TextField,
+  Checkbox,
+  Typography,
+} from "@mui/material";
+import React, { useState, useRef } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import axios from "../../Application/fndbas/api/axios";
+import useAuth from "../../Application/fndbas/hooks/useAuth";
+//import logo from '../../assets/logo.png';
+
 import { PASSWORD, TEXT } from "./consts";
 import './login.css';
 import {tokens} from '../../theme';
@@ -85,23 +93,36 @@ function Login() {
         }
     }
 
-    return (
-        <Box display="flex" fullwidth="true" height="100vh">
-            <div style={{ width: '70%' }} className='d-center login-back flex-column'>
-                <div className='mb-2'>
-                    <img width={30} className="img-fluid w-100" src={logo} alt="" />
-                </div>
-                <h1 style={sheet.mainTopic} className='text-purple f-shippori text-shadow-sm'>WELCOME TO SIPSAYURI</h1>
-                {/* <h2 className='mt-1 f-courgette text-purple'>GMB Window coverings</h2> */}
-            </div>
-            <Box width="30%" height="100%">
-                <Paper elevation={3} sx={{backgroundColor: colors.primary[500]}} className="login-paper h-100 d-center flex-column">
-                    <hr></hr>
-                    <div className='w-75 mb-4'>
-                        <Typography variant='h2'>Login</Typography>
-                        <Typography variant='h5'>Use your credentials to login</Typography>
-                    </div>
-                    <Typography ref={errRef} variant='h5' sx={{color:colors.redAccent[500]}}>{errMsg}</Typography>
+  return (
+    <div className="full-page d-flex">
+      <div style={{ width: "70%" }} className="d-center login-back flex-column">
+        <div className="mb-2">
+          <img width={30} className="img-fluid w-100" alt="" />
+        </div>
+        <h1
+          style={sheet.mainTopic}
+          className="text-purple f-shippori text-shadow-sm"
+        >
+          WELCOME TO GMB
+        </h1>
+        {/* <h2 className='mt-1 f-courgette text-purple'>GMB Window coverings</h2> */}
+      </div>
+      <div className="h-100" style={{ width: "30%" }}>
+        <Paper elevation={5} className="login-paper h-100 d-center flex-column">
+          <hr></hr>
+          <div className="w-75 mb-4">
+            <h1 className="text-left text-large mt-2 mb-2 text-purple m-0 p-0">
+              Login
+            </h1>
+            <p>Use your credentials to login</p>
+          </div>
+          <p
+            ref={errRef}
+            className={errMsg ? "errmsg" : "offscreen"}
+            aria-live="assertive"
+          >
+            {errMsg}
+          </p>
 
                     <form className='w-75' onSubmit={handleSubmit}>
                         <div className='w-100'>
