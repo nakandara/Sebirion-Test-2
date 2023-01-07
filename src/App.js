@@ -1,13 +1,14 @@
-import React, { lazy, Suspense } from "react";
+import React, { lazy, Suspense, useState } from "react";
 import { Route, Routes } from "react-router-dom";
 import Layout from "./components/pages/Layout";
 import { CssBaseline, ThemeProvider } from "@mui/material";
 import { ColorModeContext, useMode } from "./theme";
 
-
+import { FaBars } from 'react-icons/fa';
 import RequireAuth from "./components/pages/RequireAuth";
 import { AuthProvider } from "./context/AuthProvider";
 import Dashboard from "./app/dashboard/Dashboard";
+
 // import IsoUnit from './components/Application/AppBase/IsoUnit/IsoUnit';
 
 const Page404 = lazy(() => import("./components/pages/page404/Page404"));
@@ -43,90 +44,94 @@ const IssueNote = lazy(() =>
 
 function App() {
   const [theme, colorMode] = useMode();
+  const [toggled, setToggled] = useState(false);
   return (
     <ColorModeContext.Provider value={colorMode}>
       <ThemeProvider theme={theme}>
         <CssBaseline />
         <AuthProvider>
+          <div className={`app ${toggled ? 'toggled' : ''}`} >
 
-          <Routes>
-            <Route path="/" element={<Layout />}>
-              <Route path="login" element={<Login />} />
-              <Route
-                path="unauthorized"
-                element={
-                  <Suspense fallback={<>...</>}>
-                    <Unauthorized />
-                  </Suspense>
-                }
-              />
+            <main >
 
-              <Route >
-                <Route
-                  path="/"
-                  element={
-                    <Suspense fallback={<>...</>}>
-                      <AppHome />
-                    </Suspense>
-                  }
-                >
+              <Routes>
+                <Route path="/" element={<Layout />}>
+                  <Route path="login" element={<Login />} />
                   <Route
-                    path="/"
+                    path="unauthorized"
                     element={
                       <Suspense fallback={<>...</>}>
-                        <Dashboard />
+                        <Unauthorized />
                       </Suspense>
                     }
                   />
-                  <Route
-                    path="inventory_item/:objId"
-                    element={
-                      <Suspense fallback={<>...</>}>
-                        <InventoryItem />
-                      </Suspense>
-                    }
-                  />
-                  <Route
-                    path="item_types"
-                    element={
-                      <Suspense fallback={<>...</>}>
-                        <ItemType />
-                      </Suspense>
-                    }
-                  />
-                  <Route
-                    path="user"
-                    element={
-                      <Suspense fallback={<>...</>}>
-                        <FndUser />
-                      </Suspense>
-                    }
-                  />
-                  <Route
-                    path="company"
-                    element={
-                      <Suspense fallback={<>...</>}>
-                        <Company />
-                      </Suspense>
-                    }
-                  />
-                  <Route
-                    path="Salesreporder"
-                    element={
-                      <Suspense fallback={<>...</>}>
-                        <SalesRepOrder />
-                      </Suspense>
-                    }
-                  />
-                  <Route
-                    path="Issuenote"
-                    element={
-                      <Suspense fallback={<>...</>}>
-                        <IssueNote />
-                      </Suspense>
-                    }
-                  />
-                  {/*<Route path='users' element={<FndUsers />} />
+
+                  <Route >
+                    <Route
+                      path="/"
+                      element={
+                        <Suspense fallback={<>...</>}>
+                          <AppHome />
+                        </Suspense>
+                      }
+                    >
+                      <Route
+                        path="/"
+                        element={
+                          <Suspense fallback={<>...</>}>
+                            <Dashboard />
+                          </Suspense>
+                        }
+                      />
+                      <Route
+                        path="inventory_item/:objId"
+                        element={
+                          <Suspense fallback={<>...</>}>
+                            <InventoryItem />
+                          </Suspense>
+                        }
+                      />
+                      <Route
+                        path="item_types"
+                        element={
+                          <Suspense fallback={<>...</>}>
+                            <ItemType />
+                          </Suspense>
+                        }
+                      />
+                      <Route
+                        path="user"
+                        element={
+                          <Suspense fallback={<>...</>}>
+                            <FndUser />
+                          </Suspense>
+                        }
+                      />
+                      <Route
+                        path="company"
+                        element={
+                          <Suspense fallback={<>...</>}>
+                            <Company />
+                          </Suspense>
+                        }
+                      />
+                      <Route
+                        path="Salesreporder"
+                        element={
+                          <Suspense fallback={<>...</>}>
+                            <SalesRepOrder />
+                          </Suspense>
+                        }
+                      />
+                      <Route
+                        path="Issuenote"
+                        element={
+                          <Suspense fallback={<>...</>}>
+                            <IssueNote />
+                          </Suspense>
+                        }
+                      />
+                      {/*<Route path='users' element={<FndUsers />} />
             <Route path='user_role' element={<UserRole />} />
             <Route path='user_roles' element={<UserRoles />} />
             <Route path='project' element={<Project />} />
@@ -135,18 +140,21 @@ function App() {
             <Route path='material_groups' element={<MaterialGroup />} />
             <Route path='unit_measure' element={<IsoUnit />} />            
             */}
+                    </Route>
+                    <Route
+                      path="*"
+                      element={
+                        <Suspense fallback={<>...</>}>
+                          <Page404 />
+                        </Suspense>
+                      }
+                    />
+                  </Route>
                 </Route>
-                <Route
-                  path="*"
-                  element={
-                    <Suspense fallback={<>...</>}>
-                      <Page404 />
-                    </Suspense>
-                  }
-                />
-              </Route>
-            </Route>
-          </Routes>
+              </Routes>
+            </main>
+          </div>
+
 
         </AuthProvider>
       </ThemeProvider>

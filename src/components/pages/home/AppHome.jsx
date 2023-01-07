@@ -16,9 +16,9 @@ export default function AppHome() {
     setCollapsed(!collapsed);
   };
 
-//   const handleImageChange = (checked) => {
-//     setImage(checked);
-//   };
+  //   const handleImageChange = (checked) => {
+  //     setImage(checked);
+  //   };
 
   const handleToggleSidebar = (value) => {
     setToggled(value);
