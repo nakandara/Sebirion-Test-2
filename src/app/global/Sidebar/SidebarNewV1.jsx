@@ -110,7 +110,9 @@ const SidebarNewV1 = ({
             </MenuItem> */}
 
             <SubMenu
+
               suffix={<span className="badge yellow">2</span>}
+
               title={"Order"}
               icon={<FaRegLaughWink />}
             >

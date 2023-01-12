@@ -30,7 +30,6 @@ function Company() {
   const handleDelete = (e) => {
     companyIdRef.current.focus();
   };
-
   return (
     <Box m="20px" backgroundColor={colors.primary[400]}>
       <Header title="Company" subTitle="" />
@@ -168,10 +167,10 @@ function Company() {
 
 const checkoutSchema = yup.object().shape({
   companyId: yup.string().required("Company Id is required"),
-  companyName: yup.string().required("Company Namer is equired"),
-  associationNo: yup.string().required("Association No is required"),
-  webAddress: yup.string().required("Web Address is required"),
-  businessNature: yup.string().required("Business Nature is required"),
+  companyName: yup.string().required("Company Name is required"),
+  associationNo: yup.string().required(""),
+  webAddress: yup.string().required(""),
+  businessNature: yup.string().required(""),
 });
 
 const initialValues = {

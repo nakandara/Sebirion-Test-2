@@ -1,3 +1,4 @@
+
 import React, { lazy, Suspense,useState } from "react";
 import { Route, Routes } from "react-router-dom";
 import Layout from "./components/pages/Layout";
@@ -5,10 +6,11 @@ import { CssBaseline, ThemeProvider } from "@mui/material";
 import { ColorModeContext, useMode } from "./theme";
 import "./styles.scss"
 
-
+import { FaBars } from "react-icons/fa";
 import RequireAuth from "./components/pages/RequireAuth";
 import { AuthProvider } from "./context/AuthProvider";
 import Dashboard from "./app/dashboard/Dashboard";
+
 // import IsoUnit from './components/Application/AppBase/IsoUnit/IsoUnit';
 
 const Page404 = lazy(() => import("./components/pages/page404/Page404"));
@@ -32,11 +34,13 @@ const ItemType = lazy(() =>
   import("./Application/Inventory/ItemType/ItemType")
 );
 
+
 const Company = lazy(() =>
   import("./app/bizapp/enterp/Company")
 );
 const SalesRepOrder = lazy(() => import("./Application/Order/SalesROrder"));
 const IssueNote = lazy(() => import("./Application/Order/IssueNote"));
+
 function App() {
   const [theme, colorMode] = useMode();
   const [toggled, setToggled] = useState(false);
@@ -45,6 +49,7 @@ function App() {
       <ThemeProvider theme={theme}>
         <CssBaseline />
         <AuthProvider>
+
           <div className={`app ${toggled ? 'toggled' : ''}`}>
             <main >
 
@@ -60,7 +65,9 @@ function App() {
                     }
                   />
 
-                  <Route >
+
+                  <Route element={<RequireAuth allowedRoles={["ADMIN"]} />}>
+
                     <Route
                       path="/"
                       element={
@@ -125,6 +132,7 @@ function App() {
                           </Suspense>
                         }
                       />
+
                       {/*<Route path='users' element={<FndUsers />} />
             <Route path='user_role' element={<UserRole />} />
             <Route path='user_roles' element={<UserRoles />} />
@@ -134,6 +142,7 @@ function App() {
             <Route path='material_groups' element={<MaterialGroup />} />
             <Route path='unit_measure' element={<IsoUnit />} />            
             */}
+
                     </Route>
                     <Route
                       path="*"
