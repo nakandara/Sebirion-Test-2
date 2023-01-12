@@ -98,7 +98,7 @@ const SidebarNewV1 = ({
               suffix={<span className="badge red">NEW</span>}
             >
               Dashboard
-              <NavLink to="/dashboard" />
+              <NavLink to="/" />
             </MenuItem>
             {/* <MenuItem icon={<FaGem />}>Components </MenuItem> */}
             <MenuItem icon={<FaGem />}>
@@ -110,7 +110,9 @@ const SidebarNewV1 = ({
             </MenuItem> */}
 
             <SubMenu
-              suffix={<span className="badge yellow">3</span>}
+
+              suffix={<span className="badge yellow">2</span>}
+
               title={"Order"}
               icon={<FaRegLaughWink />}
             >
