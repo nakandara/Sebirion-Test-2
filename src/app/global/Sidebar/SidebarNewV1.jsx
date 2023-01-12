@@ -25,6 +25,7 @@ import {
   FaRegLaughWink,
   FaHeart,
 } from "react-icons/fa";
+import { Margin } from "@mui/icons-material";
 // import downloadl from "../../assets/p2.jpg";
 // const Item = ({ title, to, icon, selected, setSelected }) => {
 //   const theme = useTheme();
@@ -97,29 +98,31 @@ const SidebarNewV1 = ({
               suffix={<span className="badge red">NEW</span>}
             >
               Dashboard
-              <NavLink to="/dashboard" />
+              <NavLink to="/" />
             </MenuItem>
             {/* <MenuItem icon={<FaGem />}>Components </MenuItem> */}
             <MenuItem icon={<FaGem />}>
               company <Link to="/company" />
             </MenuItem>
-
+            {/* 
             <MenuItem icon={<FaGem />}>
               Schools <Link to="/schools" />
-            </MenuItem>
+            </MenuItem> */}
 
             <SubMenu
-              suffix={<span className="badge yellow">3</span>}
-              title={"With Suffix"}
+              suffix={<span className="badge yellow">2</span>}
+              title={"Order"}
               icon={<FaRegLaughWink />}
             >
               <MenuItem>
-                Submenu 1 <Link to="/school" />
+                Sales Rep Order <Link to="/Salesreporder" />
               </MenuItem>
-              <MenuItem>Submenu 2</MenuItem>
-              <MenuItem>Submenu 3</MenuItem>
+              <MenuItem>
+                Issue Note <Link to="/Issuenote" />
+              </MenuItem>
+              {/* <MenuItem>Submenu 3</MenuItem> */}
             </SubMenu>
-            <SubMenu
+            {/* <SubMenu
               prefix={<span className="badge gray">3</span>}
               title={"With Prefix"}
               icon={<FaHeart />}
@@ -127,23 +130,23 @@ const SidebarNewV1 = ({
               <MenuItem>Submenu 1</MenuItem>
               <MenuItem>Submenu 2</MenuItem>
               <MenuItem>Submenu 3</MenuItem>
-            </SubMenu>
-            <SubMenu title={"Multi Level"} icon={<FaList />}>
+            </SubMenu> */}
+            {/* <SubMenu title={"Multi Level"} icon={<FaList />}>
               <MenuItem>Submenu 1 </MenuItem>
               <MenuItem>Submenu 2 </MenuItem>
               <SubMenu title={"Submenu 3"}>
                 <MenuItem>Submenu 3.1 </MenuItem>
                 <MenuItem>Submenu 3.2 </MenuItem>
               </SubMenu>
-            </SubMenu>
-            <SubMenu title={"Multi Level"} icon={<FaList />}>
+            </SubMenu> */}
+            {/* <SubMenu title={"Multi Level"} icon={<FaList />}>
               <MenuItem>Submenu 1 </MenuItem>
               <MenuItem>Submenu 2 </MenuItem>
               <SubMenu title={"Submenu 3"}>
                 <MenuItem>Submenu 3.1 </MenuItem>
                 <MenuItem>Submenu 3.2 </MenuItem>
               </SubMenu>
-            </SubMenu>
+            </SubMenu> */}
           </Menu>
         </SidebarContent>
         {/* Footer */}
