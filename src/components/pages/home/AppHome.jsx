@@ -5,7 +5,7 @@ import SidebarNew from "../../../app/global/Sidebar/SidebarNew";
 import { useState } from "react";
 import SidebarNewV1 from "../../../app/global/Sidebar/SidebarNewV1";
 import { FaBars } from "react-icons/fa";
-import "../../../styles.scss";
+
 export default function AppHome() {
   const [isSidebar, setIsSidebar] = useState(true);
   const [collapsed, setCollapsed] = useState(false);
