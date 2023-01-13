@@ -134,9 +134,10 @@ const SidebarNewV1 = ({
             <MenuItem icon={<FaGem />}>
               Schools <Link to="/schools" />
             </MenuItem> */}
-
             <SubMenu
-              suffix={<span className="badge yellow">3</span>}
+
+              suffix={<span className="badge yellow">2</span>}
+
               title={"Order"}
               icon={<FaRegLaughWink />}
             >

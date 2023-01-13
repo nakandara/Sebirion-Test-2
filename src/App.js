@@ -1,9 +1,11 @@
-import React, { lazy, Suspense, useState } from "react";
+
+import React, { lazy, Suspense,useState } from "react";
 import { Route, Routes } from "react-router-dom";
 import Layout from "./components/pages/Layout";
 import { CssBaseline, ThemeProvider} from "@mui/material";
 import { ColorModeContext, useMode } from "./theme";
 import "./styles.scss"
+
 import RequireAuth from "./components/pages/RequireAuth";
 import { AuthProvider } from "./context/AuthProvider";
 import Dashboard from "./app/dashboard/Dashboard";
@@ -31,7 +33,10 @@ const ItemType = lazy(() =>
   import("./Application/Inventory/ItemType/ItemType")
 );
 
-const Company = lazy(() => import("./app/bizapp/enterp/Company"));
+
+const Company = lazy(() =>
+  import("./app/bizapp/enterp/Company")
+);
 const SalesRepOrder = lazy(() => import("./Application/Order/SalesROrder"));
 const IssueNote = lazy(() => import("./Application/Order/IssueNote"));
 
@@ -43,8 +48,8 @@ function App() {
       <ThemeProvider theme={theme}>
         <CssBaseline />
         <AuthProvider>
-          <div className={`app ${toggled ? 'toggled' : ''}`} >
 
+          <div className={`app ${toggled ? 'toggled' : ''}`}>
             <main >
 
             <Routes>
@@ -66,7 +71,13 @@ function App() {
                         <AppHome />
                       </Suspense>
                     }
+
                   >
+
+                  />
+
+                  <Route element={<RequireAuth allowedRoles={["ADMIN"]} />} >
+
                     <Route
                       path="/"
                       element={
@@ -123,7 +134,29 @@ function App() {
                           </Suspense>
                         }
                       />
-                   
+
+
+                      {/*<Route path='users' element={<FndUsers />} />
+            <Route path='user_role' element={<UserRole />} />
+            <Route path='user_roles' element={<UserRoles />} />
+            <Route path='project' element={<Project />} />
+            <Route path='covering_types' element={<CoveringType />} />
+            <Route path='material' element={<Material />} />
+            <Route path='material_groups' element={<MaterialGroup />} />
+            <Route path='unit_measure' element={<IsoUnit />} />            
+            */}
+
+                    </Route>
+                    <Route
+                      path="*"
+                      element={
+                        <Suspense fallback={<>...</>}>
+                          <Page404 />
+                        </Suspense>
+                      }
+                    />
+                  </Route>
+
                 </Route>
                 <Route
                   path="*"
