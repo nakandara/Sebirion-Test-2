@@ -37,16 +37,13 @@ const IssueNote = lazy(() => import("./Application/Order/IssueNote"));
 
 function App() {
   const [theme, colorMode] = useMode();
-  const [toggled, setToggled] = useState(false);
+
   return (
     <ColorModeContext.Provider value={colorMode}>
       <ThemeProvider theme={theme}>
         <CssBaseline />
         <AuthProvider>
-          <div className={`app ${toggled ? 'toggled' : ''}`} >
-
-            <main >
-
+          <div className="app" >
             <Routes>
             <Route path="/" element={<Layout />}>
               <Route path="login" element={<Login />} />
@@ -107,36 +104,35 @@ function App() {
                         </Suspense>
                       }
                     />
-                 <Route
-                        path="Salesreporder"
-                        element={
-                          <Suspense fallback={<>...</>}>
-                            <SalesRepOrder />
-                          </Suspense>
-                        }
-                      />
-                      <Route
-                        path="Issuenote"
-                        element={
-                          <Suspense fallback={<>...</>}>
-                            <IssueNote />
-                          </Suspense>
-                        }
-                      />
-                   
+                    <Route
+                      path="Salesreporder"
+                      element={
+                        <Suspense fallback={<>...</>}>
+                          <SalesRepOrder />
+                        </Suspense>
+                      }
+                    />
+                    <Route
+                      path="Issuenote"
+                      element={
+                        <Suspense fallback={<>...</>}>
+                          <IssueNote />
+                        </Suspense>
+                      }
+                    />
+
+                  </Route>
+                  <Route
+                    path="*"
+                    element={
+                      <Suspense fallback={<>...</>}>
+                        <Page404 />
+                      </Suspense>
+                    }
+                  />
                 </Route>
-                <Route
-                  path="*"
-                  element={
-                    <Suspense fallback={<>...</>}>
-                      <Page404 />
-                    </Suspense>
-                  }
-                />
               </Route>
-            </Route>
-          </Routes>
-            </main>
+            </Routes>
           </div>
         </AuthProvider>
       </ThemeProvider>

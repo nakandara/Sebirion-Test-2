@@ -117,12 +117,10 @@ const SidebarNewV1 = ({
               textTransform: "uppercase",
               fontSize: 10,
               letterSpacing: "1px",
-              color:`${colors.primary[100]}`
-            }}>
-            <MenuItem
-              icon={<FaTachometerAlt />}
-              suffix={<span className="badge red">NEW</span>}
-            >
+              color: `${colors.primary[100]}`,
+            }}
+          >
+            <MenuItem icon={<FaTachometerAlt />}>
               Dashboard
               <NavLink to="/" />
             </MenuItem>
@@ -135,11 +133,7 @@ const SidebarNewV1 = ({
               Schools <Link to="/schools" />
             </MenuItem> */}
 
-            <SubMenu
-              suffix={<span className="badge yellow">3</span>}
-              title={"Order"}
-              icon={<FaRegLaughWink />}
-            >
+            <SubMenu title={"Order"} icon={<FaRegLaughWink />}>
               <MenuItem>
                 Sales Rep Order <Link to="/Salesreporder" />
               </MenuItem>

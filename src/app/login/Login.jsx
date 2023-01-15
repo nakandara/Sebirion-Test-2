@@ -96,7 +96,7 @@ function Login() {
   return (
     <div className="full-page d-flex">
       <div
-        style={{ width: "70%", height: "170%" }}
+        style={{ width: "70%", height: "100vh" }}
         className="d-center login-back flex-column"
       >
         <div className="mb-2">
@@ -110,7 +110,7 @@ function Login() {
         </h1>
         {/* <h2 className='mt-1 f-courgette text-purple'>GMB Window coverings</h2> */}
       </div>
-      <div className="h-100" style={{ width: "30%", height: "170%" }}>
+      <div className="h-100" style={{ width: "30%" , height: "100vh"}}>
         <Paper elevation={5} className="login-paper h-100 d-center flex-column">
           <hr></hr>
           <div className="w-75 mb-4">
