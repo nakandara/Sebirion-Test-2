@@ -8,6 +8,7 @@ import CrudActions from "../../../components/CrudActions";
 import { axiosPrivate } from "../../../../Application/fndbas/api/axios";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import useAxiosPrivate from "../../../../Application/fndbas/hooks/useAxiosPrivate";
 
 const API_URL = "v1/Company/";
 
@@ -15,6 +16,7 @@ function Company() {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const companyIdRef = useRef();
+  const axiosPrivate = useAxiosPrivate();
 
   const isNonMobile = useMediaQuery("(min-width:600px)");
   const [isNewEnabled, setIsNewEnabled] = useState(true);
@@ -79,10 +81,7 @@ function Company() {
     try {
       const response = await axiosPrivate.post(
         API_URL + "create",
-        JSON.stringify({
-          companyId: "TESTCOMP",
-          companyName: "TESTCOMPNAME"
-        }),
+        JSON.stringify(values),
         {
           headers: {
             "Content-Type": "application/json",
