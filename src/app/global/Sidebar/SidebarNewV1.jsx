@@ -1,9 +1,8 @@
 import { useState, useEffect, useCallback, useContext } from "react";
-import { tokens } from "../../../theme";
 
 import { Box, IconButton, Typography, useTheme } from "@mui/material";
 import { Link, NavLink } from "react-router-dom";
-
+import "react-pro-sidebar/dist/css/styles.css";
 // import { tokens } from "../../theme";
 
 //import { userAuthContext } from "../../base/context/UserAuthContext";
@@ -54,27 +53,9 @@ const SidebarNewV1 = ({
   handleCollapsedChange,
 }) => {
   const [role, setRole] = useState("");
-  const theme = useTheme();
-  const colors = tokens(theme.palette.mode);
 
   return (
-    < Box sx={{
-      "& .pro-sidebar-inner": {
-        background: `${colors.primary[400]} !important`,
-      },
-      "& .pro-icon-wrapper": {
-        backgroundColor: "transparent !important",
-      },
-      "& .pro-inner-item": {
-        padding: "5px 35px 5px 20px !important",
-      },
-      "& .pro-inner-item:hover": {
-        color: "#9e1b09 !important",
-      },
-      "& .pro-menu-item.active": {
-        color: "#9e1b09 !important",
-      },
-    }}>
+    <>
       <ProSidebar
         collapsed={collapsed}
         toggled={toggled}
@@ -101,7 +82,6 @@ const SidebarNewV1 = ({
                     fontWeight: "bold",
                     fontSize: 15,
                     letterSpacing: "1px",
-                    color:`${colors.primary[100]}`
                   }}
                 >
                   DInidu
@@ -111,14 +91,8 @@ const SidebarNewV1 = ({
           </Menu>
         </SidebarHeader>
         {/* Content */}
-        <SidebarContent >
-          <Menu iconShape="circle" style={{
-              padding: "5px",
-              textTransform: "uppercase",
-              fontSize: 10,
-              letterSpacing: "1px",
-              color:`${colors.primary[100]}`
-            }}>
+        <SidebarContent>
+          <Menu iconShape="circle">
             <MenuItem
               icon={<FaTachometerAlt />}
               suffix={<span className="badge red">NEW</span>}
@@ -193,7 +167,7 @@ const SidebarNewV1 = ({
           </div>
         </SidebarFooter>
       </ProSidebar>
-    </Box>
+    </>
   );
 };
 

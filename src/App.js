@@ -36,7 +36,7 @@ const ItemType = lazy(() =>
 
 
 const Company = lazy(() =>
-  import("./app/bizapp/enterp/Company")
+  import("./app/bizapp/enterp/Company/Company")
 );
 const SalesRepOrder = lazy(() => import("./Application/Order/SalesROrder"));
 const IssueNote = lazy(() => import("./Application/Order/IssueNote"));
