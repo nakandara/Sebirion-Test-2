@@ -43,16 +43,14 @@ const IssueNote = lazy(() => import("./Application/Order/IssueNote"));
 
 function App() {
   const [theme, colorMode] = useMode();
-  const [toggled, setToggled] = useState(false);
+
   return (
     <ColorModeContext.Provider value={colorMode}>
       <ThemeProvider theme={theme}>
         <CssBaseline />
         <AuthProvider>
-
           <div className={`app ${toggled ? 'toggled' : ''}`}>
             <main >
-
               <Routes>
                 <Route path="/" element={<Layout />}>
                   <Route path="login" element={<Login />} />
@@ -73,6 +71,7 @@ function App() {
                           <AppHome />
                         </Suspense>
                       }
+
                     >
                       <Route
                         path="/"
