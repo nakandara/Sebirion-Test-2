@@ -3,7 +3,8 @@ import { useState, useEffect, useCallback, useContext } from "react";
 import { Box, IconButton, Typography, useTheme } from "@mui/material";
 import { Link, NavLink } from "react-router-dom";
 import "react-pro-sidebar/dist/css/styles.css";
-// import { tokens } from "../../theme";
+import { tokens } from "../../../theme";
+import useAuth from "../../../Application/fndbas/hooks/useAuth";
 
 //import { userAuthContext } from "../../base/context/UserAuthContext";
 import {
@@ -22,6 +23,7 @@ import {
   FaTachometerAlt,
   FaGem,
   FaList,
+  FaArchway,
   FaRegLaughWink,
   FaHeart,
 } from "react-icons/fa";
@@ -52,11 +54,14 @@ const SidebarNewV1 = ({
   handleToggleSidebar,
   handleCollapsedChange,
 }) => {
+  const { auth } = useAuth();
   const [role, setRole] = useState("");
+  const theme = useTheme();
+  const colors = tokens(theme.palette.mode);
 
   return (
     <>
-      <ProSidebar
+      <ProSidebar backgroundColor={colors.primary[400]}
         collapsed={collapsed}
         toggled={toggled}
         onToggle={handleToggleSidebar}
@@ -84,38 +89,34 @@ const SidebarNewV1 = ({
                     letterSpacing: "1px",
                   }}
                 >
-                  DInidu
+                  {auth.username}
                 </div>
               </MenuItem>
             )}
           </Menu>
         </SidebarHeader>
         {/* Content */}
-        <SidebarContent >
+        <SidebarContent backgroundColor={colors.primary[400]} >
           <Menu iconShape="circle" style={{
-              padding: "5px",
-              textTransform: "uppercase",
-              fontSize: 10,
-              letterSpacing: "1px",
-              color: `${colors.primary[100]}`,
-            }}
-          >
+            padding: "5px",
+            textTransform: "uppercase",
+            fontSize: 10,
+            letterSpacing: "1px",
+          }}>
             <MenuItem icon={<FaTachometerAlt />}>
-
               Dashboard
               <NavLink to="/" />
             </MenuItem>
-            {/* <MenuItem icon={<FaGem />}>Components </MenuItem> */}
-            <MenuItem icon={<FaGem />}>
-              company <Link to="/company" />
-            </MenuItem>
-            {/* 
-            <MenuItem icon={<FaGem />}>
-              Schools <Link to="/schools" />
-            </MenuItem> */}
+            <SubMenu title={"Enterprise"} icon={<FaArchway />}>
+              <MenuItem icon={<FaGem />}>
+                company <Link to="/company" />
+              </MenuItem>
+              <MenuItem icon={<FaGem />}>
+                companies <Link to="/companies" />
+              </MenuItem>
+            </SubMenu>
 
             <SubMenu title={"Order"} icon={<FaRegLaughWink />}>
-
               <MenuItem>
                 Sales Rep Order <Link to="/Salesreporder" />
               </MenuItem>
@@ -124,7 +125,7 @@ const SidebarNewV1 = ({
               </MenuItem>
               {/* <MenuItem>Submenu 3</MenuItem> */}
             </SubMenu>
-            {/* <SubMenu
+            <SubMenu
               prefix={<span className="badge gray">3</span>}
               title={"With Prefix"}
               icon={<FaHeart />}
@@ -132,7 +133,7 @@ const SidebarNewV1 = ({
               <MenuItem>Submenu 1</MenuItem>
               <MenuItem>Submenu 2</MenuItem>
               <MenuItem>Submenu 3</MenuItem>
-            </SubMenu> */}
+            </SubMenu>
             {/* <SubMenu title={"Multi Level"} icon={<FaList />}>
               <MenuItem>Submenu 1 </MenuItem>
               <MenuItem>Submenu 2 </MenuItem>

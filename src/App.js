@@ -34,15 +34,20 @@ const ItemType = lazy(() =>
   import("./Application/Inventory/ItemType/ItemType")
 );
 
+const Companies = lazy(() =>
+  import("./app/bizapp/enterp/Companies")
+);
+
 
 const Company = lazy(() =>
-  import("./app/bizapp/enterp/Company/Company")
+  import("./app/bizapp/enterp/Company")
 );
 const SalesRepOrder = lazy(() => import("./Application/Order/SalesROrder"));
 const IssueNote = lazy(() => import("./Application/Order/IssueNote"));
 
 function App() {
   const [theme, colorMode] = useMode();
+  const [toggled, setToggled] = useState(false);
 
   return (
     <ColorModeContext.Provider value={colorMode}>
@@ -110,6 +115,14 @@ function App() {
                         element={
                           <Suspense fallback={<>...</>}>
                             <Company />
+                          </Suspense>
+                        }
+                      />
+                      <Route
+                        path="companies"
+                        element={
+                          <Suspense fallback={<>...</>}>
+                            <Companies />
                           </Suspense>
                         }
                       />

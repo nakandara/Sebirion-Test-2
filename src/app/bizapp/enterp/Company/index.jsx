@@ -24,7 +24,10 @@ function Company() {
   const [isSaveEnabled, setIsSaveEnabled] = useState(true);
   const [isDeleteEnabled, setIsDeleteEnabled] = useState(true);
 
+  const[newClicked, setNewClicked]=useState(false);
+
   const [values, setValues] = useState(initialValues);
+  const [isFormDisabled, setIsFormDisabled] = useState(true);
 
   const showAllToasts = (type, msg) => {
     type === "SUCCESS" && toast.success(msg, {
@@ -71,6 +74,7 @@ function Company() {
 
   const handleNew = (e) => {
     setValues(initialValues);
+    setNewClicked(true);
   };
   const handleEdit = (e) => {
     companyIdRef.current.focus();
@@ -93,7 +97,8 @@ function Company() {
       // response.data && setCurrentObject(response.data);
       showAllToasts("SUCCESS", "Successfully Saved.")
     } catch (err) {
-      
+      showAllToasts("ERROR", err.response.data.apiError.message)
+      console.log(err);
     }
   };
   const handleDelete = (e) => {
@@ -121,98 +126,101 @@ function Company() {
       />
 
       <form onSubmit={handleSave}>
-        <Box
-          display="grid"
-          gap="20px"
-          gridTemplateColumns="repeat(6, minmax(0, 1fr))"
-          sx={{
-            "& > div": { gridColumn: isNonMobile ? undefined : "span 6" },
-          }}
-        >
-
-          <TextField
-            fullWidth
-            variant="outlined"
-            ref={companyIdRef}
-            type="text"
-            label="Company ID"
-            onChange={(e) => onFormInputChange('companyId', e.target.value)}
-            value={values.companyId}
-            InputProps={{ sx: { height: 40 } }}
-            name="companyId"
-            size="small"
+        <fieldset disabled={!newClicked} style={{border:"0"}} >
+          <Box
+            display="grid"
+            gap="20px"
+            gridTemplateColumns="repeat(6, minmax(0, 1fr))"
             sx={{
-              gridColumn: "span 1",
-              "& .MuiInputBase-root": {
-                height: 40,
-              },
+              "& > div": { gridColumn: isNonMobile ? undefined : "span 6" },
             }}
-          />
-          <TextField
-            fullWidth
-            variant="outlined"
-            type="text"
-            label="Name"
-            onChange={(e) => onFormInputChange('companyName', e.target.value)}
-            value={values.companyName}
-            name="companyName"
-            sx={{
-              gridColumn: "span 2",
-              "& .MuiInputBase-root": {
-                height: 40,
-              },
-            }}
-            size="small"
-          />
-          <TextField
-            fullWidth
-            variant="outlined"
-            type="text"
-            label="Association No"
-            onChange={(e) => onFormInputChange('associationNo', e.target.value)}
-            value={values.associationNo}
-            name="associationNo"
-            sx={{
-              gridColumn: "span 1",
-              "& .MuiInputBase-root": {
-                height: 40,
-              },
-            }}
-            size="small"
-          />
-          <TextField
-            fullWidth
-            variant="outlined"
-            type="text"
-            label="Web Address"
-            onChange={(e) => onFormInputChange('webAddress', e.target.value)}
-            value={values.webAddress}
-            name="webAddress"
-            sx={{
-              gridColumn: "span 2",
-              "& .MuiInputBase-root": {
-                height: 40,
-              },
-            }}
-            size="small"
-          />
-          <TextField
-            fullWidth
-            variant="outlined"
-            type="text"
-            label="Nature of Business"
-            onChange={(e) => onFormInputChange('businessNature', e.target.value)}
-            value={values.businessNature}
-            name="businessNature"
-            sx={{
-              gridColumn: "span 2",
-              "& .MuiInputBase-root": {
-                height: 40,
-              },
-            }}
-            size="small"
-          />
-        </Box>
+          >
+            <TextField
+              fullWidth
+              variant="outlined"
+              ref={companyIdRef}
+              type="text"
+              label="Company ID"
+              onChange={(e) => onFormInputChange('companyId', e.target.value)}
+              value={values.companyId}
+              InputProps={{ sx: { height: 40 } }}
+              name="companyId"
+              size="small"
+              sx={{
+                gridColumn: "span 1",
+                "& .MuiInputBase-root": {
+                  height: 40,
+                  background:"#ffbaba"
+                },
+              }}
+            />
+            <TextField
+              fullWidth
+              variant="outlined"
+              type="text"
+              label="Name"
+              onChange={(e) => onFormInputChange('companyName', e.target.value)}
+              value={values.companyName}
+              name="companyName"
+              sx={{
+                gridColumn: "span 2",
+                "& .MuiInputBase-root": {
+                  height: 40,
+                  background:"#ffbaba"
+                },
+              }}
+              size="small"
+            />
+            <TextField
+              fullWidth
+              variant="outlined"
+              type="text"
+              label="Association No"
+              onChange={(e) => onFormInputChange('associationNo', e.target.value)}
+              value={values.associationNo}
+              name="associationNo"
+              sx={{
+                gridColumn: "span 1",
+                "& .MuiInputBase-root": {
+                  height: 40,
+                },
+              }}
+              size="small"
+            />
+            <TextField
+              fullWidth
+              variant="outlined"
+              type="text"
+              label="Web Address"
+              onChange={(e) => onFormInputChange('webAddress', e.target.value)}
+              value={values.webAddress}
+              name="webAddress"
+              sx={{
+                gridColumn: "span 2",
+                "& .MuiInputBase-root": {
+                  height: 40,
+                },
+              }}
+              size="small"
+            />
+            <TextField
+              fullWidth
+              variant="outlined"
+              type="text"
+              label="Nature of Business"
+              onChange={(e) => onFormInputChange('businessNature', e.target.value)}
+              value={values.businessNature}
+              name="businessNature"
+              sx={{
+                gridColumn: "span 2",
+                "& .MuiInputBase-root": {
+                  height: 40,
+                },
+              }}
+              size="small"
+            />
+          </Box>
+        </fieldset>
       </form>
       <ToastContainer />
     </Box>

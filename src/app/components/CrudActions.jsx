@@ -17,8 +17,7 @@ function CrudActions({ handleNew, isNewEnabled, handleEdit, isEditEnabled, handl
                     variant="outlined"
                     size="small"
                     onClick={handleNew}
-                    disabled={!isNewEnabled}>
-                    
+                    disabled={!isNewEnabled}>                    
                     <AddBoxOutlined />
                 </Button>
                 <Button
