@@ -36,7 +36,10 @@ export default function AppHome() {
         <FaBars />
       </div>
       <main className="content">
+        <div className="topbar">
         <TopbarNew setIsSidebar={setIsSidebar} />
+        </div>
+      
         <Outlet />
       </main>
     </div>
