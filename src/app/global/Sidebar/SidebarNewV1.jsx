@@ -66,6 +66,9 @@ const SidebarNewV1 = ({
         toggled={toggled}
         onToggle={handleToggleSidebar}
         breakPoint="md"
+        style={{
+          zIndex: "387456378853",
+        }}
       >
         {/* Header */}
         <SidebarHeader>
