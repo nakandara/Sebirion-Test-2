@@ -30,6 +30,9 @@ const FndUsers = lazy(() =>
 const InventoryItem = lazy(() =>
   import("./Application/Inventory/InventoryItem/InventoryItem")
 );
+const InventoryItemNewV1 = lazy(() =>
+  import("./Application/Inventory/InventoryItem/InventoryItemNewV1")
+);
 const ItemType = lazy(() =>
   import("./Application/Inventory/ItemType/ItemType")
 );
@@ -83,6 +86,14 @@ function App() {
                         element={
                           <Suspense fallback={<>...</>}>
                             <Dashboard />
+                          </Suspense>
+                        }
+                      />
+                       <Route
+                        path="inventory_item"
+                        element={
+                          <Suspense fallback={<>...</>}>
+                            <InventoryItemNewV1/>
                           </Suspense>
                         }
                       />
