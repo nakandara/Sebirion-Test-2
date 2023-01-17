@@ -27,7 +27,7 @@ import {
   FaRegLaughWink,
   FaHeart,
 } from "react-icons/fa";
-import { Margin } from "@mui/icons-material";
+import { ChildFriendly, ViewAgenda } from "@mui/icons-material";
 // import downloadl from "../../assets/p2.jpg";
 // const Item = ({ title, to, icon, selected, setSelected }) => {
 //   const theme = useTheme();
@@ -124,6 +124,12 @@ const SidebarNewV1 = ({
                 Issue Note <Link to="/Issuenote" />
               </MenuItem>
               {/* <MenuItem>Submenu 3</MenuItem> */}
+            </SubMenu>
+            {/* Inventory  */}
+            <SubMenu title={"Inventory"} icon={<ViewAgenda />}>
+              <MenuItem icon={<ChildFriendly />}>
+                Inventory Item <Link to="/inventory_item" />
+              </MenuItem>
             </SubMenu>
             <SubMenu
               prefix={<span className="badge gray">3</span>}
