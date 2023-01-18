@@ -27,7 +27,11 @@ import {
   FaRegLaughWink,
   FaHeart,
 } from "react-icons/fa";
-import { ChildFriendly, ViewAgenda } from "@mui/icons-material";
+import {
+  AssignmentIndOutlined,
+  ChildFriendly,
+  ViewAgenda,
+} from "@mui/icons-material";
 // import downloadl from "../../assets/p2.jpg";
 // const Item = ({ title, to, icon, selected, setSelected }) => {
 //   const theme = useTheme();
@@ -106,6 +110,10 @@ const SidebarNewV1 = ({
             <MenuItem icon={<FaTachometerAlt />}>
               Dashboard
               <NavLink to="/" />
+            </MenuItem>
+            <MenuItem icon={<AssignmentIndOutlined />}>
+              Person Info
+              <NavLink to="/Personinfo" />
             </MenuItem>
             <SubMenu title={"Enterprise"} icon={<FaArchway />}>
               <MenuItem icon={<FaGem />}>

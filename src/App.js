@@ -24,6 +24,9 @@ const Unauthorized = lazy(() => import("./components/pages/Unauthorized"));
 // const CoveringType = lazy(() => import('./components/Application/Invent/CoveringTypes/CoveringType'));
 const Login = lazy(() => import("./app/login/Login"));
 const FndUser = lazy(() => import("./Application/Enterprise/User/FndUser"));
+const PersonInfo = lazy(() =>
+  import("./Application/Pageinfo/PersonInfo")
+);
 const FndUsers = lazy(() =>
   import("./Application/Enterprise/FndUsers/FndUsers")
 );
@@ -150,6 +153,14 @@ function App() {
                         element={
                           <Suspense fallback={<>...</>}>
                             <IssueNote />
+                          </Suspense>
+                        }
+                      />
+                      <Route
+                        path="Personinfo"
+                        element={
+                          <Suspense fallback={<>...</>}>
+                            <PersonInfo />
                           </Suspense>
                         }
                       />
