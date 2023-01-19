@@ -14,16 +14,18 @@ function Companies() {
     const theme = useTheme();
     const colors = tokens(theme.palette.mode);
     const axiosPrivate = useAxiosPrivate();
-    const [companies, setCompanies] = useState([{
-        id:"",
+
+    const initialValue = {
+        id: "",
         companyId: "",
         companyName: "",
         associationNo: "",
         webAddress: "",
         businessNature: "",
-        createdAt:"",
-        createdBy:""
-    }]);
+        createdAt: "",
+        createdBy: ""
+    }
+    const [companies, setCompanies] = useState([initialValue]);
 
     useEffect(() => {
         let isMounted = true;
@@ -45,7 +47,7 @@ function Companies() {
                     companyId: company.companyId,
                     companyName: company.companyName,
                     createdBy: company.createdBy,
-                    createdAt:company.createdAt,
+                    createdAt: company.createdAt,
                     associationNo: company.associationNo,
                     businessNature: company.businessNature,
                     webAddress: company.webAddress,

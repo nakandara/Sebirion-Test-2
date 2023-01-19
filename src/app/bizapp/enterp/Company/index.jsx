@@ -1,4 +1,4 @@
-import { Box, TextField, useMediaQuery, useTheme } from "@mui/material";
+import { Box, Tab, TextField, useMediaQuery, useTheme } from "@mui/material";
 import React, { useRef, useState } from "react";
 import Header from "../../../components/Header";
 import * as yup from "yup";
@@ -9,6 +9,9 @@ import { axiosPrivate } from "../../../../Application/fndbas/api/axios";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import useAxiosPrivate from "../../../../Application/fndbas/hooks/useAxiosPrivate";
+import { TabContext, TabList, TabPanel } from "@mui/lab";
+import CompanyAddress from "./CompanyAddress";
+import CompanyContactInfo from "./CompanyContactInfo";
 
 const API_URL = "v1/Company/";
 
@@ -24,7 +27,7 @@ function Company() {
   const [isSaveEnabled, setIsSaveEnabled] = useState(true);
   const [isDeleteEnabled, setIsDeleteEnabled] = useState(true);
 
-  const[newClicked, setNewClicked]=useState(false);
+  const [newClicked, setNewClicked] = useState(false);
 
   const [values, setValues] = useState(initialValues);
   const [isFormDisabled, setIsFormDisabled] = useState(true);
@@ -111,6 +114,12 @@ function Company() {
     setValues(updated);
   };
 
+  const [tabValue, setTabValue] = useState('1');
+
+  const handleTabChange = (event, newValue) => {
+    setTabValue(newValue);
+  };
+
   return (
     <Box m="20px" backgroundColor={colors.primary[400]}>
       <Header title="Company" subTitle="" />
@@ -126,7 +135,7 @@ function Company() {
       />
 
       <form onSubmit={handleSave}>
-        <fieldset disabled={!newClicked} style={{border:"0"}} >
+        <fieldset disabled={!newClicked} style={{ border: "0" }} >
           <Box
             display="grid"
             gap="20px"
@@ -150,7 +159,7 @@ function Company() {
                 gridColumn: "span 1",
                 "& .MuiInputBase-root": {
                   height: 40,
-                  background:"#ffbaba"
+                  background: "#ffbaba"
                 },
               }}
             />
@@ -166,7 +175,7 @@ function Company() {
                 gridColumn: "span 2",
                 "& .MuiInputBase-root": {
                   height: 40,
-                  background:"#ffbaba"
+                  background: "#ffbaba"
                 },
               }}
               size="small"
@@ -223,18 +232,23 @@ function Company() {
         </fieldset>
       </form>
       <ToastContainer />
+      <Box sx={{ width: '100%', typography: 'body1', pt: "10px" }}>
+        <TabContext value={tabValue}>
+          <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+            <TabList onChange={handleTabChange} aria-label="lab API tabs example">
+              <Tab label="Address" value="1" />
+              <Tab label="Contact Info" value="2" />
+            </TabList>
+          </Box>
+          <TabPanel value="1"><CompanyAddress/></TabPanel>
+          <TabPanel value="2"><CompanyContactInfo/></TabPanel>
+        </TabContext>
+      </Box>
     </Box>
+
 
   );
 }
-
-const checkoutSchema = yup.object().shape({
-  companyId: yup.string().required("Company Id is required"),
-  companyName: yup.string().required("Company Name is required"),
-  associationNo: yup.string().required(""),
-  webAddress: yup.string().required(""),
-  businessNature: yup.string().required(""),
-});
 
 const initialValues = {
   companyId: "",
