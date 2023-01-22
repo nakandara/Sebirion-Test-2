@@ -27,7 +27,6 @@ function CompanyAddress() {
     const [addrList, setAddrList] = useState([initialValue]);
 
     const columnDef = [
-        { field: "id", headerName: "ID" },
         {
             field: "addressId",
             headerName: "Address ID",
