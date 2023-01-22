@@ -27,18 +27,19 @@ function CompanyAddress() {
     const [addrList, setAddrList] = useState([initialValue]);
 
     const columnDef = [
-        { field: "id", headerName: "ID" },
+        // { field: "id", headerName: "ID" },
         {
             field: "addressId",
             headerName: "Address ID",
             flex: 1,
-            cellClassName: "name-column--cell",
+            // cellClassName: "name-column--cell",
             editable: true
         },
         {
             field: "address1",
             headerName: "Address 1",
             flex: 1,
+            editable: true 
         },
         {
             field: "address2",

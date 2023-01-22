@@ -23,7 +23,7 @@ function CompanyContactInfo() {
     const [addrList, setAddrList] = useState([initialValue]);
 
     const columns = [
-        { field: "id", headerName: "ID" },
+        // { field: "id", headerName: "ID" },
         {
             field: "commId",
             headerName: "Comm. ID",
