@@ -29,6 +29,7 @@ import {
 } from "react-icons/fa";
 import {
   AssignmentIndOutlined,
+  AutoAwesome,
   ChildFriendly,
   ViewAgenda,
 } from "@mui/icons-material";
@@ -138,8 +139,11 @@ const SidebarNewV1 = ({
             </SubMenu>
             {/* Inventory  */}
             <SubMenu title={"Inventory"} icon={<ViewAgenda />}>
-              <MenuItem icon={<ChildFriendly />}>
+              <MenuItem icon={<AutoAwesome />}>
                 Inventory Item <Link to="/inventory_item" />
+              </MenuItem>
+              <MenuItem icon={<AutoAwesome />}>
+                Inventory Items <Link to="/inventory_items" />
               </MenuItem>
             </SubMenu>
             <SubMenu
