@@ -13,7 +13,7 @@ import { TabContext, TabList, TabPanel } from "@mui/lab";
 import CompanyAddress from "./CompanyAddress";
 import CompanyContactInfo from "./CompanyContactInfo";
 
-const API_URL = "v1/Company/";
+const API_URL = "enterp/v1/Company/";
 
 function Company() {
   const theme = useTheme();
@@ -251,6 +251,7 @@ function Company() {
 }
 
 const initialValues = {
+  id:"",
   companyId: "",
   companyName: "",
   associationNo: "",
