@@ -24,7 +24,7 @@ import { TabContext, TabList, TabPanel } from "@mui/lab";
 import useAxiosPrivate from "../../../../Application/fndbas/hooks/useAxiosPrivate";
 import InventoryAddress from "./InventoryAddress";
 import InventoryContactInfo from "./InventoryContactInfo";
-const API_URL = "v1/Inventory/";
+const API_URL = "enterp/v1/Inventory/";
 
 const InventoryItem = () => {
   const theme = useTheme();
@@ -40,6 +40,7 @@ const InventoryItem = () => {
   const [values, setValues] = useState(initialValues);
   const [newClicked, setNewClicked] = useState(false);
   const [tabValue, setTabValue] = useState("1");
+
   const showAllToasts = (type, msg) => {
     type === "SUCCESS" &&
       toast.success(msg, {

@@ -8,7 +8,7 @@ import { useEffect } from 'react';
 import useAxiosPrivate from '../../../../Application/fndbas/hooks/useAxiosPrivate';
 import { useState } from 'react';
 
-const API_URL = "v1/Company/";
+const API_URL = "enterp/v1/Company/";
 
 function Companies() {
     const theme = useTheme();
