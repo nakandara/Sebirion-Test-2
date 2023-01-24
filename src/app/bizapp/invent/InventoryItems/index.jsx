@@ -8,7 +8,7 @@ import { useEffect } from "react";
 import useAxiosPrivate from "../../../../Application/fndbas/hooks/useAxiosPrivate";
 import { useState } from "react";
 
-const API_URL = "v1/Company/";
+const API_URL = "enterp/v1/InventoryItem/";
 
 function InventoryItems() {
   const theme = useTheme();
@@ -17,13 +17,19 @@ function InventoryItems() {
 
   const initialValue = {
     id: "",
-    companyId: "",
-    companyName: "",
-    associationNo: "",
-    webAddress: "",
-    businessNature: "",
-    createdAt: "",
+    itemCode: "",
+    description: "",
+    itemType: "",
     createdBy: "",
+    itemDiscount: "",
+    weight: "",
+    reorderLevel: "",
+    currAvgPrice: "",
+    currAvgCost: "",
+    availableQuantity: "",
+    datecreatedAt: "",
+    datelastEditedAt: "",
+    status: "",
   };
   const [companies, setCompanies] = useState([initialValue]);
 
@@ -39,16 +45,22 @@ function InventoryItems() {
           },
         });
         console.log(response.data);
-        let companies = response.data;
-        const dataArray = companies.map((company, idx) => ({
+        let inventories = response.data;
+        const dataArray = inventories.map((inventory, idx) => ({
           id: idx + 1,
-          companyId: company.companyId,
-          companyName: company.companyName,
-          createdBy: company.createdBy,
-          createdAt: company.createdAt,
-          associationNo: company.associationNo,
-          businessNature: company.businessNature,
-          webAddress: company.webAddress,
+          itemCode: inventories.itemCode,
+          description: inventory.description,
+          itemType: inventory.itemType,
+          createdBy: inventory.createdBy,
+          itemDiscount: inventory.itemDiscount,
+          weight: inventory.weight,
+          reorderLevel: inventory.reorderLevel,
+          currAvgPrice: inventory.currAvgPrice,
+          currAvgCost: inventory.currAvgCost,
+          availableQuantity: inventory.availableQuantity,
+          datecreatedAt: inventory.datecreatedAt,
+          datelastEditedAt: inventory.datelastEditedAt,
+          status: inventory.status,
         }));
 
         console.log(dataArray);
