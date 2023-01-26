@@ -1,13 +1,17 @@
-import { Box, TextField, useMediaQuery, useTheme } from "@mui/material";
+import { Box, TextField, useMediaQuery, useTheme, Tab } from "@mui/material";
 import { Formik, useFormik } from "formik";
 import React, { useRef, useState } from "react";
-import Header from "../../app/components/Header";
+import Header from "../../components/Header";
 import * as yup from "yup";
+import { ToastContainer, toast } from "react-toastify";
+import { TabContext, TabList, TabPanel } from "@mui/lab";
+import { tokens } from "../../../theme";
+import CrudActions from "../../components/CrudActions";
+import InventoryAddress from "../invent/InventoryItem/InventoryContactInfo";
+import InventoryContactInfo from "../invent/InventoryItem/InventoryContactInfo";
+import SalesRepOrderAddress from "./SalesRepOrderAddress";
 
-import { tokens } from "../../theme";
-import CrudActions from "../../app/components/CrudActions";
-
-const IssueNote = () => {
+const SalesROrder = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const companyIdRef = useRef();
@@ -17,6 +21,7 @@ const IssueNote = () => {
   const [isEditEnabled, setIsEditEnabled] = useState(true);
   const [isSaveEnabled, setIsSaveEnabled] = useState(true);
   const [isDeleteEnabled, setIsDeleteEnabled] = useState(true);
+  const [tabValue, setTabValue] = useState("1");
 
   const handleNew = (e) => {
     companyIdRef.current.focus();
@@ -30,10 +35,13 @@ const IssueNote = () => {
   const handleDelete = (e) => {
     companyIdRef.current.focus();
   };
+  const handleTabChange = (event, newValue) => {
+    setTabValue(newValue);
+  };
 
   return (
     <Box m="20px" backgroundColor={colors.primary[400]}>
-      <Header title="Issue Note" subTitle="" />
+      <Header title="Sales Rep Order" subTitle="" />
       <CrudActions
         handleNew={handleNew}
         isNewEnabled={isNewEnabled}
@@ -71,14 +79,14 @@ const IssueNote = () => {
                 variant="outlined"
                 ref={companyIdRef}
                 type="text"
-                label="Issue Note ID"
+                label="Oder ID"
                 onBlur={handleBlur}
                 onChange={handleChange}
-                value={values.IssueNoteID}
+                value={values.oderId}
                 InputProps={{ sx: { height: 40 } }}
-                name="IssueNoteID"
-                error={!!touched.IssueNoteID && !!errors.IssueNoteID}
-                helperText={touched.IssueNoteID && errors.IssueNoteID}
+                name="oderId"
+                error={!!touched.oderId && !!errors.oderId}
+                helperText={touched.oderId && errors.oderId}
                 sx={{
                   gridColumn: "span 1",
                   "& .MuiInputBase-root": {
@@ -104,24 +112,7 @@ const IssueNote = () => {
                   },
                 }}
               />
-              <TextField
-                fullWidth
-                variant="outlined"
-                type="text"
-                label="Order Ref"
-                onBlur={handleBlur}
-                onChange={handleChange}
-                value={values.orderRef}
-                name="orderRef"
-                error={!!touched.orderRef && !!errors.orderRef}
-                helperText={touched.orderRef && errors.orderRef}
-                sx={{
-                  gridColumn: "span 1",
-                  "& .MuiInputBase-root": {
-                    height: 40,
-                  },
-                }}
-              />
+
               <TextField
                 fullWidth
                 variant="outlined"
@@ -140,24 +131,7 @@ const IssueNote = () => {
                   },
                 }}
               />
-              <TextField
-                fullWidth
-                variant="outlined"
-                type="text"
-                label="Sales Rep"
-                onBlur={handleBlur}
-                onChange={handleChange}
-                value={values.salesRep}
-                name="salesRep"
-                error={!!touched.salesRep && !!errors.salesRep}
-                helperText={touched.salesRep && errors.salesRep}
-                sx={{
-                  gridColumn: "span 2",
-                  "& .MuiInputBase-root": {
-                    height: 40,
-                  },
-                }}
-              />
+
               <TextField
                 fullWidth
                 variant="outlined"
@@ -216,33 +190,40 @@ const IssueNote = () => {
           </form>
         )}
       </Formik>
+      <ToastContainer />
+      <Box sx={{ width: "100%", typography: "body1", pt: "10px" }}>
+        <TabContext value={tabValue}>
+          <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+            <TabList
+              onChange={handleTabChange}
+              aria-label="lab API tabs example"
+            ></TabList>
+          </Box>
+          <TabPanel value="1">
+            <SalesRepOrderAddress />
+          </TabPanel>
+        </TabContext>
+      </Box>
     </Box>
   );
 };
 
 const checkoutSchema = yup.object().shape({
-  IssueNoteID: yup.string().required("Issue Note ID  is required"),
-  description: yup.string().required("description  is required"),
-  orderRef: yup.string().required(""),
+  oderId: yup.string().required("Issue Oder Id  is required"),
+  description: yup.string().required("Description  is required"),
   sdo: yup.string().required(""),
-  salesRep: yup.string().required(""),
   createdAt: yup.string().required(""),
   createdBy: yup.string().required(""),
   status: yup.string().required(""),
 });
 
 const initialValues = {
-  IssueNoteID: "",
+  oderId: "",
   description: "",
-  orderRef: "",
   sdo: "",
-  salesRep: "",
   createdAt: "",
   createdBy: "",
   status: "",
 };
 
-
-export default IssueNote;
-
-
+export default SalesROrder;
