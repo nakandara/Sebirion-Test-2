@@ -1,15 +1,30 @@
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import { Box, Tab, TextField, useMediaQuery, useTheme } from "@mui/material";
 import CrudActions from "../../../../Application/fndbas/CrudActions/CrudActions";
 import useAxiosPrivate from "../../../../Application/fndbas/hooks/useAxiosPrivate";
-import { DataGrid } from "@mui/x-data-grid";
+import { DataGrid, GridToolbar } from "@mui/x-data-grid";
+import { useDemoData } from "@mui/x-data-grid-generator";
 
 const API_URL = "/invent/v1/IsoUnit/";
 
+const rows = [
+  {
+    id: 1,
+    unitCode: "unitCode",
+    description: "description",
+    baseUnit: "length",
+    multiFactor: "2",
+    divFactor: "3",
+    tenPower: "2",
+    userDefined: "true",
+    unitType: "Not Used",
+  },
+];
+
 function BasicData() {
-  const companyIdRef = useRef();
   const axiosPrivate = useAxiosPrivate();
+
   const [newClicked, setNewClicked] = useState(false);
 
   const [isNewEnabled, setIsNewEnabled] = useState(true);
@@ -17,15 +32,19 @@ function BasicData() {
   const [isSaveEnabled, setIsSaveEnabled] = useState(true);
   const [isDeleteEnabled, setIsDeleteEnabled] = useState(true);
 
-  const [tableValues, setTableValues] = useState([])
-
-  
-
-    
+  const [tableValues, setTableValues] = useState(rows);
 
   const [values, setValues] = useState(initialValues);
 
   const isNonMobile = useMediaQuery("(min-width:600px)");
+
+  const VISIBLE_FIELDS = [];
+
+  const { data } = useDemoData({
+    // dataSet: 'Employee',
+    visibleFields: VISIBLE_FIELDS,
+    rowLength: 100,
+  });
 
   const handleNew = (e) => {
     setValues(initialValues);
@@ -57,7 +76,9 @@ function BasicData() {
     }
   };
 
-  const handleDelete = (e) => {};
+  const handleDelete = (e) => {
+
+  };
 
   const onFormInputChange = (key, value) => {
     const updated = Object.assign({}, values);
@@ -330,6 +351,7 @@ function BasicData() {
           checkboxSelection
           disableSelectionOnClick
           experimentalFeatures={{ newEditingApi: true }}
+          components={{ Toolbar: GridToolbar }}
         />
       </Box>
     </Box>
