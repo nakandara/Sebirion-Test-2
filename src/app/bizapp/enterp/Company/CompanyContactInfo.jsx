@@ -8,66 +8,6 @@ import { tokens } from '../../../../theme';
 import { ToastContainer, toast } from 'react-toastify';
 
 
-function CompanyContactInfo() {
-    const theme = useTheme();
-    const colors = tokens(theme.palette.mode);
-    const initialValue = {
-        id: "",
-        addressId: "",
-        address1: "",
-        address2: "",
-        city: "",
-        district: "",
-        province: "",
-        country: ""
-    }
-
-    const [addrList, setAddrList] = useState([initialValue]);
-
-    const columns = [
-        // { field: "id", headerName: "ID" },
-        {
-            field: "commId",
-            headerName: "Comm. ID",
-            flex: 1,
-            cellClassName: "name-column--cell",
-        },
-        {
-            field: "commType",
-            headerName: "Type",
-            flex: 1,
-        },
-        {
-            field: "commValue",
-            headerName: "Value",
-            flex: 1,
-        },
-        {
-            field: "description",
-            headerName: "Description",
-            flex: 1,
-        },
-        {
-            field: "defaultMethod",
-            headerName: "Default",
-            flex: 1,
-        },
-        {
-            field: "addressId",
-            headerName: "Address ID",
-            flex: 1,
-        }
-    ];
-
-    const [isNewEnabled, setIsNewEnabled] = useState(true);
-    const [isEditEnabled, setIsEditEnabled] = useState(true);
-    const [isSaveEnabled, setIsSaveEnabled] = useState(true);
-    const [isDeleteEnabled, setIsDeleteEnabled] = useState(true);
-
-    const handleNew = (e) => {
-    };
-    const handleEdit = (e) => {
-    };
 
 function CompanyContactInfo({row}) {
   const theme = useTheme();

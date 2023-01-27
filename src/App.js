@@ -9,6 +9,7 @@ import { FaBars } from "react-icons/fa";
 import RequireAuth from "./components/pages/RequireAuth";
 import { AuthProvider } from "./context/AuthProvider";
 import Dashboard from "./app/dashboard/Dashboard";
+import Association from "./app/bizapp/enterp/Association";
 
 // import IsoUnit from './components/Application/AppBase/IsoUnit/IsoUnit';
 
@@ -46,12 +47,9 @@ const Companies = lazy(() => import("./app/bizapp/enterp/Companies"));
 const Company = lazy(() => import("./app/bizapp/enterp/Company"));
 
 
-const Company = lazy(() =>
-  import("./app/bizapp/enterp/Company")
-);
 const Units = lazy(() => import("./app/bizapp/appserv/Units"));
-const SalesRepOrder = lazy(() => import("./Application/Order/SalesROrder"));
-const IssueNote = lazy(() => import("./Application/Order/IssueNote"));
+// const SalesRepOrder = lazy(() => import("./Application/Order/SalesROrder"));
+// const IssueNote = lazy(() => import("./Application/Order/IssueNote"));
 
 function App() {
   const [theme, colorMode] = useMode();
@@ -134,6 +132,14 @@ function App() {
                           </Suspense>
                         }
                       />
+                       <Route
+                        path="association"
+                        element={
+                          <Suspense fallback={<>...</>}>
+                            <Association />
+                          </Suspense>
+                        }
+                      />
                       <Route
                         path="company"
                         element={
@@ -150,7 +156,7 @@ function App() {
                           </Suspense>
                         }
                       />
-                      <Route
+                      {/* <Route
                         path="Salesreporder"
                         element={
                           <Suspense fallback={<>...</>}>
@@ -165,7 +171,7 @@ function App() {
                             <IssueNote />
                           </Suspense>
                         }
-                      />
+                      /> */}
                       <Route
                         path="Personinfo"
                         element={
