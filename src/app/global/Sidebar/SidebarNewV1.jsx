@@ -145,6 +145,9 @@ const SidebarNewV1 = ({
               <MenuItem icon={<AutoAwesome />}>
                 Inventory Items <Link to="/inventory_items" />
               </MenuItem>
+              <MenuItem icon={<AutoAwesome />}>
+                Item Cataog <Link to="/itemcatalog" />
+              </MenuItem>
             </SubMenu>
             <SubMenu
               prefix={<span className="badge gray">3</span>}
