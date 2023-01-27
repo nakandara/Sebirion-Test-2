@@ -1,10 +1,9 @@
-
-import React, { lazy, Suspense,useState } from "react";
+import React, { lazy, Suspense, useState } from "react";
 import { Route, Routes } from "react-router-dom";
 import Layout from "./components/pages/Layout";
 import { CssBaseline, ThemeProvider } from "@mui/material";
 import { ColorModeContext, useMode } from "./theme";
-import "./styles.scss"
+import "./styles.scss";
 
 import { FaBars } from "react-icons/fa";
 import RequireAuth from "./components/pages/RequireAuth";
@@ -24,9 +23,8 @@ const Unauthorized = lazy(() => import("./components/pages/Unauthorized"));
 // const CoveringType = lazy(() => import('./components/Application/Invent/CoveringTypes/CoveringType'));
 const Login = lazy(() => import("./app/login/Login"));
 const FndUser = lazy(() => import("./Application/Enterprise/User/FndUser"));
-const PersonInfo = lazy(() =>
-  import("./Application/Pageinfo/PersonInfo")
-);
+
+const PersonInfo = lazy(() => import("./Application/Pageinfo/PersonInfo"));
 const FndUsers = lazy(() =>
   import("./Application/Enterprise/FndUsers/FndUsers")
 );
@@ -43,14 +41,11 @@ const ItemType = lazy(() =>
   import("./Application/Inventory/ItemType/ItemType")
 );
 
-const Companies = lazy(() =>
-  import("./app/bizapp/enterp/Companies")
-);
+const Companies = lazy(() => import("./app/bizapp/enterp/Companies"));
 
+const Company = lazy(() => import("./app/bizapp/enterp/Company"));
 
-const Company = lazy(() =>
-  import("./app/bizapp/enterp/Company")
-);
+const Units = lazy(() => import("./app/bizapp/appserv/Units"));
 const SalesRepOrder = lazy(() => import("./Application/Order/SalesROrder"));
 const IssueNote = lazy(() => import("./Application/Order/IssueNote"));
 
@@ -63,8 +58,8 @@ function App() {
       <ThemeProvider theme={theme}>
         <CssBaseline />
         <AuthProvider>
-          <div className={`app ${toggled ? 'toggled' : ''}`}>
-            <main >
+          <div className={`app ${toggled ? "toggled" : ""}`}>
+            <main>
               <Routes>
                 <Route path="/" element={<Layout />}>
                   <Route path="login" element={<Login />} />
@@ -76,8 +71,7 @@ function App() {
                       </Suspense>
                     }
                   />
-
-                  <Route element={<RequireAuth allowedRoles={["ADMIN"]} />} >
+                  <Route element={<RequireAuth allowedRoles={["ADMIN"]} />}>
                     <Route
                       path="/"
                       element={
@@ -85,7 +79,6 @@ function App() {
                           <AppHome />
                         </Suspense>
                       }
-
                     >
                       <Route
                         path="/"
@@ -100,6 +93,7 @@ function App() {
                         element={
                           <Suspense fallback={<>...</>}>
                             <InventoryItemNewV1 />
+
                           </Suspense>
                         }
                       />
@@ -108,6 +102,7 @@ function App() {
                         element={
                           <Suspense fallback={<>...</>}>
                             <InventoryItems />
+
                           </Suspense>
                         }
                       />
@@ -176,6 +171,15 @@ function App() {
                         }
                       />
 
+                      <Route
+                        path="units"
+                        element={
+                          <Suspense fallback={<>...</>}>
+                            <Units />
+                          </Suspense>
+                        }
+                      />
+
                       {/*<Route path='users' element={<FndUsers />} />
             <Route path='user_role' element={<UserRole />} />
             <Route path='user_roles' element={<UserRoles />} />
@@ -185,7 +189,6 @@ function App() {
             <Route path='material_groups' element={<MaterialGroup />} />
             <Route path='unit_measure' element={<IsoUnit />} />            
             */}
-
                     </Route>
                     <Route
                       path="*"

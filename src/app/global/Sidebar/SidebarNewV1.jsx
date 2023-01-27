@@ -26,7 +26,10 @@ import {
   FaArchway,
   FaRegLaughWink,
   FaHeart,
+  FaDatabase,
+  FaUnity,
   FaRegBuilding
+
 } from "react-icons/fa";
 
 import {
@@ -117,6 +120,11 @@ const SidebarNewV1 = ({
               Dashboard
               <NavLink to="/" />
             </MenuItem>
+            <SubMenu title={"Basic Data"} icon={<FaDatabase />}>
+              <MenuItem icon={<FaUnity />}>
+                Units <Link to="/units" />
+              </MenuItem>
+            </SubMenu>
             <MenuItem icon={<AssignmentIndOutlined />}>
               Person Info
               <NavLink to="/Personinfo" />
