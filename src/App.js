@@ -45,6 +45,10 @@ const Companies = lazy(() => import("./app/bizapp/enterp/Companies"));
 
 const Company = lazy(() => import("./app/bizapp/enterp/Company"));
 
+
+const Company = lazy(() =>
+  import("./app/bizapp/enterp/Company")
+);
 const Units = lazy(() => import("./app/bizapp/appserv/Units"));
 const SalesRepOrder = lazy(() => import("./Application/Order/SalesROrder"));
 const IssueNote = lazy(() => import("./Application/Order/IssueNote"));

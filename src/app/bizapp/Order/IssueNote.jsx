@@ -1,13 +1,13 @@
 import { Box, TextField, useMediaQuery, useTheme } from "@mui/material";
 import { Formik, useFormik } from "formik";
 import React, { useRef, useState } from "react";
-import Header from "../../app/components/Header";
+import Header from "../../components/Header";
 import * as yup from "yup";
 
-import { tokens } from "../../theme";
-import CrudActions from "../../app/components/CrudActions";
+import { tokens } from "../../../theme";
+import CrudActions from "../../components/CrudActions";
 
-const SalesROrder = () => {
+const IssueNote = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const companyIdRef = useRef();
@@ -33,7 +33,7 @@ const SalesROrder = () => {
 
   return (
     <Box m="20px" backgroundColor={colors.primary[400]}>
-      <Header title="Sales Rep Order" subTitle="" />
+      <Header title="Issue Note" subTitle="" />
       <CrudActions
         handleNew={handleNew}
         isNewEnabled={isNewEnabled}
@@ -71,14 +71,14 @@ const SalesROrder = () => {
                 variant="outlined"
                 ref={companyIdRef}
                 type="text"
-                label="Oder ID"
+                label="Issue Note ID"
                 onBlur={handleBlur}
                 onChange={handleChange}
-                value={values.oderId}
+                value={values.IssueNoteID}
                 InputProps={{ sx: { height: 40 } }}
-                name="oderId"
-                error={!!touched.oderId && !!errors.oderId}
-                helperText={touched.oderId && errors.oderId}
+                name="IssueNoteID"
+                error={!!touched.IssueNoteID && !!errors.IssueNoteID}
+                helperText={touched.IssueNoteID && errors.IssueNoteID}
                 sx={{
                   gridColumn: "span 1",
                   "& .MuiInputBase-root": {
@@ -104,7 +104,24 @@ const SalesROrder = () => {
                   },
                 }}
               />
-
+              <TextField
+                fullWidth
+                variant="outlined"
+                type="text"
+                label="Order Ref"
+                onBlur={handleBlur}
+                onChange={handleChange}
+                value={values.orderRef}
+                name="orderRef"
+                error={!!touched.orderRef && !!errors.orderRef}
+                helperText={touched.orderRef && errors.orderRef}
+                sx={{
+                  gridColumn: "span 1",
+                  "& .MuiInputBase-root": {
+                    height: 40,
+                  },
+                }}
+              />
               <TextField
                 fullWidth
                 variant="outlined"
@@ -123,7 +140,24 @@ const SalesROrder = () => {
                   },
                 }}
               />
-
+              <TextField
+                fullWidth
+                variant="outlined"
+                type="text"
+                label="Sales Rep"
+                onBlur={handleBlur}
+                onChange={handleChange}
+                value={values.salesRep}
+                name="salesRep"
+                error={!!touched.salesRep && !!errors.salesRep}
+                helperText={touched.salesRep && errors.salesRep}
+                sx={{
+                  gridColumn: "span 2",
+                  "& .MuiInputBase-root": {
+                    height: 40,
+                  },
+                }}
+              />
               <TextField
                 fullWidth
                 variant="outlined"
@@ -187,24 +221,28 @@ const SalesROrder = () => {
 };
 
 const checkoutSchema = yup.object().shape({
-  oderId: yup.string().required("Issue Oder Id  is required"),
-  description: yup.string().required("Description  is required"),
+  IssueNoteID: yup.string().required("Issue Note ID  is required"),
+  description: yup.string().required("description  is required"),
+  orderRef: yup.string().required(""),
   sdo: yup.string().required(""),
+  salesRep: yup.string().required(""),
   createdAt: yup.string().required(""),
   createdBy: yup.string().required(""),
   status: yup.string().required(""),
 });
 
 const initialValues = {
-  oderId: "",
+  IssueNoteID: "",
   description: "",
+  orderRef: "",
   sdo: "",
+  salesRep: "",
   createdAt: "",
   createdBy: "",
   status: "",
 };
 
 
-export default SalesROrder;
+export default IssueNote;
 
 
