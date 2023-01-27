@@ -88,7 +88,7 @@ export default function CustomAgGrid({ api_url, handleSave, gridRef, items, colu
                     columnDefs={columnDefs}
                     defaultColDef={defaultColDef}
                     animateRows="true"
-                ></AgGridReact>
+                />
             <DeleteModal open={openDeleteDlg} handleClose={handleClose} Delete={Delete} />
         </Paper>
     )

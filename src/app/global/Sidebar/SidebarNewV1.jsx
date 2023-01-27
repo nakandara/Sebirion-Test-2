@@ -27,10 +27,14 @@ import {
   FaRegLaughWink,
   FaHeart,
   FaDatabase,
-  FaUnity
+  FaUnity,
+  FaRegBuilding
+
 } from "react-icons/fa";
+
 import {
   AssignmentIndOutlined,
+  AutoAwesome,
   ChildFriendly,
   ViewAgenda,
 } from "@mui/icons-material";
@@ -126,10 +130,10 @@ const SidebarNewV1 = ({
               <NavLink to="/Personinfo" />
             </MenuItem>
             <SubMenu title={"Enterprise"} icon={<FaArchway />}>
-              <MenuItem icon={<FaGem />}>
+              <MenuItem icon={<FaRegBuilding />}>
                 company <Link to="/company" />
               </MenuItem>
-              <MenuItem icon={<FaGem />}>
+              <MenuItem icon={<FaRegBuilding />}>
                 companies <Link to="/companies" />
               </MenuItem>
             </SubMenu>
@@ -145,8 +149,11 @@ const SidebarNewV1 = ({
             </SubMenu>
             {/* Inventory  */}
             <SubMenu title={"Inventory"} icon={<ViewAgenda />}>
-              <MenuItem icon={<ChildFriendly />}>
+              <MenuItem icon={<AutoAwesome />}>
                 Inventory Item <Link to="/inventory_item" />
+              </MenuItem>
+              <MenuItem icon={<AutoAwesome />}>
+                Inventory Items <Link to="/inventory_items" />
               </MenuItem>
             </SubMenu>
             <SubMenu

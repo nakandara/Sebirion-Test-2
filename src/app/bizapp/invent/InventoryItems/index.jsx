@@ -2,39 +2,36 @@ import { Box, Typography, useTheme } from "@mui/material";
 import React from "react";
 import Header from "../../../components/Header";
 import { tokens } from "../../../../theme";
-import { DataGrid, GridToolbar } from "@mui/x-data-grid";
+import { DataGrid } from "@mui/x-data-grid";
 import { mockDataInvoices } from "../../../../data/mockData";
 import { useEffect } from "react";
 import useAxiosPrivate from "../../../../Application/fndbas/hooks/useAxiosPrivate";
 import { useState } from "react";
-import { useDemoData } from "@mui/x-data-grid-generator";
 
-const API_URL = "enterp/v1/Company/";
+const API_URL = "enterp/v1/InventoryItem/";
 
-function Companies() {
+function InventoryItems() {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const axiosPrivate = useAxiosPrivate();
 
   const initialValue = {
     id: "",
-    companyId: "",
-    companyName: "",
-    associationNo: "",
-    webAddress: "",
-    businessNature: "",
-    createdAt: "",
+    itemCode: "",
+    description: "",
+    itemType: "",
     createdBy: "",
+    itemDiscount: "",
+    weight: "",
+    reorderLevel: "",
+    currAvgPrice: "",
+    currAvgCost: "",
+    availableQuantity: "",
+    datecreatedAt: "",
+    datelastEditedAt: "",
+    status: "",
   };
   const [companies, setCompanies] = useState([initialValue]);
-
-  const VISIBLE_FIELDS = [];
-
-  const { data } = useDemoData({
-    // dataSet: 'Employee',
-    visibleFields: VISIBLE_FIELDS,
-    rowLength: 100,
-  });
 
   useEffect(() => {
     let isMounted = true;
@@ -48,16 +45,22 @@ function Companies() {
           },
         });
         console.log(response.data);
-        let companies = response.data;
-        const dataArray = companies.map((company, idx) => ({
+        let inventories = response.data;
+        const dataArray = inventories.map((inventory, idx) => ({
           id: idx + 1,
-          companyId: company.companyId,
-          companyName: company.companyName,
-          createdBy: company.createdBy,
-          createdAt: company.createdAt,
-          associationNo: company.associationNo,
-          businessNature: company.businessNature,
-          webAddress: company.webAddress,
+          itemCode: inventories.itemCode,
+          description: inventory.description,
+          itemType: inventory.itemType,
+          createdBy: inventory.createdBy,
+          itemDiscount: inventory.itemDiscount,
+          weight: inventory.weight,
+          reorderLevel: inventory.reorderLevel,
+          currAvgPrice: inventory.currAvgPrice,
+          currAvgCost: inventory.currAvgCost,
+          availableQuantity: inventory.availableQuantity,
+          datecreatedAt: inventory.datecreatedAt,
+          datelastEditedAt: inventory.datelastEditedAt,
+          status: inventory.status,
         }));
 
         console.log(dataArray);
@@ -73,48 +76,77 @@ function Companies() {
   }, []);
 
   const columns = [
-    { field: "id", headerName: "ID" },
     {
-      field: "companyId",
-      headerName: "Company ID",
+      field: "itemCode",
+      headerName: "Item Code",
       flex: 1,
       cellClassName: "name-column--cell",
     },
     {
-      field: "companyName",
-      headerName: "Name",
+      field: "description",
+      headerName: "Description",
       flex: 1,
     },
     {
-      field: "associationNo",
-      headerName: "Association No",
-      flex: 1,
-    },
-    {
-      field: "webAddress",
-      headerName: "Web Address",
-      flex: 1,
-    },
-    {
-      field: "businessNature",
-      headerName: "Nature of Business",
-      flex: 1,
-    },
-    {
-      field: "createdAt",
-      headerName: "Created At",
+      field: "itemType",
+      headerName: "Item Type",
       flex: 1,
     },
     {
       field: "createdBy",
-      headerName: "Created By",
+      headerName: "Create dBy",
+      flex: 1,
+    },
+    {
+      field: "itemDiscount",
+      headerName: "Item Discount",
+      flex: 1,
+    },
+    {
+      field: "weight",
+      headerName: "Weight",
+      flex: 1,
+    },
+    {
+      field: "reorderLevel",
+      headerName: "ReorderLevel",
+      flex: 1,
+    },
+    {
+      field: "currAvgPrice",
+      headerName: "Curr Avg Price",
+      flex: 1,
+    },
+    {
+      field: "currAvgCost",
+      headerName: "Curr Avg Cost",
+      flex: 1,
+    },
+    {
+      field: "availableQuantity",
+      headerName: "Available Quantity",
+      flex: 1,
+    },
+    {
+      field: "datecreatedAt",
+      headerName: "Date CreatedAt",
+      flex: 1,
+    },
+    {
+      field: "datelastEditedAt",
+      headerName: "Date last Edited At",
+      flex: 1,
+    },
+    {
+      field: "status",
+      headerName: "Status",
       flex: 1,
     },
   ];
 
   return (
     <Box m="20px" backgroundColor={colors.primary[400]}>
-      <Header title="Companies" subTitle="" />
+      <Header title="Inventory Items" subTitle="" />
 
       <Box
         m="10px 0 0 0"
@@ -145,15 +177,10 @@ function Companies() {
           },
         }}
       >
-        <DataGrid
-          checkboxSelection
-          rows={companies}
-          columns={columns}
-          components={{ Toolbar: GridToolbar }}
-        />
+        <DataGrid checkboxSelection rows={companies} columns={columns} />
       </Box>
     </Box>
   );
 }
 
-export default Companies;
+export default InventoryItems;

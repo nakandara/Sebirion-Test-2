@@ -32,7 +32,10 @@ const InventoryItem = lazy(() =>
   import("./Application/Inventory/InventoryItem/InventoryItem")
 );
 const InventoryItemNewV1 = lazy(() =>
-  import("./Application/Inventory/InventoryItem/InventoryItemNewV1")
+  import("./app/bizapp/invent/InventoryItem")
+);
+const InventoryItems = lazy(() =>
+  import("./app/bizapp/invent/InventoryItems")
 );
 const ItemType = lazy(() =>
   import("./Application/Inventory/ItemType/ItemType")
@@ -90,6 +93,16 @@ function App() {
                         element={
                           <Suspense fallback={<>...</>}>
                             <InventoryItemNewV1 />
+
+                          </Suspense>
+                        }
+                      />
+                      <Route
+                        path="inventory_items"
+                        element={
+                          <Suspense fallback={<>...</>}>
+                            <InventoryItems />
+
                           </Suspense>
                         }
                       />
