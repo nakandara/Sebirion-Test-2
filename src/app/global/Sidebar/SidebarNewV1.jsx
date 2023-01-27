@@ -26,7 +26,9 @@ import {
   FaArchway,
   FaRegLaughWink,
   FaHeart,
+  FaRegBuilding
 } from "react-icons/fa";
+
 import {
   AssignmentIndOutlined,
   AutoAwesome,
@@ -120,10 +122,10 @@ const SidebarNewV1 = ({
               <NavLink to="/Personinfo" />
             </MenuItem>
             <SubMenu title={"Enterprise"} icon={<FaArchway />}>
-              <MenuItem icon={<FaGem />}>
+              <MenuItem icon={<FaRegBuilding />}>
                 company <Link to="/company" />
               </MenuItem>
-              <MenuItem icon={<FaGem />}>
+              <MenuItem icon={<FaRegBuilding />}>
                 companies <Link to="/companies" />
               </MenuItem>
             </SubMenu>

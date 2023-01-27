@@ -2,7 +2,6 @@ import { Box, Tab, TextField, useMediaQuery, useTheme } from "@mui/material";
 import React, { useRef, useState } from "react";
 import Header from "../../../components/Header";
 import * as yup from "yup";
-
 import { tokens } from "../../../../theme";
 import CrudActions from "../../../components/CrudActions";
 import { axiosPrivate } from "../../../../Application/fndbas/api/axios";
@@ -27,10 +26,16 @@ function Company() {
   const [isSaveEnabled, setIsSaveEnabled] = useState(true);
   const [isDeleteEnabled, setIsDeleteEnabled] = useState(true);
 
+  
+
   const [newClicked, setNewClicked] = useState(false);
+
+  const [addNewRow, setAddNewRow] = useState(false);
 
   const [values, setValues] = useState(initialValues);
   const [isFormDisabled, setIsFormDisabled] = useState(true);
+
+  
 
   const showAllToasts = (type, msg) => {
     type === "SUCCESS" && toast.success(msg, {
@@ -83,6 +88,7 @@ function Company() {
     companyIdRef.current.focus();
   };
   const handleSave = async (e) => {
+    setValues(initialValues);
     e.preventDefault();
     const controller = new AbortController();
     try {
@@ -96,6 +102,7 @@ function Company() {
           },
         }
       );
+      setAddNewRow(true)
       console.log(response.data);
       // response.data && setCurrentObject(response.data);
       showAllToasts("SUCCESS", "Successfully Saved.")
@@ -240,8 +247,8 @@ function Company() {
               <Tab label="Contact Info" value="2" />
             </TabList>
           </Box>
-          <TabPanel value="1"><CompanyAddress/></TabPanel>
-          <TabPanel value="2"><CompanyContactInfo/></TabPanel>
+          <TabPanel value="1"><CompanyAddress row={addNewRow}/></TabPanel>
+          <TabPanel value="2"><CompanyContactInfo row={addNewRow}/></TabPanel>
         </TabContext>
       </Box>
     </Box>
