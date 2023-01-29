@@ -212,7 +212,7 @@ function CompanyAddress({row}) {
           },
         }}
       >
-        <DataGrid checkboxSelection rows={addrList} columns={columnDef} />
+        {/* <DataGrid checkboxSelection rows={addrList} columns={columnDef} /> */}
       </Box>
     </Box>
   );

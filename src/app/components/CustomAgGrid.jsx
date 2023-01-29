@@ -6,20 +6,19 @@ import ListCrudActions from './ListCrudActions';
 import DeleteModal from './DeleteModal';
 
 import "ag-grid-community/dist/styles/ag-grid.css";
-import "ag-grid-community/dist/styles/ag-theme-alpine.css";
+import "ag-grid-community/dist/styles/ag-theme-balham.css";
 
 export default function CustomAgGrid({ api_url, handleSave, gridRef, items, columnDefs }) {
 
     const axiosPrivate = useAxiosPrivate();
     const [openDeleteDlg, setOpenDeleteDlg] = useState(false);
 
-    const addItems = useCallback(() => {
-        const res = gridRef.current.api.applyTransaction({
+    const addItems = useCallback((addIndex) => {
+        gridRef.current.api.applyTransaction({
             add: [{}],
-            addIndex: 0,
+            addIndex: addIndex,
         });
-        printResult(res);
-    }, []);
+    }, [gridRef]);
 
     const defaultColDef = useMemo(() => {
         return {
@@ -47,6 +46,10 @@ export default function CustomAgGrid({ api_url, handleSave, gridRef, items, colu
             });
         }
     };
+
+    const handleNew = (e) => {
+        addItems(0);
+      };
 
     const handleEdit = async (e) => {
         e.preventDefault();
@@ -78,7 +81,7 @@ export default function CustomAgGrid({ api_url, handleSave, gridRef, items, colu
     return (
         <Paper className='tableContent'>
             <div className='p-2 d-flex align-items-center'>
-                <ListCrudActions addItems={addItems} handleSave={handleSave} handleEdit={handleEdit} handleDelete={handleDelete} />                
+                <ListCrudActions addItems={handleNew} handleSave={handleSave} handleEdit={handleEdit} handleDelete={handleDelete} />                
             </div>
             
                 <AgGridReact

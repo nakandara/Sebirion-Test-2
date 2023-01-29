@@ -169,7 +169,7 @@ function CompanyContactInfo() {
           },
         }}
       >
-        <DataGrid checkboxSelection rows={addrList} columns={columns} />
+        {/* <DataGrid checkboxSelection rows={addrList} columns={columns} /> */}
       </Box>
     </Box>
   );

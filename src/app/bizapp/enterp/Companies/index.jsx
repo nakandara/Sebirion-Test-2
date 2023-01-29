@@ -7,7 +7,7 @@ import { mockDataInvoices } from "../../../../data/mockData";
 import { useEffect } from "react";
 import useAxiosPrivate from "../../../../Application/fndbas/hooks/useAxiosPrivate";
 import { useState } from "react";
-import { useDemoData } from "@mui/x-data-grid-generator";
+// import { useDemoData } from "@mui/x-data-grid-generator";
 
 const API_URL = "enterp/v1/Company/";
 
@@ -30,11 +30,11 @@ function Companies() {
 
   const VISIBLE_FIELDS = [];
 
-  const { data } = useDemoData({
-    // dataSet: 'Employee',
-    visibleFields: VISIBLE_FIELDS,
-    rowLength: 100,
-  });
+  // const { data } = useDemoData({
+  //   // dataSet: 'Employee',
+  //   visibleFields: VISIBLE_FIELDS,
+  //   rowLength: 100,
+  // });
 
   useEffect(() => {
     let isMounted = true;
@@ -145,12 +145,12 @@ function Companies() {
           },
         }}
       >
-        <DataGrid
+        {/* <DataGrid
           checkboxSelection
           rows={companies}
           columns={columns}
           components={{ Toolbar: GridToolbar }}
-        />
+        /> */}
       </Box>
     </Box>
   );
