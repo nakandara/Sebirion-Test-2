@@ -8,25 +8,63 @@ import { tokens } from '../../../../theme';
 import { ToastContainer, toast } from 'react-toastify';
 
 
+function CompanyContactInfo() {
+    const theme = useTheme();
+    const colors = tokens(theme.palette.mode);
+    const initialValue = {
+        id: "",
+        addressId: "",
+        address1: "",
+        address2: "",
+        city: "",
+        district: "",
+        province: "",
+        country: ""
+    }
 
-function CompanyContactInfo({row}) {
-  const theme = useTheme();
-  const colors = tokens(theme.palette.mode);
 
-  let idCounter = 0;
-  const initialValue = () => {
-    idCounter += 1;
-    return {
-      id: "",
-      addressId: "",
-      address1: "",
-      address2: "",
-      city: "",
-      district: "",
-      province: "",
-      country: "",
-    };
-  };
+    const columns = [
+        // { field: "id", headerName: "ID" },
+        {
+            field: "commId",
+            headerName: "Comm. ID",
+            flex: 1,
+            cellClassName: "name-column--cell",
+        },
+        {
+            field: "commType",
+            headerName: "Type",
+            flex: 1,
+        },
+        {
+            field: "commValue",
+            headerName: "Value",
+            flex: 1,
+        },
+        {
+            field: "description",
+            headerName: "Description",
+            flex: 1,
+        },
+        {
+            field: "defaultMethod",
+            headerName: "Default",
+            flex: 1,
+        },
+        {
+            field: "addressId",
+            headerName: "Address ID",
+            flex: 1,
+        }
+    ];
+
+    const [isNewEnabled, setIsNewEnabled] = useState(true);
+    const [isEditEnabled, setIsEditEnabled] = useState(true);
+    const [isSaveEnabled, setIsSaveEnabled] = useState(true);
+    const [isDeleteEnabled, setIsDeleteEnabled] = useState(true);  
+
+
+  let idCounter = 0;  
 
   const showAllToasts = (type, msg) => {
     type === "SUCCESS" && toast.success(msg, {
@@ -72,46 +110,6 @@ function CompanyContactInfo({row}) {
   }
 
   const [addrList, setAddrList] = useState([]);
-
-  const columns = [
-    { field: "id", headerName: "ID" },
-    {
-      field: "commId",
-      headerName: "Comm. ID",
-      flex: 1,
-      cellClassName: "name-column--cell",
-    },
-    {
-      field: "commType",
-      headerName: "Type",
-      flex: 1,
-    },
-    {
-      field: "commValue",
-      headerName: "Value",
-      flex: 1,
-    },
-    {
-      field: "description",
-      headerName: "Description",
-      flex: 1,
-    },
-    {
-      field: "defaultMethod",
-      headerName: "Default",
-      flex: 1,
-    },
-    {
-      field: "addressId",
-      headerName: "Address ID",
-      flex: 1,
-    },
-  ];
-
-  const [isNewEnabled, setIsNewEnabled] = useState(row);
-  const [isEditEnabled, setIsEditEnabled] = useState(true);
-  const [isSaveEnabled, setIsSaveEnabled] = useState(true);
-  const [isDeleteEnabled, setIsDeleteEnabled] = useState(true);
 
   const handleNew = (e) => {
     setAddrList((prevRows) => [...prevRows, initialValue()]);
@@ -171,7 +169,7 @@ function CompanyContactInfo({row}) {
           },
         }}
       >
-        <DataGrid checkboxSelection rows={addrList} columns={columns} />
+        {/* <DataGrid checkboxSelection rows={addrList} columns={columns} /> */}
       </Box>
     </Box>
   );

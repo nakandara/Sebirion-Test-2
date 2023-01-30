@@ -1,292 +1,256 @@
-import React, { useState } from "react";
-import PropTypes from "prop-types";
-import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
-import AddIcon from "@mui/icons-material/Add";
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/DeleteOutlined";
-import { useDemoData } from "@mui/x-data-grid-generator";
-import CrudActions from "../../../../Application/fndbas/CrudActions/CrudActions";
-import SaveIcon from "@mui/icons-material/Save";
-import CancelIcon from "@mui/icons-material/Close";
-import {
-  GridRowModes,
-  DataGridPro,
-  GridToolbarContainer,
-  GridActionsCellItem,
-} from "@mui/x-data-grid-pro";
-import {
-  randomCreatedDate,
-  randomTraderName,
-  randomUpdatedDate,
-  randomId,
-} from "@mui/x-data-grid-generator";
+import React, {
+  useState,
+  useMemo,
+  useRef,
+  useCallback,
+  useEffect,
+} from "react";
+import { Box, Tab, TextField, useMediaQuery, useTheme } from "@mui/material";
+import { AgGridReact } from "ag-grid-react";
+import "ag-grid-community/styles/ag-grid.css";
+import "ag-grid-community/styles/ag-theme-balham.css";
+import Header from "../../../components/Header";
+import ListCrudActions from "../../../components/ListCrudActions";
+import useAxiosPrivate from "../../../../Application/fndbas/hooks/useAxiosPrivate";
+import { ToastContainer, toast } from "react-toastify";
 
-const initialRows = [
-  //   {
-  //     id: randomId(),
-  //     associationId: "",
-  //     associationName: "",
-  //     address1: "",
-  //     address2: "",
-  //     city: "",
-  //     district: "",
-  //     province: "",
-  //     country: "",
-  //     contact1: "",
-  //     contact2: "",
-  //     email: "",
-  //   },
-];
+const API_URL = "/api/enterp/v1/Association/";
 
-function EditToolbar(props) {
-  const { setRows, setRowModesModel } = props;
+const Association = () => {
+  const gridRef = useRef();
+  const gridStyle = useMemo(() => ({ height: "100%", width: "100%" }), []);
+  const axiosPrivate = useAxiosPrivate();
 
-  const handleClick = () => {
-    const id = randomId();
-    setRows((oldRows) => [
-      ...oldRows,
-      {
-        id,
-        associationId: "",
-        associationName: "",
-        address1: "",
-        address2: "",
-        city: "",
-        district: "",
-        province: "",
-        country: "",
-        contact1: "",
-        contact2: "",
-        email: "",
-        isNew: true,
-      },
-    ]);
-    setRowModesModel((oldModel) => ({
-      ...oldModel,
-      [id]: { mode: GridRowModes.Edit, fieldToFocus: "associationId" },
-    }));
-  };
+  const [newClicked, setNewClicked] = useState(false);
+  const [values, setValues] = useState(initialValues);
 
-  return (
-    <GridToolbarContainer>
-      <Button color="primary" startIcon={<AddIcon />} onClick={handleClick}>
-        Add record
-      </Button>
-    </GridToolbarContainer>
-  );
-}
+  const [association, setAssociation] = useState();
 
-EditToolbar.propTypes = {
-  setRowModesModel: PropTypes.func.isRequired,
-  setRows: PropTypes.func.isRequired,
-};
+ 
 
-export default function FullFeaturedCrudGrid() {
-  const [rows, setRows] = React.useState(initialRows);
-  const [rowModesModel, setRowModesModel] = React.useState({});
+  const defaultColDef = useMemo(() => {
+    return {
+      flex: 1,
+      editable: true,
+      filter: true,
+      sortable: true,
+      floatingFilter: true,
+    };
+  }, []);
 
-  const handleRowEditStart = (params, event) => {
-    event.defaultMuiPrevented = true;
-  };
-
-  const handleRowEditStop = (params, event) => {
-    event.defaultMuiPrevented = true;
-  };
-
-  const handleEditClick = (id) => () => {
-    setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.Edit } });
-  };
-
-  const handleSaveClick = (id) => () => {
-    setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.View } });
-  };
-
-  const handleDeleteClick = (id) => () => {
-    setRows(rows.filter((row) => row.id !== id));
-  };
-
-  const handleCancelClick = (id) => () => {
-    setRowModesModel({
-      ...rowModesModel,
-      [id]: { mode: GridRowModes.View, ignoreModifications: true },
-    });
-
-    const editedRow = rows.find((row) => row.id === id);
-    if (editedRow.isNew) {
-      setRows(rows.filter((row) => row.id !== id));
-    }
-  };
-
-  const processRowUpdate = (newRow) => {
-    const updatedRow = { ...newRow, isNew: false };
-    setRows(rows.map((row) => (row.id === newRow.id ? updatedRow : row)));
-    return updatedRow;
-  };
-
-
-
-
-  const columns = [
+  const [columnDefs, setColumnDefs] = useState([
     {
       field: "associationId",
-      headerName: "Association Id",
-      type: "text",
-      width: 150,
-      editable: true,
+      headerName: "Association ID",
+      width: 200,
     },
     {
       field: "associationName",
       headerName: "Association Name",
-      type: "text",
-      width: 220,
-      editable: true,
+      width: 200,
     },
-
     {
       field: "address1",
-      headerName: "Address Line 1",
-      type: "text",
-      width: 220,
-      editable: true,
+      headerName: "Address 1",
+      width: 110,
     },
-
     {
       field: "address2",
-      headerName: "Address Line 2",
-      type: "text",
-      width: 220,
-      editable: true,
+      headerName: "Address 2",
+      width: 110,
     },
-
     {
       field: "city",
       headerName: "City",
-      type: "text",
-      width: 100,
-      editable: true,
+      width: 110,
     },
-
     {
       field: "district",
       headerName: "District",
-      type: "text",
-      width: 100,
-      editable: true,
+      width: 110,
     },
     {
       field: "province",
       headerName: "Province",
-      type: "text",
-      width: 100,
-      editable: true,
+      width: 110,
     },
     {
       field: "country",
       headerName: "Country",
-      type: "text",
-      width: 100,
-      editable: true,
+      width: 110,
     },
     {
       field: "contact1",
       headerName: "Contact 1",
-      type: "number",
-      width: 100,
-      editable: true,
+      width: 110,
     },
     {
       field: "contact2",
       headerName: "Contact 2",
-      type: "number",
-      width: 100,
-      editable: true,
+      width: 110,
     },
     {
       field: "email",
       headerName: "Email",
-      type: "text",
-      width: 150,
-      editable: true,
+      width: 110,
     },
+  ]);
+  const addItems = useCallback((addIndex) => {
+    const newItems = [{}];
+    gridRef.current.api.applyTransaction({
+      add: newItems,
+      addIndex: addIndex,
+    });
+  }, []);
 
-    {
-      field: "actions",
-      type: "actions",
-      headerName: "Actions",
-      width: 100,
-      cellClassName: "actions",
-      getActions: ({ id }) => {
-        const isInEditMode = rowModesModel[id]?.mode === GridRowModes.Edit;
+  const onSelectionChanged = useCallback(() => {
+    const selectedRows = gridRef.current.api.getSelectedRows();
+    document.querySelector("#selectedRows").innerHTML =
+      selectedRows.length === 1 ? selectedRows[0].athlete : "";
+  }, []);
 
-        if (isInEditMode) {
-          return [
-            <GridActionsCellItem
-              icon={<SaveIcon />}
-              label="Save"
-              onClick={handleSaveClick(id)}
-            />,
-            <GridActionsCellItem
-              icon={<CancelIcon />}
-              label="Cancel"
-              className="textPrimary"
-              onClick={handleCancelClick(id)}
-              color="inherit"
-            />,
-          ];
+  useEffect(() => {
+    let isMounted = true;
+    const controller = new AbortController();
+
+    const getAssociation = async () => {
+      try {
+        const response = await axiosPrivate.get(API_URL + "get_all", {
+          headers: {
+            signal: controller.signal,
+          },
+        });
+
+        isMounted && setAssociation(response.data);
+      } catch (err) {}
+    };
+    getAssociation();
+    return () => {
+      isMounted = false;
+      controller.abort();
+    };
+  }, []);
+
+  const handleNew = (e) => {
+    setValues(initialValues);
+    setNewClicked(true);
+    addItems(undefined);
+  };
+
+  const handleSave = async (e) => {
+    e.preventDefault();
+    setValues(initialValues);
+
+    const controller = new AbortController();
+    try {
+      const response = await axiosPrivate.post(
+        API_URL + "create",
+        JSON.stringify(values),
+        {
+          headers: {
+            "Content-Type": "application/json",
+            signal: controller.signal,
+          },
         }
+      );
+      console.log(response.data);
+      // response.data && setCurrentObject(response.data);
+      showAllToasts("SUCCESS", "Successfully Saved.");
+    } catch (err) {
+      showAllToasts("ERROR", err.response.data.apiError.message);
+      console.log(err);
+    }
+  };
+  const handleEdit = (e) => {};
+  const handleDelete = (e) => {};
 
-        return [
-          <GridActionsCellItem
-            icon={<EditIcon />}
-            label="Edit"
-            className="textPrimary"
-            onClick={handleEditClick(id)}
-            color="inherit"
-          />,
-          <GridActionsCellItem
-            icon={<DeleteIcon />}
-            label="Delete"
-            onClick={handleDeleteClick(id)}
-            color="inherit"
-          />,
-        ];
-      },
-    },
-  ];
+  const showAllToasts = (type, msg) => {
+    type === "SUCCESS" &&
+      toast.success(msg, {
+        position: "bottom-right",
+        autoClose: 4000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
 
- 
+    type === "ERROR" &&
+      toast.error(msg, {
+        position: "bottom-right",
+        autoClose: 4000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+
+    type === "WARNING" &&
+      toast.warning(msg, {
+        position: "bottom-right",
+        autoClose: 4000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+
+    type === "INFO" &&
+      toast.info(msg, {
+        position: "bottom-right",
+        autoClose: 4000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+  };
 
   return (
-    <Box
-      sx={{
-        height: 500,
-        width: "100%",
-        "& .actions": {
-          color: "text.secondary",
-        },
-        "& .textPrimary": {
-          color: "text.primary",
-        },
-      }}
-    >
-      <DataGridPro
-        rows={rows}
-        columns={columns}
-        editMode="row"
-        rowModesModel={rowModesModel}
-        onRowModesModelChange={(newModel) => setRowModesModel(newModel)}
-        onRowEditStart={handleRowEditStart}
-        onRowEditStop={handleRowEditStop}
-        processRowUpdate={processRowUpdate}
-        components={{
-          Toolbar: EditToolbar,
-        }}
-        componentsProps={{
-          toolbar: { setRows, setRowModesModel },
-        }}
-        experimentalFeatures={{ newEditingApi: true }}
-      />
+    <Box>
+      <Box m="10px">
+        <Header title="ASSOCIATION" subTitle="" />
+        <ListCrudActions
+          addItems={handleNew}
+          handleSave={handleSave}
+          handleEdit={handleEdit}
+          handleDelete={handleDelete}
+        />
+      </Box>
+      <Box sx={{ height: 400, margin: "10px" }}>
+        <div style={gridStyle} className="ag-theme-balham">
+          <AgGridReact
+            ref={gridRef}
+            rowData={association}
+            columnDefs={columnDefs}
+            defaultColDef={defaultColDef}
+            rowSelection={"single"}
+            animateRows={true}
+            onSelectionChanged={onSelectionChanged}
+            editType={"fullRow"}
+          ></AgGridReact>
+        </div>
+      </Box>
     </Box>
   );
-}
+};
+
+const initialValues = {
+  associationId: "",
+  associationName: "",
+  address1: "",
+  address2: "",
+  city: "",
+  district: "",
+  province: "",
+  country: "",
+  contact1: "",
+  contact2: "",
+  email: "",
+};
+
+export default Association;
