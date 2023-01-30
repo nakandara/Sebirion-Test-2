@@ -5,12 +5,13 @@ import * as yup from "yup";
 import { tokens } from "../../../../theme";
 import CrudActions from "../../../components/CrudActions";
 import { axiosPrivate } from "../../../../Application/fndbas/api/axios";
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import useAxiosPrivate from "../../../../Application/fndbas/hooks/useAxiosPrivate";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
 import CompanyAddress from "./CompanyAddress";
 import CompanyContactInfo from "./CompanyContactInfo";
+import { useEffect } from "react";
 
 const API_URL = "enterp/v1/Company/";
 
@@ -20,65 +21,63 @@ function Company() {
   const companyIdRef = useRef();
   const axiosPrivate = useAxiosPrivate();
 
+  
+
   const isNonMobile = useMediaQuery("(min-width:600px)");
   const [isNewEnabled, setIsNewEnabled] = useState(true);
   const [isEditEnabled, setIsEditEnabled] = useState(true);
   const [isSaveEnabled, setIsSaveEnabled] = useState(true);
   const [isDeleteEnabled, setIsDeleteEnabled] = useState(true);
 
-  
-
   const [newClicked, setNewClicked] = useState(false);
-
   const [addNewRow, setAddNewRow] = useState(false);
-
   const [values, setValues] = useState(initialValues);
-  const [isFormDisabled, setIsFormDisabled] = useState(true);
-
-  
 
   const showAllToasts = (type, msg) => {
-    type === "SUCCESS" && toast.success(msg, {
-      position: "bottom-right",
-      autoClose: 4000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined
-    });
+    type === "SUCCESS" &&
+      toast.success(msg, {
+        position: "bottom-right",
+        autoClose: 4000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
 
-    type === "ERROR" && toast.error(msg, {
-      position: "bottom-right",
-      autoClose: 4000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined
-    });
+    type === "ERROR" &&
+      toast.error(msg, {
+        position: "bottom-right",
+        autoClose: 4000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
 
-    type === "WARNING" && toast.warning(msg, {
-      position: "bottom-right",
-      autoClose: 4000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined
-    });
+    type === "WARNING" &&
+      toast.warning(msg, {
+        position: "bottom-right",
+        autoClose: 4000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
 
-    type === "INFO" && toast.info(msg, {
-      position: "bottom-right",
-      autoClose: 4000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined
-    });
-
-  }
+    type === "INFO" &&
+      toast.info(msg, {
+        position: "bottom-right",
+        autoClose: 4000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+  };
 
   const handleNew = (e) => {
     setValues(initialValues);
@@ -102,12 +101,12 @@ function Company() {
           },
         }
       );
-      setAddNewRow(true)
+      setAddNewRow(true);
       console.log(response.data);
       // response.data && setCurrentObject(response.data);
-      showAllToasts("SUCCESS", "Successfully Saved.")
+      showAllToasts("SUCCESS", "Successfully Saved.");
     } catch (err) {
-      showAllToasts("ERROR", err.response.data.apiError.message)
+      showAllToasts("ERROR", err.response.data.apiError.message);
       console.log(err);
     }
   };
@@ -121,11 +120,11 @@ function Company() {
     setValues(updated);
   };
 
-  const [tabValue, setTabValue] = useState('1');
+  const [tabValue, setTabValue] = useState("1");
 
   const handleTabChange = (event, newValue) => {
     setTabValue(newValue);
-  };
+  };  
 
   return (
     <Box m="20px" backgroundColor={colors.primary[400]}>
@@ -142,7 +141,7 @@ function Company() {
       />
 
       <form onSubmit={handleSave}>
-        <fieldset disabled={!newClicked} style={{ border: "0" }} >
+        <fieldset disabled={!newClicked} style={{ border: "0" }}>
           <Box
             display="grid"
             gap="20px"
@@ -157,7 +156,7 @@ function Company() {
               ref={companyIdRef}
               type="text"
               label="Company ID"
-              onChange={(e) => onFormInputChange('companyId', e.target.value)}
+              onChange={(e) => onFormInputChange("companyId", e.target.value)}
               value={values.companyId}
               InputProps={{ sx: { height: 40 } }}
               name="companyId"
@@ -166,7 +165,7 @@ function Company() {
                 gridColumn: "span 1",
                 "& .MuiInputBase-root": {
                   height: 40,
-                  background: "#ffbaba"
+                  background: "#ffbaba",
                 },
               }}
             />
@@ -175,14 +174,14 @@ function Company() {
               variant="outlined"
               type="text"
               label="Name"
-              onChange={(e) => onFormInputChange('companyName', e.target.value)}
+              onChange={(e) => onFormInputChange("companyName", e.target.value)}
               value={values.companyName}
               name="companyName"
               sx={{
                 gridColumn: "span 2",
                 "& .MuiInputBase-root": {
                   height: 40,
-                  background: "#ffbaba"
+                  background: "#ffbaba",
                 },
               }}
               size="small"
@@ -192,7 +191,9 @@ function Company() {
               variant="outlined"
               type="text"
               label="Association No"
-              onChange={(e) => onFormInputChange('associationNo', e.target.value)}
+              onChange={(e) =>
+                onFormInputChange("associationNo", e.target.value)
+              }
               value={values.associationNo}
               name="associationNo"
               sx={{
@@ -208,7 +209,7 @@ function Company() {
               variant="outlined"
               type="text"
               label="Web Address"
-              onChange={(e) => onFormInputChange('webAddress', e.target.value)}
+              onChange={(e) => onFormInputChange("webAddress", e.target.value)}
               value={values.webAddress}
               name="webAddress"
               sx={{
@@ -224,7 +225,9 @@ function Company() {
               variant="outlined"
               type="text"
               label="Nature of Business"
-              onChange={(e) => onFormInputChange('businessNature', e.target.value)}
+              onChange={(e) =>
+                onFormInputChange("businessNature", e.target.value)
+              }
               value={values.businessNature}
               name="businessNature"
               sx={{
@@ -239,26 +242,31 @@ function Company() {
         </fieldset>
       </form>
       <ToastContainer />
-      <Box sx={{ width: '100%', typography: 'body1', pt: "10px" }}>
+      <Box sx={{ width: "100%", typography: "body1", pt: "10px" }}>
         <TabContext value={tabValue}>
-          <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-            <TabList onChange={handleTabChange} aria-label="lab API tabs example">
+          <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+            <TabList
+              onChange={handleTabChange}
+              aria-label="lab API tabs example"
+            >
               <Tab label="Address" value="1" />
               <Tab label="Contact Info" value="2" />
             </TabList>
           </Box>
-          <TabPanel value="1"><CompanyAddress row={addNewRow}/></TabPanel>
-          <TabPanel value="2"><CompanyContactInfo row={addNewRow}/></TabPanel>
+          <TabPanel value="1">
+            <CompanyAddress row={addNewRow} />
+          </TabPanel>
+          <TabPanel value="2">
+            <CompanyContactInfo row={addNewRow} />
+          </TabPanel>
         </TabContext>
       </Box>
     </Box>
-
-
   );
 }
 
 const initialValues = {
-  id:"",
+  id: "",
   companyId: "",
   companyName: "",
   associationNo: "",
