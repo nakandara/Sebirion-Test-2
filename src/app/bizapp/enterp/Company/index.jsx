@@ -30,7 +30,7 @@ function Company() {
   const [isDeleteEnabled, setIsDeleteEnabled] = useState(true);
 
   const [newClicked, setNewClicked] = useState(false);
-  const [addNewRow, setAddNewRow] = useState(false);
+  const [addNewRow, setAddNewRow] = useState(true);
   const [values, setValues] = useState(initialValues);
 
   const showAllToasts = (type, msg) => {

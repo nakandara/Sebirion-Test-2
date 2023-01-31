@@ -101,6 +101,8 @@ function BasicData() {
       minWidth: 100,
       editable: true,
     };
+
+    
   }, []);
 
   const onSelectionChanged = useCallback(() => {
