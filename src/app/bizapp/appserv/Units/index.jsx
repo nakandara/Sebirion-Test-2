@@ -129,7 +129,7 @@ function BasicData() {
       isMounted = false;
       controller.abort();
     };
-  }, []);
+  }, [axiosPrivate]);
 
   const handleNew = (e) => {
     setFormValues(initialValues);

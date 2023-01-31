@@ -19,9 +19,7 @@ function Company() {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const companyIdRef = useRef();
-  const axiosPrivate = useAxiosPrivate();
-
-  
+  const axiosPrivate = useAxiosPrivate();  
 
   const isNonMobile = useMediaQuery("(min-width:600px)");
   const [isNewEnabled, setIsNewEnabled] = useState(true);
