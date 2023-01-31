@@ -14,7 +14,7 @@ import ListCrudActions from "../../../components/ListCrudActions";
 import useAxiosPrivate from "../../../../Application/fndbas/hooks/useAxiosPrivate";
 import { ToastContainer, toast } from "react-toastify";
 
-const API_URL = "/api/enterp/v1/Association/";
+const API_URL = "enterp/v1/Association/";
 
 const Association = () => {
   const gridRef = useRef();
