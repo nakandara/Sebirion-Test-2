@@ -1,4 +1,11 @@
-import { Box, Tab, TextField, useMediaQuery, useTheme } from "@mui/material";
+import {
+  Autocomplete,
+  Box,
+  Tab,
+  TextField,
+  useMediaQuery,
+  useTheme,
+} from "@mui/material";
 import { Formik, useFormik } from "formik";
 import React, { useRef, useState } from "react";
 
@@ -27,6 +34,19 @@ const Itemcatalog = () => {
   const [isDeleteEnabled, setIsDeleteEnabled] = useState(true);
   const [values, setValues] = useState(initialValues);
   const [newClicked, setNewClicked] = useState(false);
+  const [description, setDescription] = useState("");
+
+  const [unitCode, setUnitCode] = useState(null);
+  const [uomForWeightNets, setValueuomForWeightNets] = useState(null);
+
+  const unitCodes = [
+    { unitCode: "meter", description: description, baseUnit: "meter" },
+  ];
+
+  const defaultProps = {
+    options: unitCodes,
+    getOptionLabel: (option) => option.unitCode,
+  };
 
   const showAllToasts = (type, msg) => {
     type === "SUCCESS" &&
@@ -89,12 +109,12 @@ const Itemcatalog = () => {
         API_URL + "create",
         JSON.stringify({
           itemCode: values.itemCode,
-          description: values.description,
+          description: description,
           infoText: values.infoText,
-          unitCode: values.unitCode,
+          unitCode: unitCode,
           configurable: values.configurable,
           weightNet: values.weightNet,
-          uomForWeightNet: values.uomForWeightNet,
+          uomForWeightNet: uomForWeightNets,
           // volumeNet: values.configurable,
           // uomForVolumeNet: values.uomForVolumeNet,
           // pictureUrl: values.weightNet,
@@ -176,8 +196,8 @@ const Itemcatalog = () => {
               variant="outlined"
               type="text"
               label="Description"
-              onChange={(e) => onFormInputChange("description", e.target.value)}
-              value={values.description}
+              onChange={(e) => setDescription(e.target.value)}
+              value={description}
               name="description"
               sx={{
                 gridColumn: "span 1",
@@ -217,6 +237,33 @@ const Itemcatalog = () => {
                   height: 40,
                 },
               }}
+            />
+
+            <Autocomplete
+              {...defaultProps}
+              id="controlled-demo"
+              value={unitCode}
+              onChange={(event, newValue) => {
+                setUnitCode(newValue);
+              }}
+              renderInput={(params) => (
+                <TextField {...params} label="Unit Code: " variant="standard" />
+              )}
+            />
+            <Autocomplete
+              {...defaultProps}
+              id="controlled-demo"
+              value={uomForWeightNets}
+              onChange={(event, newValue) => {
+                setValueuomForWeightNets(newValue);
+              }}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label="Uom For WeightNet: "
+                  variant="standard"
+                />
+              )}
             />
           </Box>
         </fieldset>
