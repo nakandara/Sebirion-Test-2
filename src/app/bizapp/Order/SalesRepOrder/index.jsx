@@ -1,28 +1,26 @@
-import {
-  Box,
-  TextField,
-  useMediaQuery,
-  useTheme,
-  Grid,
-  Chip,
-} from "@mui/material";
-import React, { useRef, useState } from "react";
-import Header from "../../components/Header";
-import { ToastContainer, toast } from "react-toastify";
-import { tokens } from "../../../theme";
-import CrudActions from "../../components/CrudActions";
-import { AgGridReact } from "ag-grid-react";
-import { useMemo } from "react";
-import { useCallback } from "react";
-import "ag-grid-community/styles/ag-grid.css";
-import "ag-grid-community/styles/ag-theme-balham.css";
-import ListCrudActions from "../../components/ListCrudActions";
+import { Box,  Chip,  Grid,  TextField,  useMediaQuery,  useTheme } from "@mui/material";
+import React from "react";
+import { tokens } from "../../../../theme";
+import Header from "../../../components/Header";
+import CrudActions from "../../../components/CrudActions";
+import { useRef } from "react";
+import { useState } from "react";
+import { ToastContainer } from "react-toastify";
+import OrderLine from "./OrderLine";
 
-const SalesROrder = () => {
+function SalesRepOrder() {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const orderIdRef = useRef();
-  const gridRef = useRef();
+
+  const initialValues = {
+    orderId: "",
+    description: "",
+    sdo: "",
+    createdAt: "",
+    createdBy: "",
+    status: "",
+  };
 
   const isNonMobile = useMediaQuery("(min-width:600px)");
   const [isNewEnabled, setIsNewEnabled] = useState(true);
@@ -35,6 +33,7 @@ const SalesROrder = () => {
 
   const handleNew = (e) => {
     orderIdRef.current.focus();
+    setFormValues(initialValues);
   };
   const handleEdit = (e) => {
     orderIdRef.current.focus();
@@ -45,9 +44,6 @@ const SalesROrder = () => {
   const handleDelete = (e) => {
     orderIdRef.current.focus();
   };
-  const handleTabChange = (event, newValue) => {
-    setOrderLines(newValue);
-  };
 
   const onFormInputChange = (key, value) => {
     const updated = Object.assign({}, formValues);
@@ -55,70 +51,11 @@ const SalesROrder = () => {
     setFormValues(updated);
   };
 
-  const gridStyle = useMemo(() => ({ height: "100%", width: "100%" }), []);
-  const onSelectionChanged = useCallback(() => {
-    const selectedRows = gridRef.current.api.getSelectedRows();
-    document.querySelector("#selectedRows").innerHTML =
-      selectedRows.length === 1 ? selectedRows[0].athlete : "";
-  }, []);
 
-  const [columnDefs] = useState([
-    {
-      field: "unitCode",
-      headerName: "Unit Code",
-      width: 110,
-    },
-    {
-      field: "description",
-      headerName: "Description",
-      width: 110,
-      editable: true,
-    },
-    {
-      field: "baseUnit",
-      headerName: "Base Unit",
-      width: 110,
-    },
-    {
-      field: "multiFactor",
-      headerName: "Multi Factor",
-      width: 110,
-    },
-    {
-      field: "divFactor",
-      headerName: "Div Factor",
-      width: 110,
-      type: "numericColumn",
-    },
-    {
-      field: "tenPower",
-      headerName: "Ten Power",
-      width: 110,
-    },
-    {
-      field: "userDefined",
-      headerName: "User Defined",
-      width: 110,
-    },
-    {
-      field: "unitType",
-      headerName: "Unit Type",
-      width: 110,
-    },
-  ]);
-
-  const defaultColDef = useMemo(() => {
-    return {
-      flex: 1,
-      minWidth: 100,
-      editable: true,
-    };
-  }, []);
 
   return (
     <Box m="5px" backgroundColor={colors.primary[400]} p="10px">
       <Header title="Sales Rep Order" subTitle="" />
-
       <Grid container spacing={2}>
         <Grid item xs={6} md={8}>
           <CrudActions
@@ -144,7 +81,6 @@ const SalesROrder = () => {
           <Chip label="Created" color="success" />
         </Grid>
       </Grid>
-
       <form onSubmit={handleSave}>
         <Box
           display="grid"
@@ -243,41 +179,9 @@ const SalesROrder = () => {
         </Box>
       </form>
       <ToastContainer />
-
-      <Box mt="30px">
-        <ListCrudActions
-          addItems={handleNew}
-          handleSave={handleSave}
-          handleEdit={handleEdit}
-          handleDelete={handleDelete}
-        />
-      </Box>
-      <Box
-        sx={{ height: "400px", width: "100%"}}
-      >
-        <div style={gridStyle} className="ag-theme-balham">
-          <AgGridReact
-            ref={gridRef}
-            rowData={orderLines}
-            columnDefs={columnDefs}
-            defaultColDef={defaultColDef}
-            rowSelection={"single"}
-            animateRows={true}
-            onSelectionChanged={onSelectionChanged}
-          ></AgGridReact>
-        </div>
-      </Box>
+      <OrderLine orderLines={orderLines}/>
     </Box>
   );
-};
+}
 
-const initialValues = {
-  orderId: "",
-  description: "",
-  sdo: "",
-  createdAt: "",
-  createdBy: "",
-  status: "",
-};
-
-export default SalesROrder;
+export default SalesRepOrder;

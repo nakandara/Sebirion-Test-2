@@ -15,8 +15,6 @@ import { AgGridReact } from "ag-grid-react";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-balham.css";
 import Header from "../../../components/Header";
-import { GridApi } from "ag-grid-community";
-import CustomAgGrid from "../../../components/CustomAgGrid";
 import ListCrudActions from "../../../components/ListCrudActions";
 
 const API_URL = "/appsrv/v1/IsoUnit/";

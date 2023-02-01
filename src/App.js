@@ -46,8 +46,8 @@ const Companies = lazy(() => import("./app/bizapp/enterp/Companies"));
 const Company = lazy(() => import("./app/bizapp/enterp/Company"));
 
 const Units = lazy(() => import("./app/bizapp/appserv/Units"));
-const SalesRepOrder = lazy(() => import("./app/bizapp/Order/SalesROrder"));
-const IssueNote = lazy(() => import("./app/bizapp/Order/IssueNote"));
+const SalesRepOrder = lazy(() => import("./app/bizapp/order/SalesRepOrder"));
+const IssueNote = lazy(() => import("./app/bizapp/order/IssueNote"));
 
 function App() {
   const [theme, colorMode] = useMode();
