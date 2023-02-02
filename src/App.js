@@ -40,6 +40,12 @@ const InventoryItems = lazy(() =>
 const ItemType = lazy(() =>
   import("./Application/Inventory/ItemType/ItemType")
 );
+const Itemcatalog = lazy(() =>
+  import("./app/bizapp/invent/itemcatalog")
+);
+
+
+const Association = lazy(() => import("./app/bizapp/enterp/Association"));
 
 const Companies = lazy(() => import("./app/bizapp/enterp/Companies"));
 
@@ -131,6 +137,14 @@ function App() {
                           </Suspense>
                         }
                       />
+                        <Route
+                        path="association"
+                        element={
+                          <Suspense fallback={<>...</>}>
+                            <Association />
+                          </Suspense>
+                        }
+                      />
                       <Route
                         path="company"
                         element={
@@ -168,6 +182,14 @@ function App() {
                         element={
                           <Suspense fallback={<>...</>}>
                             <PersonInfo />
+                          </Suspense>
+                        }
+                      />
+                      <Route
+                        path="itemcatalog"
+                        element={
+                          <Suspense fallback={<>...</>}>
+                            <Itemcatalog />
                           </Suspense>
                         }
                       />

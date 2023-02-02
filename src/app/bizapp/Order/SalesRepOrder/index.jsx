@@ -1,4 +1,11 @@
-import { Box,  Chip,  Grid,  TextField,  useMediaQuery,  useTheme } from "@mui/material";
+import {
+  Box,
+  Chip,
+  Grid,
+  TextField,
+  useMediaQuery,
+  useTheme,
+} from "@mui/material";
 import React from "react";
 import { tokens } from "../../../../theme";
 import Header from "../../../components/Header";
@@ -7,11 +14,15 @@ import { useRef } from "react";
 import { useState } from "react";
 import { ToastContainer } from "react-toastify";
 import OrderLine from "./OrderLine";
+import useAxiosPrivate from "../../../../Application/fndbas/hooks/useAxiosPrivate";
+
+const API_URL = "/order/v1/saleRepOrder/";
 
 function SalesRepOrder() {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const orderIdRef = useRef();
+  const axiosPrivate = useAxiosPrivate();
 
   const initialValues = {
     orderId: "",
@@ -33,13 +44,30 @@ function SalesRepOrder() {
 
   const handleNew = (e) => {
     orderIdRef.current.focus();
-    setFormValues(initialValues);
+    setFormValues(initialValues);    
   };
   const handleEdit = (e) => {
     orderIdRef.current.focus();
   };
-  const handleSave = (values) => {
-    console.log(values);
+
+  const handleSave = async (e) => {
+    console.log(formValues);
+    let isMounted = true;
+    const controller = new AbortController();
+    try {
+      const response = await axiosPrivate.post(
+        API_URL +"create",
+        JSON.stringify(formValues),
+        {
+          headers: {
+            "Content-Type": "application/json",
+            signal: controller.signal,
+          },
+        }
+      );
+
+      isMounted && setFormValues(response.data);
+    } catch (err) {}
   };
   const handleDelete = (e) => {
     orderIdRef.current.focus();
@@ -50,8 +78,6 @@ function SalesRepOrder() {
     updated[key] = value;
     setFormValues(updated);
   };
-
-
 
   return (
     <Box m="5px" backgroundColor={colors.primary[400]} p="10px">
@@ -179,7 +205,7 @@ function SalesRepOrder() {
         </Box>
       </form>
       <ToastContainer />
-      <OrderLine orderLines={orderLines}/>
+      <OrderLine orderLines={orderLines} />
     </Box>
   );
 }
