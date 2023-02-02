@@ -44,6 +44,9 @@ const Itemcatalog = lazy(() =>
   import("./app/bizapp/invent/itemcatalog")
 );
 
+
+const Association = lazy(() => import("./app/bizapp/enterp/Association"));
+
 const Companies = lazy(() => import("./app/bizapp/enterp/Companies"));
 
 const Company = lazy(() => import("./app/bizapp/enterp/Company"));
@@ -130,6 +133,14 @@ function App() {
                         element={
                           <Suspense fallback={<>...</>}>
                             <FndUser />
+                          </Suspense>
+                        }
+                      />
+                        <Route
+                        path="association"
+                        element={
+                          <Suspense fallback={<>...</>}>
+                            <Association />
                           </Suspense>
                         }
                       />

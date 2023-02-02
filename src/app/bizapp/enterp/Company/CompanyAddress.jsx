@@ -37,50 +37,7 @@ function CompanyAddress({row}) {
 
   const [addrList, setAddrList] = useState([]);
 
-  const columnDef = [
-    {
-      field: "addressId",
-      headerName: "Address ID",
-      flex: 1,
-      cellClassName: "name-column--cell",
-      editable: true,
-    },
-    {
-      field: "address1",
-      headerName: "Address 1",
-      flex: 1,
-    },
-    {
-      field: "address2",
-      headerName: "Address 2",
-      flex: 1,
-      editable: true,
-    },
-    {
-      field: "city",
-      headerName: "City",
-      flex: 1,
-      editable: true,
-    },
-    {
-      field: "district",
-      headerName: "District",
-      flex: 1,
-      editable: true,
-    },
-    {
-      field: "province",
-      headerName: "Province",
-      flex: 1,
-      editable: true,
-    },
-    {
-      field: "country",
-      headerName: "Country",
-      flex: 1,
-      editable: true,
-    },
-  ];
+  
 
   const showAllToasts = (type, msg) => {
     type === "SUCCESS" && toast.success(msg, {
