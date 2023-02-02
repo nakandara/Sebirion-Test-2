@@ -46,8 +46,9 @@ const Companies = lazy(() => import("./app/bizapp/enterp/Companies"));
 const Company = lazy(() => import("./app/bizapp/enterp/Company"));
 
 const Units = lazy(() => import("./app/bizapp/appserv/Units"));
-const SalesRepOrder = lazy(() => import("./app/bizapp/order/SalesRepOrder"));
-const IssueNote = lazy(() => import("./app/bizapp/order/IssueNote"));
+const SalesRepOrder = lazy(() => import("./app/bizapp/Order/SalesRepOrder/index"));
+const IssueNote = lazy(() => import("./app/bizapp/Order/IssueNote"));
+const Person = lazy(() => import("./app/bizapp/hr/Person"));
 
 function App() {
   const [theme, colorMode] = useMode();
@@ -176,6 +177,14 @@ function App() {
                         element={
                           <Suspense fallback={<>...</>}>
                             <Units />
+                          </Suspense>
+                        }
+                      />
+                      <Route
+                        path="person"
+                        element={
+                          <Suspense fallback={<>...</>}>
+                            <Person />
                           </Suspense>
                         }
                       />

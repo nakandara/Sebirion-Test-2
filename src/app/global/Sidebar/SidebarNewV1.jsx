@@ -28,8 +28,7 @@ import {
   FaHeart,
   FaDatabase,
   FaUnity,
-  FaRegBuilding
-
+  FaRegBuilding,
 } from "react-icons/fa";
 
 import {
@@ -154,6 +153,12 @@ const SidebarNewV1 = ({
               </MenuItem>
               <MenuItem icon={<AutoAwesome />}>
                 Inventory Items <Link to="/inventory_items" />
+              </MenuItem>
+            </SubMenu>
+            {/* HR */}
+            <SubMenu title={"HR"} icon={<FaArchway />}>
+              <MenuItem icon={<FaRegBuilding />}>
+                Person <Link to="/person" />
               </MenuItem>
             </SubMenu>
             <SubMenu
