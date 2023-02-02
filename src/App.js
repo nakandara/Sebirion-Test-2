@@ -40,8 +40,9 @@ const InventoryItems = lazy(() =>
 const ItemType = lazy(() =>
   import("./Application/Inventory/ItemType/ItemType")
 );
-const Itemcatalog = lazy(() =>
-  import("./app/bizapp/invent/itemcatalog")
+
+const ItemCatalog = lazy(() =>
+  import("./app/bizapp/invent/ItemCatalog")
 );
 
 
@@ -188,7 +189,7 @@ function App() {
                         path="itemcatalog"
                         element={
                           <Suspense fallback={<>...</>}>
-                            <Itemcatalog />
+                            <ItemCatalog />
                           </Suspense>
                         }
                       />

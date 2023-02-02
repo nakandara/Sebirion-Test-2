@@ -1,6 +1,11 @@
 import {
   Autocomplete,
   Box,
+  Grid,
+  List,
+  ListItem,
+  ListItemText,
+  Paper,
   Tab,
   TextField,
   useMediaQuery,
@@ -18,8 +23,10 @@ import { tokens } from "../../../../theme";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
 import useAxiosPrivate from "../../../../Application/fndbas/hooks/useAxiosPrivate";
 import InventoryAddress from "../InventoryItem/InventoryAddress";
+import { useEffect } from "react";
 
 const API_URL = "invent/v1/ItemCatalog/";
+const UNITS_API_URL = "appsrv/v1/IsoUnit/";
 
 const Itemcatalog = () => {
   const theme = useTheme();
@@ -35,13 +42,32 @@ const Itemcatalog = () => {
   const [values, setValues] = useState(initialValues);
   const [newClicked, setNewClicked] = useState(false);
   const [description, setDescription] = useState("");
+  const [infoText, setInfoText] = useState("");
+  const [unitCode, setUnitCode] = useState({});
+  const [unitCodes, setUnitCodes] = useState([]);
+  const [inputUnitCode, setInputUnitCode] = useState({});
+  const [configurable, setConfigurable] = useState(false);
+  const [weightNet, setWeightNet] = useState("");
+  const [uomForWeightNet, setUomForWeightNet] = useState({});
+  const [volumeNet, setVolumeNet] = useState("");
+  const [uomForVolumeNet, setUomForVolumeNet] = useState({});
 
-  const [unitCode, setUnitCode] = useState(null);
   const [uomForWeightNets, setValueuomForWeightNets] = useState(null);
 
-  const unitCodes = [
-    { unitCode: "meter", description: description, baseUnit: "meter" },
-  ];
+  useEffect(() => {
+    const getUnits = async () => {
+      const controller = new AbortController();
+      try {
+        const latestId = await axiosPrivate.get(UNITS_API_URL + "get_all", {
+          headers: {
+            signal: controller.signal,
+          },
+        });
+        setUnitCodes(latestId.data);
+      } catch (err) {}
+    };
+    getUnits();
+  });
 
   const defaultProps = {
     options: unitCodes,
@@ -144,15 +170,9 @@ const Itemcatalog = () => {
     setValues(updated);
   };
 
-  const [tabValue, setTabValue] = useState("1");
-
-  const handleTabChange = (event, newValue) => {
-    setTabValue(newValue);
-  };
-
   return (
     <Box m="20px" backgroundColor={colors.primary[400]}>
-      <Header title="Item Catalogs" subTitle="" />
+      <Header title="Item Catalog" subTitle="" />
       <CrudActions
         handleNew={handleNew}
         isNewEnabled={isNewEnabled}
@@ -164,11 +184,38 @@ const Itemcatalog = () => {
         isDeleteEnabled={isDeleteEnabled}
       />
 
+      <Paper className="pageContent mb-3">
+        <form onSubmit={handleSave} className="prospect-form">
+          <fieldset  className="form-group">
+            <Grid container spacing={2}>
+              <Grid item xs={3}>
+                <TextField
+                  variant="outlined"
+                  size="small"
+                  fullWidth
+                  id="prospectId"
+                  autoComplete="off"
+                  name="prospectId"
+                  label="Prospect Id"
+                  type="text"
+                  // value={prospectId}
+                  // onChange={(e) => setProspectId(e.target.value)}
+                  // required
+                  // aria-invalid={validProspectId ? "false" : "true"}
+                  margin="normal"
+                  inputProps={{ style: { textTransform: "uppercase" } }}
+                />
+              </Grid>
+            </Grid>
+          </fieldset>
+        </form>
+      </Paper>
+
       <form onSubmit={handleSave}>
         <fieldset disabled={!newClicked} style={{ border: "0" }}>
           <Box
             display="grid"
-            gap="20px"
+            gap="15px"
             gridTemplateColumns="repeat(6, minmax(0, 1fr))"
             sx={{
               "& > div": { gridColumn: isNonMobile ? undefined : "span 6" },
@@ -200,7 +247,7 @@ const Itemcatalog = () => {
               value={description}
               name="description"
               sx={{
-                gridColumn: "span 1",
+                gridColumn: "span 3",
                 "& .MuiInputBase-root": {
                   height: 40,
                 },
@@ -216,17 +263,29 @@ const Itemcatalog = () => {
               value={values.infoText}
               name="infoText"
               sx={{
-                gridColumn: "span 1",
+                gridColumn: "span 5",
                 "& .MuiInputBase-root": {
                   height: 40,
                 },
               }}
             />
+            <Autocomplete
+              {...defaultProps}
+              id="controlled-demo"
+              value={unitCode}
+              variant="outlined"
+              onChange={(event, newValue) => {
+                setUnitCode(newValue);
+              }}
+              renderInput={(params) => (
+                <TextField {...params} label="Unit Code: " variant="standard" />
+              )}
+            />
 
             <TextField
               fullWidth
               variant="outlined"
-              type="text"
+              type="number"
               label="WeightNet (kg)"
               onChange={(e) => onFormInputChange("weightNet", e.target.value)}
               value={values.weight}
@@ -247,8 +306,23 @@ const Itemcatalog = () => {
                 setUnitCode(newValue);
               }}
               renderInput={(params) => (
-                <TextField {...params} label="Unit Code: " variant="standard" />
+                <TextField {...params} label="Unit Code: " variant="outlined" />
               )}
+            />
+            <TextField
+              fullWidth
+              variant="outlined"
+              type="number"
+              label="Volumn Net (l)"
+              onChange={(e) => onFormInputChange("weightNet", e.target.value)}
+              value={values.weight}
+              name="weightNet"
+              sx={{
+                gridColumn: "span 1",
+                "& .MuiInputBase-root": {
+                  height: 40,
+                },
+              }}
             />
             <Autocomplete
               {...defaultProps}
@@ -261,7 +335,7 @@ const Itemcatalog = () => {
                 <TextField
                   {...params}
                   label="Uom For WeightNet: "
-                  variant="standard"
+                  variant="outlined"
                 />
               )}
             />
@@ -269,53 +343,32 @@ const Itemcatalog = () => {
         </fieldset>
       </form>
       <ToastContainer />
-      <Box sx={{ width: "100%", typography: "body1", pt: "10px" }}>
-        <TabContext value={tabValue}>
-          <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-            <TabList
-              onChange={handleTabChange}
-              aria-label="lab API tabs example"
-            >
-              <Tab label="Address" value="1" />
-            </TabList>
-          </Box>
-          <TabPanel value="1">
-            <InventoryAddress />
-          </TabPanel>
-        </TabContext>
-      </Box>
     </Box>
   );
+};
+
+const isoUnit = {
+  unitCode: "",
+  description: "",
+  baseUnit: "",
+  multiFactor: "",
+  divFactor: "",
+  tenPower: "",
+  userDefined: "",
+  unitType: "",
 };
 
 const initialValues = {
   itemCode: "",
   description: "",
   infoText: "",
-  unitCode: {
-    unitCode: "meter",
-    description: "",
-    baseUnit: "meter",
-    multiFactor: "",
-    divFactor: "",
-    tenPower: "",
-    userDefined: true,
-
-    unitType: "",
-  },
+  unitCode: isoUnit,
   configurable: true,
   weightNet: "",
-
-  uomForWeightNet: {
-    unitCode: "meter",
-    description: "",
-    baseUnit: "meter",
-    multiFactor: "",
-    divFactor: "",
-    tenPower: "",
-    userDefined: "",
-    unitType: "",
-  },
+  uomForWeightNet: isoUnit,
+  volumeNet: "",
+  uomForVolumeNet: isoUnit,
+  pictureUrl: "",
 };
 
 export default Itemcatalog;

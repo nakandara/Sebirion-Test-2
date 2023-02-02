@@ -16,6 +16,7 @@ import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-balham.css";
 import Header from "../../../components/Header";
 import ListCrudActions from "../../../components/ListCrudActions";
+import CreateDlg from "./createDlg";
 
 const API_URL = "/appsrv/v1/IsoUnit/";
 
@@ -42,6 +43,8 @@ function BasicData() {
   const [isEditEnabled, setIsEditEnabled] = useState(true);
   const [isSaveEnabled, setIsSaveEnabled] = useState(true);
   const [isDeleteEnabled, setIsDeleteEnabled] = useState(true);
+
+  const [isOpenDlg, setIsOpenDlg] = useState(false);
 
   const [formValues, setFormValues] = useState(initialValues);
 
@@ -99,8 +102,6 @@ function BasicData() {
       minWidth: 100,
       editable: true,
     };
-
-    
   }, []);
 
   const onSelectionChanged = useCallback(() => {
@@ -129,7 +130,7 @@ function BasicData() {
       isMounted = false;
       controller.abort();
     };
-  }, [axiosPrivate]);
+  }, []);
 
   const handleNew = (e) => {
     setFormValues(initialValues);
@@ -240,6 +241,7 @@ function BasicData() {
           ></AgGridReact>
         </div>
       </Box>
+      <CreateDlg openDlg={isOpenDlg} setOpenDlg={setIsOpenDlg} />
     </Box>
   );
 }
