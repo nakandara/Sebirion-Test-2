@@ -11,11 +11,12 @@ import useAxiosPrivate from "../../../../Application/fndbas/hooks/useAxiosPrivat
 import dayjs from "dayjs";
 import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
+import LocalizationProvider from "@mui/lab/LocalizationProvider";
+import { DatePicker } from "@mui/lab";
 
-const API_URL = "enterp/v1/Person/";
+const API_URL = "hr/v1/PersonaInfo/";
 
 function Person() {
   const theme = useTheme();
@@ -104,7 +105,7 @@ function Person() {
     const controller = new AbortController();
     try {
       const response = await axiosPrivate.post(
-        API_URL + "",
+        API_URL + "create",
         JSON.stringify(values),
         {
           headers: {

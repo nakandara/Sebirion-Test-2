@@ -1,11 +1,11 @@
 import { Box, TextField, useMediaQuery, useTheme } from "@mui/material";
 import { Formik, useFormik } from "formik";
 import React, { useRef, useState } from "react";
-import Header from "../../components/Header";
+import Header from "../../../components/Header";
 import * as yup from "yup";
 
-import { tokens } from "../../../theme";
-import CrudActions from "../../components/CrudActions";
+import { tokens } from "../../../../theme";
+import CrudActions from "../../../components/CrudActions";
 
 const IssueNote = () => {
   const theme = useTheme();

@@ -163,7 +163,10 @@ const SidebarNewV1 = ({
                 Inventory Items <Link to="/inventory_items" />
               </MenuItem>
               <MenuItem icon={<AutoAwesome />}>
-                Item Cataog <Link to="/itemcatalog" />
+                Item Cataog <Link to="/itemcatalog/null" />
+              </MenuItem>
+              <MenuItem icon={<AutoAwesome />}>
+                Cataog Items<Link to="/catalogitems" />
               </MenuItem>
             </SubMenu>
             {/* HR */}

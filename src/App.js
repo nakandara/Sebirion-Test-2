@@ -23,39 +23,21 @@ const Unauthorized = lazy(() => import("./components/pages/Unauthorized"));
 // const CoveringType = lazy(() => import('./components/Application/Invent/CoveringTypes/CoveringType'));
 const Login = lazy(() => import("./app/login/Login"));
 const FndUser = lazy(() => import("./Application/Enterprise/User/FndUser"));
-
 const PersonInfo = lazy(() => import("./Application/Pageinfo/PersonInfo"));
-const FndUsers = lazy(() =>
-  import("./Application/Enterprise/FndUsers/FndUsers")
-);
-const InventoryItem = lazy(() =>
-  import("./Application/Inventory/InventoryItem/InventoryItem")
-);
-const InventoryItemNewV1 = lazy(() =>
-  import("./app/bizapp/invent/InventoryItem")
-);
-const InventoryItems = lazy(() =>
-  import("./app/bizapp/invent/InventoryItems")
-);
-const ItemType = lazy(() =>
-  import("./Application/Inventory/ItemType/ItemType")
-);
-
-const ItemCatalog = lazy(() =>
-  import("./app/bizapp/invent/ItemCatalog")
-);
-
-
+const FndUsers = lazy(() =>import("./Application/Enterprise/FndUsers/FndUsers"));
+const InventoryItem = lazy(() =>import("./Application/Inventory/InventoryItem/InventoryItem"));
+const InventoryItemNewV1 = lazy(() =>import("./app/bizapp/invent/InventoryItem"));
+const InventoryItems = lazy(() =>import("./app/bizapp/invent/InventoryItems"));
+const ItemType = lazy(() =>import("./Application/Inventory/ItemType/ItemType"));
+const ItemCatalog = lazy(() =>import("./app/bizapp/invent/ItemCatalog"));
 const Association = lazy(() => import("./app/bizapp/enterp/Association"));
-
 const Companies = lazy(() => import("./app/bizapp/enterp/Companies"));
-
 const Company = lazy(() => import("./app/bizapp/enterp/Company"));
-
 const Units = lazy(() => import("./app/bizapp/appserv/Units"));
-const SalesRepOrder = lazy(() => import("./app/bizapp/Order/SalesRepOrder/index"));
-const IssueNote = lazy(() => import("./app/bizapp/Order/IssueNote"));
+const SalesRepOrder = lazy(() => import("./app/bizapp/order/SalesRepOrder"));
+const IssueNote = lazy(() => import("./app/bizapp/order/IssueNote/IssueNote"));
 const Person = lazy(() => import("./app/bizapp/hr/Person"));
+const CatalogItems = lazy(() => import("./app/bizapp/invent/ItemCatalog/items"));
 
 function App() {
   const [theme, colorMode] = useMode();
@@ -187,10 +169,18 @@ function App() {
                         }
                       />
                       <Route
-                        path="itemcatalog"
+                        path="itemcatalog/:id"
                         element={
                           <Suspense fallback={<>...</>}>
                             <ItemCatalog />
+                          </Suspense>
+                        }
+                      />
+                      <Route
+                        path="catalogitems"
+                        element={
+                          <Suspense fallback={<>...</>}>
+                            <CatalogItems />
                           </Suspense>
                         }
                       />

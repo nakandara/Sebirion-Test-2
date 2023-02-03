@@ -24,7 +24,7 @@ export default function AppHome() {
     setToggled(value);
   };
   return (
-    <div className={`app ${toggled ? 'toggled' : ''}`} >
+    <div className={`app ${toggled ? "toggled" : ""}`}>
       <SidebarNewV1
         image={image}
         collapsed={collapsed}
@@ -37,9 +37,9 @@ export default function AppHome() {
       </div>
       <main className="content">
         <div className="topbar">
-        <TopbarNew setIsSidebar={setIsSidebar} />
+          <TopbarNew setIsSidebar={setIsSidebar} />
         </div>
-      
+
         <Outlet />
       </main>
     </div>

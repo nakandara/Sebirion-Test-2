@@ -1,16 +1,17 @@
-import { Box,  useTheme } from "@mui/material";
-import React, {useRef, useMemo, useState, useCallback} from "react";
-import Header from "../../../components/Header";
+import { Box, useTheme } from "@mui/material";
+import React, { useRef, useMemo, useState, useCallback } from "react";
 import { tokens } from "../../../../theme";
 import { useEffect } from "react";
 import useAxiosPrivate from "../../../../Application/fndbas/hooks/useAxiosPrivate";
 import { AgGridReact } from "ag-grid-react";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-balham.css";
+import Header from "../../../components/Header";
+import { Link } from "react-router-dom";
 
-const API_URL = "enterp/v1/Company/";
+const API_URL = "invent/v1/ItemCatalog/";
 
-function Companies() {
+function CatalogItems() {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const axiosPrivate = useAxiosPrivate();
@@ -19,23 +20,13 @@ function Companies() {
   const containerStyle = useMemo(() => ({ width: "100%", height: "100%" }), []);
   const gridStyle = useMemo(() => ({ height: "100%", width: "100%" }), []);
 
-  const initialValue = {
-    id: "",
-    companyId: "",
-    companyName: "",
-    associationNo: "",
-    webAddress: "",
-    businessNature: "",
-    createdAt: "",
-    createdBy: "",
-  };
-  const [companies, setCompanies] = useState([]);
+  const [catItems, setCatItems] = useState([]);
 
   useEffect(() => {
     let isMounted = true;
     const controller = new AbortController();
 
-    const getCompanies = async () => {
+    const getItems = async () => {
       try {
         const response = await axiosPrivate.get(API_URL + "get_all", {
           headers: {
@@ -43,24 +34,24 @@ function Companies() {
           },
         });
         console.log(response.data);
-        let companies = response.data;
-        const dataArray = companies.map((company, idx) => ({
+        let catalogitems = response.data;
+        const dataArray = catalogitems.map((catitem, idx) => ({
           id: idx + 1,
-          companyId: company.companyId,
-          companyName: company.companyName,
-          createdBy: company.createdBy,
-          createdAt: company.createdAt,
-          associationNo: company.associationNo,
-          businessNature: company.businessNature,
-          webAddress: company.webAddress,
+          itemCode: catitem.itemCode,
+          description: catitem.description,
+          infoText: catitem.infoText,
+          unitCode: catitem.unitCode.description,
+          configurable: catitem.configurable,
+          weightNet: catitem.weightNet,
+          uomWeightNet: catitem.uomForWeightNet.description,
+          volumeNet: catitem.volumeNet,
+          uomVolumeNet: catitem.uomForVolumeNet.description,
         }));
 
-        console.log(dataArray);
-
-        isMounted && setCompanies(dataArray);
+        isMounted && setCatItems(dataArray);
       } catch (err) {}
     };
-    getCompanies();
+    getItems();
     return () => {
       isMounted = false;
       controller.abort();
@@ -70,39 +61,51 @@ function Companies() {
   const [columnDefs] = useState([
     { field: "id", headerName: "ID" },
     {
-      field: "companyId",
-      headerName: "Company ID",
+      field: "itemCode",
+      headerName: "Item Code",
       flex: 1,
-      cellClassName: "name-column--cell",
+      cellRendererFramework: (params) => {
+        return <Link to={`/itemcatalog/${params.value}`}>{params.value}</Link>;
+      },
     },
     {
-      field: "companyName",
-      headerName: "Name",
-      flex: 1,
-    },
-    {
-      field: "associationNo",
-      headerName: "Association No",
+      field: "description",
+      headerName: "Description",
       flex: 1,
     },
     {
-      field: "webAddress",
-      headerName: "Web Address",
+      field: "infoText",
+      headerName: "Info Text",
       flex: 1,
     },
     {
-      field: "businessNature",
-      headerName: "Nature of Business",
+      field: "unitCode",
+      headerName: "Unit",
       flex: 1,
     },
     {
-      field: "createdAt",
-      headerName: "Created At",
+      field: "configurable",
+      headerName: "Configurable",
       flex: 1,
     },
     {
-      field: "createdBy",
-      headerName: "Created By",
+      field: "weightNet",
+      headerName: "Net Weight",
+      flex: 1,
+    },
+    {
+      field: "uomWeightNet",
+      headerName: "Net Weight Unit",
+      flex: 1,
+    },
+    {
+      field: "volumeNet",
+      headerName: "Net Volume",
+      flex: 1,
+    },
+    {
+      field: "uomVolumeNet",
+      headerName: "Net Volume Unit",
       flex: 1,
     },
   ]);
@@ -111,12 +114,8 @@ function Companies() {
     return {
       flex: 1,
       minWidth: 100,
-      // editable: true,
       filter: true,
       sortable: true,
-      floatingFilter: true,
-
-
     };
   }, []);
 
@@ -127,14 +126,14 @@ function Companies() {
   }, []);
 
   return (
-    <Box m="20px" backgroundColor={colors.primary[400]}>
-      <Header title="Companies" subTitle="" />
+    <Box m="5px" p="5px" backgroundColor={colors.primary[400]}>
+      <Header title="Items" subTitle="" />
 
       <Box sx={{ height: 500, margin: "10px" }}>
         <div style={gridStyle} className="ag-theme-balham">
           <AgGridReact
             ref={gridRef}
-            rowData={companies}
+            rowData={catItems}
             columnDefs={columnDefs}
             defaultColDef={defaultColDef}
             rowSelection={"single"}
@@ -147,4 +146,4 @@ function Companies() {
   );
 }
 
-export default Companies;
+export default CatalogItems;
