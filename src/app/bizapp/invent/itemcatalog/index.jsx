@@ -361,7 +361,7 @@ const Itemcatalog = () => {
                 margin="normal"
               />
             </Grid>
-            <Grid item xs={3}>
+            <Grid item xs={2}>
               <Autocomplete
                 variant="outlined"
                 disablePortal
@@ -406,7 +406,7 @@ const Itemcatalog = () => {
                 margin="normal"
               />
             </Grid>
-            <Grid item xs={3}>
+            <Grid item xs={2}>
               <Autocomplete
                 variant="outlined"
                 disablePortal

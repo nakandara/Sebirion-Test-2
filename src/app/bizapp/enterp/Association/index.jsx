@@ -37,8 +37,6 @@ const Association = () => {
   const { id } = useParams();
   const [reqObjId, setReqObjId] = useState(id);
 
-  const [association, setAssociation] = useState();
-
   const [openDel, setOpenDel] = useState(false);
 
   const addItems = useCallback((addIndex) => {
