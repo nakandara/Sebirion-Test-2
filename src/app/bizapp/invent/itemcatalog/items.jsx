@@ -40,12 +40,16 @@ function CatalogItems() {
           itemCode: catitem.itemCode,
           description: catitem.description,
           infoText: catitem.infoText,
-          unitCode: catitem.unitCode.description,
+          unitCode: catitem.unitCode ? catitem.unitCode.description : null,
           configurable: catitem.configurable,
-          weightNet: catitem.weightNet,
-          uomWeightNet: catitem.uomForWeightNet.description,
+          weightNet: catitem.weightNet ? catitem.weightNet : null,
+          uomWeightNet: catitem.uomForWeightNet
+            ? catitem.uomForWeightNet.description
+            : null,
           volumeNet: catitem.volumeNet,
-          uomVolumeNet: catitem.uomForVolumeNet.description,
+          uomVolumeNet: catitem.uomForVolumeNet
+            ? catitem.uomForVolumeNet.description
+            : null,
         }));
 
         isMounted && setCatItems(dataArray);
