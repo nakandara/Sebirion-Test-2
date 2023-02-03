@@ -51,6 +51,12 @@ const CatalogItems = lazy(() =>
 const AssociationList = lazy(() =>
   import("./app/bizapp/enterp/Association/associationlist")
 );
+const Site = lazy(() =>
+  import("./app/bizapp/enterp/Site")
+);
+const Sites = lazy(() =>
+  import("./app/bizapp/enterp/Site/sites")
+);
 
 function App() {
   const [theme, colorMode] = useMode();
@@ -144,6 +150,22 @@ function App() {
                         element={
                           <Suspense fallback={<>...</>}>
                             <AssociationList />
+                          </Suspense>
+                        }
+                      />
+                      <Route
+                        path="site/:id"
+                        element={
+                          <Suspense fallback={<>...</>}>
+                            <Site />
+                          </Suspense>
+                        }
+                      />
+                      <Route
+                        path="sites"
+                        element={
+                          <Suspense fallback={<>...</>}>
+                            <Sites />
                           </Suspense>
                         }
                       />
