@@ -146,6 +146,12 @@ const SidebarNewV1 = ({
               <MenuItem icon={<FaRegBuilding />}>
                 companies <Link to="/companies" />
               </MenuItem>
+              <MenuItem icon={<FaRegBuilding />}>
+                Site <Link to="/site/null" />
+              </MenuItem>
+              <MenuItem icon={<FaRegBuilding />}>
+                Sites <Link to="/sites" />
+              </MenuItem>
             </SubMenu>
 
             <SubMenu title={"Order"} icon={<FaRegLaughWink />}>
