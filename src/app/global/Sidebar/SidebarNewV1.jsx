@@ -29,11 +29,7 @@ import {
   FaDatabase,
   FaUnity,
   FaRegBuilding,
-
-
-  FaLaptopHouse
-
-
+  FaLaptopHouse,
 } from "react-icons/fa";
 
 import {
@@ -75,7 +71,8 @@ const SidebarNewV1 = ({
 
   return (
     <>
-      <ProSidebar backgroundColor={colors.primary[400]}
+      <ProSidebar
+        backgroundColor={colors.primary[400]}
         collapsed={collapsed}
         toggled={toggled}
         onToggle={handleToggleSidebar}
@@ -113,13 +110,16 @@ const SidebarNewV1 = ({
           </Menu>
         </SidebarHeader>
         {/* Content */}
-        <SidebarContent backgroundColor={colors.primary[400]} >
-          <Menu iconShape="circle" style={{
-            padding: "5px",
-            textTransform: "uppercase",
-            fontSize: 10,
-            letterSpacing: "1px",
-          }}>
+        <SidebarContent backgroundColor={colors.primary[400]}>
+          <Menu
+            iconShape="circle"
+            style={{
+              padding: "5px",
+              textTransform: "uppercase",
+              fontSize: 10,
+              letterSpacing: "1px",
+            }}
+          >
             <MenuItem icon={<FaTachometerAlt />}>
               Dashboard
               <NavLink to="/" />
@@ -134,8 +134,11 @@ const SidebarNewV1 = ({
               <NavLink to="/Personinfo" />
             </MenuItem>
             <SubMenu title={"Enterprise"} icon={<FaArchway />}>
-            <MenuItem icon={<FaLaptopHouse />}>
-                Association <Link to="/association" />
+              <MenuItem icon={<FaLaptopHouse />}>
+                Association <Link to="/association/null" />
+              </MenuItem>
+              <MenuItem icon={<FaLaptopHouse />}>
+                Associations <Link to="/associations" />
               </MenuItem>
               <MenuItem icon={<FaRegBuilding />}>
                 company <Link to="/company" />
@@ -166,7 +169,8 @@ const SidebarNewV1 = ({
                 Item Cataog <Link to="/itemcatalog/null" />
               </MenuItem>
               <MenuItem icon={<AutoAwesome />}>
-                Cataog Items<Link to="/catalogitems" />
+                Cataog Items
+                <Link to="/catalogitems" />
               </MenuItem>
             </SubMenu>
             {/* HR */}
@@ -203,7 +207,7 @@ const SidebarNewV1 = ({
           </Menu>
         </SidebarContent>
         {/* Footer */}
-        <SidebarFooter style={{ textAlign: "center" }}>
+        {/* <SidebarFooter style={{ textAlign: "center" }}>
           <div
             className="sidebar-btn-wrapper"
             style={{ padding: "16px", height: "330px" }}
@@ -217,7 +221,7 @@ const SidebarNewV1 = ({
               <span>My Account</span>
             </Link>
           </div>
-        </SidebarFooter>
+        </SidebarFooter> */}
       </ProSidebar>
     </>
   );

@@ -4,15 +4,25 @@ import React, {
   useRef,
   useCallback,
   useEffect,
-} from "react";
-import { Box, Tab, TextField, useMediaQuery, useTheme } from "@mui/material";
-import { AgGridReact } from "ag-grid-react";
+  } from "react";
+import {
+  Box,
+  Grid,
+  Paper,
+  TextField,
+  useMediaQuery,
+  useTheme,
+} from "@mui/material";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-balham.css";
 import Header from "../../../components/Header";
 import ListCrudActions from "../../../components/ListCrudActions";
 import useAxiosPrivate from "../../../../Application/fndbas/hooks/useAxiosPrivate";
+import DeleteModal from "../../../components/DeleteModal";
+import { useParams } from "react-router-dom";
+
 import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const API_URL = "enterp/v1/Association/";
 
@@ -22,79 +32,15 @@ const Association = () => {
   const axiosPrivate = useAxiosPrivate();
 
   const [newClicked, setNewClicked] = useState(false);
-  const [values, setValues] = useState(initialValues);
+  const [values, setValues] = useState(initialState);
+
+  const { id } = useParams();
+  const [reqObjId, setReqObjId] = useState(id);
 
   const [association, setAssociation] = useState();
 
- 
+  const [openDel, setOpenDel] = useState(false);
 
-  const defaultColDef = useMemo(() => {
-    return {
-      flex: 1,
-      editable: true,
-      filter: true,
-      sortable: true,
-      floatingFilter: true,
-    };
-  }, []);
-
-  const [columnDefs, setColumnDefs] = useState([
-    {
-      field: "associationId",
-      headerName: "Association ID",
-      width: 200,
-    },
-    {
-      field: "associationName",
-      headerName: "Association Name",
-      width: 200,
-    },
-    {
-      field: "address1",
-      headerName: "Address 1",
-      width: 110,
-    },
-    {
-      field: "address2",
-      headerName: "Address 2",
-      width: 110,
-    },
-    {
-      field: "city",
-      headerName: "City",
-      width: 110,
-    },
-    {
-      field: "district",
-      headerName: "District",
-      width: 110,
-    },
-    {
-      field: "province",
-      headerName: "Province",
-      width: 110,
-    },
-    {
-      field: "country",
-      headerName: "Country",
-      width: 110,
-    },
-    {
-      field: "contact1",
-      headerName: "Contact 1",
-      width: 110,
-    },
-    {
-      field: "contact2",
-      headerName: "Contact 2",
-      width: 110,
-    },
-    {
-      field: "email",
-      headerName: "Email",
-      width: 110,
-    },
-  ]);
   const addItems = useCallback((addIndex) => {
     const newItems = [{}];
     gridRef.current.api.applyTransaction({
@@ -110,36 +56,49 @@ const Association = () => {
   }, []);
 
   useEffect(() => {
-    let isMounted = true;
-    const controller = new AbortController();
-
-    const getAssociation = async () => {
+    const fetchLatestObjId = async () => {
+      const controller = new AbortController();
       try {
-        const response = await axiosPrivate.get(API_URL + "get_all", {
+        const latestId = await axiosPrivate.get(API_URL + "latest_id", {
           headers: {
             signal: controller.signal,
           },
         });
-
-        isMounted && setAssociation(response.data);
+        setReqObjId(latestId.data);
       } catch (err) {}
     };
-    getAssociation();
-    return () => {
-      isMounted = false;
-      controller.abort();
-    };
-  }, []);
+    reqObjId === "null" && fetchLatestObjId();
+  }, [reqObjId, axiosPrivate]);
+
+  const getObj = async () => {
+    const controller = new AbortController();
+    try {
+      const response = await axiosPrivate.get(API_URL + "get/" + reqObjId, {
+        headers: {
+          signal: controller.signal,
+        },
+      });
+      console.log(response.data);
+      response.data && setValues(response.data);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  useEffect(() => {
+    reqObjId && reqObjId !== "null" && getObj();
+  }, [reqObjId, axiosPrivate]);
+
+
 
   const handleNew = (e) => {
-    setValues(initialValues);
+    setValues(initialState);
     setNewClicked(true);
     addItems(undefined);
   };
 
   const handleSave = async (e) => {
     e.preventDefault();
-    setValues(initialValues);
 
     const controller = new AbortController();
     try {
@@ -162,7 +121,24 @@ const Association = () => {
     }
   };
   const handleEdit = (e) => {};
-  const handleDelete = (e) => {};
+
+  const handleDelete = (e) => {
+    setOpenDel(true);
+  };
+
+  const handleClose = () => {
+    setOpenDel(false);
+  };
+
+  const deleteObj = async () => {
+    try {
+      await axiosPrivate.delete(API_URL + "delete/" + values.associationId);
+      setOpenDel(false);
+      showAllToasts("SUCCESS", "Successfully Deleted.");
+
+      setValues(initialState);
+    } catch (err) {}
+  };
 
   const showAllToasts = (type, msg) => {
     type === "SUCCESS" &&
@@ -210,36 +186,203 @@ const Association = () => {
       });
   };
 
+  const onFormInputChange = (key, value) => {
+    const updated = Object.assign({}, values);
+    updated[key] = value;
+    setValues(updated);
+  };
+
   return (
-    <Box>
-      <Box m="10px">
-        <Header title="ASSOCIATION" subTitle="" />
-        <ListCrudActions
-          addItems={handleNew}
-          handleSave={handleSave}
-          handleEdit={handleEdit}
-          handleDelete={handleDelete}
+    <Box m="10px">
+      <Header title="ASSOCIATION" subTitle="" />
+      <ListCrudActions
+        addItems={handleNew}
+        handleSave={handleSave}
+        handleEdit={handleEdit}
+        handleDelete={handleDelete}
+      />
+      <Paper elevation={2} style={{ padding: "5px" }}>
+        <form onSubmit={handleSave}>
+          <Grid container spacing={2}>
+            <Grid item xs={2}>
+              <TextField
+                variant="outlined"
+                size="small"
+                fullWidth
+                id="associationId"
+                autoComplete="off"
+                name="associationId"
+                label="Association ID"
+                type="text"
+                value={values.associationId}
+                onChange={(e) =>
+                  onFormInputChange("associationId", e.target.value)
+                }
+                required
+                margin="normal"
+                inputProps={{ style: { textTransform: "uppercase" } }}
+              />
+            </Grid>
+            <Grid item xs={4}>
+              <TextField
+                variant="outlined"
+                size="small"
+                fullWidth
+                id="associationName"
+                autoComplete="off"
+                name="associationName"
+                label="Association Name"
+                type="text"
+                value={values.associationName}
+                onChange={(e) =>
+                  onFormInputChange("associationName", e.target.value)
+                }
+                required
+                margin="normal"
+              />
+            </Grid>
+          </Grid>
+          <Grid container spacing={2}>
+            <Grid item xs={4} direction="column">
+                <Grid item xs={2}>
+                  <TextField
+                    variant="outlined"
+                    size="small"
+                    fullWidth
+                    id="address1"
+                    autoComplete="off"
+                    name="address1"
+                    label="Address 1"
+                    type="text"
+                    value={values.address1}
+                    onChange={(e) =>
+                      onFormInputChange("address1", e.target.value)
+                    }
+                    required
+                    margin="normal"
+                  />
+                </Grid>
+                <Grid item xs={2}>
+                  <TextField
+                    variant="outlined"
+                    size="small"
+                    fullWidth
+                    id="address2"
+                    autoComplete="off"
+                    name="address2"
+                    label="Address 2"
+                    type="text"
+                    value={values.address2}
+                    onChange={(e) =>
+                      onFormInputChange("address2", e.target.value)
+                    }
+                    required
+                    margin="normal"
+                  />
+                </Grid>
+                <Grid item xs={2}>
+                  <TextField
+                    variant="outlined"
+                    size="small"
+                    fullWidth
+                    id="city"
+                    autoComplete="off"
+                    name="city"
+                    label="City"
+                    type="text"
+                    value={values.city}
+                    onChange={(e) => onFormInputChange("city", e.target.value)}
+                    required
+                    margin="normal"
+                  />
+                </Grid>
+                <Grid item xs={2}>
+                  <TextField
+                    variant="outlined"
+                    size="small"
+                    fullWidth
+                    id="province"
+                    autoComplete="off"
+                    name="province"
+                    label="Province"
+                    type="text"
+                    value={values.province}
+                    onChange={(e) =>
+                      onFormInputChange("province", e.target.value)
+                    }
+                    required
+                    margin="normal"
+                  />
+                </Grid>
+            </Grid>
+            <Grid item xs={4} direction="column">
+              <Grid item xs={2}>
+                <TextField
+                  variant="outlined"
+                  size="small"
+                  fullWidth
+                  id="contact1"
+                  autoComplete="off"
+                  name="contact1"
+                  label="Contact 1"
+                  type="text"
+                  value={values.contact1}
+                  onChange={(e) =>
+                    onFormInputChange("contact1", e.target.value)
+                  }
+                  required
+                  margin="normal"
+                />
+              </Grid>
+              <Grid item xs={2}>
+                <TextField
+                  variant="outlined"
+                  size="small"
+                  fullWidth
+                  id="contact2"
+                  autoComplete="off"
+                  name="contact2"
+                  label="Contact 2"
+                  type="text"
+                  value={values.contact2}
+                  onChange={(e) =>
+                    onFormInputChange("contact2", e.target.value)
+                  }
+                  required
+                  margin="normal"
+                />
+              </Grid>
+              <Grid item xs={3}>
+                <TextField
+                  variant="outlined"
+                  size="small"
+                  fullWidth
+                  id="email"
+                  autoComplete="off"
+                  name="email"
+                  label="Email"
+                  type="text"
+                  value={values.email}
+                  onChange={(e) => onFormInputChange("email", e.target.value)}
+                  required
+                  margin="normal"
+                />
+              </Grid>
+            </Grid>
+          </Grid>
+        </form>
+        <DeleteModal
+          open={openDel}
+          handleClose={handleClose}
+          Delete={deleteObj}
         />
-      </Box>
-      <Box sx={{ height: 400, margin: "10px" }}>
-        <div style={gridStyle} className="ag-theme-balham">
-          <AgGridReact
-            ref={gridRef}
-            rowData={association}
-            columnDefs={columnDefs}
-            defaultColDef={defaultColDef}
-            rowSelection={"single"}
-            animateRows={true}
-            onSelectionChanged={onSelectionChanged}
-            editType={"fullRow"}
-          ></AgGridReact>
-        </div>
-      </Box>
+        <ToastContainer />
+      </Paper>
     </Box>
   );
 };
 
-const initialValues = {
+const initialState = {
   associationId: "",
   associationName: "",
   address1: "",
@@ -251,6 +394,7 @@ const initialValues = {
   contact1: "",
   contact2: "",
   email: "",
+  associations: [],
 };
 
 export default Association;

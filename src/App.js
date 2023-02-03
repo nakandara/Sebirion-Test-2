@@ -24,12 +24,20 @@ const Unauthorized = lazy(() => import("./components/pages/Unauthorized"));
 const Login = lazy(() => import("./app/login/Login"));
 const FndUser = lazy(() => import("./Application/Enterprise/User/FndUser"));
 const PersonInfo = lazy(() => import("./Application/Pageinfo/PersonInfo"));
-const FndUsers = lazy(() =>import("./Application/Enterprise/FndUsers/FndUsers"));
-const InventoryItem = lazy(() =>import("./Application/Inventory/InventoryItem/InventoryItem"));
-const InventoryItemNewV1 = lazy(() =>import("./app/bizapp/invent/InventoryItem"));
-const InventoryItems = lazy(() =>import("./app/bizapp/invent/InventoryItems"));
-const ItemType = lazy(() =>import("./Application/Inventory/ItemType/ItemType"));
-const ItemCatalog = lazy(() =>import("./app/bizapp/invent/ItemCatalog"));
+const FndUsers = lazy(() =>
+  import("./Application/Enterprise/FndUsers/FndUsers")
+);
+const InventoryItem = lazy(() =>
+  import("./Application/Inventory/InventoryItem/InventoryItem")
+);
+const InventoryItemNewV1 = lazy(() =>
+  import("./app/bizapp/invent/InventoryItem")
+);
+const InventoryItems = lazy(() => import("./app/bizapp/invent/InventoryItems"));
+const ItemType = lazy(() =>
+  import("./Application/Inventory/ItemType/ItemType")
+);
+const ItemCatalog = lazy(() => import("./app/bizapp/invent/ItemCatalog"));
 const Association = lazy(() => import("./app/bizapp/enterp/Association"));
 const Companies = lazy(() => import("./app/bizapp/enterp/Companies"));
 const Company = lazy(() => import("./app/bizapp/enterp/Company"));
@@ -37,7 +45,12 @@ const Units = lazy(() => import("./app/bizapp/appserv/Units"));
 const SalesRepOrder = lazy(() => import("./app/bizapp/order/SalesRepOrder"));
 const IssueNote = lazy(() => import("./app/bizapp/order/IssueNote/IssueNote"));
 const Person = lazy(() => import("./app/bizapp/hr/Person"));
-const CatalogItems = lazy(() => import("./app/bizapp/invent/ItemCatalog/items"));
+const CatalogItems = lazy(() =>
+  import("./app/bizapp/invent/ItemCatalog/items")
+);
+const AssociationList = lazy(() =>
+  import("./app/bizapp/enterp/Association/associationlist")
+);
 
 function App() {
   const [theme, colorMode] = useMode();
@@ -83,7 +96,6 @@ function App() {
                         element={
                           <Suspense fallback={<>...</>}>
                             <InventoryItemNewV1 />
-
                           </Suspense>
                         }
                       />
@@ -92,7 +104,6 @@ function App() {
                         element={
                           <Suspense fallback={<>...</>}>
                             <InventoryItems />
-
                           </Suspense>
                         }
                       />
@@ -120,11 +131,19 @@ function App() {
                           </Suspense>
                         }
                       />
-                        <Route
-                        path="association"
+                      <Route
+                        path="association/:id"
                         element={
                           <Suspense fallback={<>...</>}>
                             <Association />
+                          </Suspense>
+                        }
+                      />
+                      <Route
+                        path="associations"
+                        element={
+                          <Suspense fallback={<>...</>}>
+                            <AssociationList />
                           </Suspense>
                         }
                       />

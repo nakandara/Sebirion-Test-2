@@ -70,7 +70,6 @@ const Itemcatalog = () => {
             signal: controller.signal,
           },
         });
-        console.log("Latedst id-->" + latestId.data);
         setRequestObjId(latestId.data);
       } catch (err) {}
     };
@@ -226,6 +225,7 @@ const Itemcatalog = () => {
   };
 
   const handleDelete = (e) => {
+    e.preventDefault();
     setOpenDel(true);
   };
 
