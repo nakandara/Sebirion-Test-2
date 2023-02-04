@@ -1,30 +1,38 @@
 import {
+  Autocomplete,
   Box,
-  FilledInput,
   FormControl,
-  FormHelperText,
-  Input,
-  InputAdornment,
-  OutlinedInput,
+  Grid,
+  InputLabel,
+  MenuItem,
+  Paper,
+  Select,
   Tab,
   TextField,
+  Typography,
   useMediaQuery,
   useTheme,
 } from "@mui/material";
-import { Formik, useFormik } from "formik";
-import React, { useRef, useState } from "react";
-
-import * as yup from "yup";
+import React, { useRef, useState, useEffect } from "react";
 
 import CrudActions from "../../../components/CrudActions";
-import { ToastContainer, toast } from "react-toastify";
 import Header from "../../../components/Header";
 import { tokens } from "../../../../theme";
-import { TabContext, TabList, TabPanel } from "@mui/lab";
 import useAxiosPrivate from "../../../../Application/fndbas/hooks/useAxiosPrivate";
 import InventoryAddress from "./InventoryAddress";
 import InventoryContactInfo from "./InventoryContactInfo";
-const API_URL = "enterp/v1/Inventory/";
+import DeleteModal from "../../../components/DeleteModal";
+import { TabContext, TabList, TabPanel } from "@mui/lab";
+import AdapterDateFns from "@mui/lab/AdapterDateFns";
+import LocalizationProvider from "@mui/lab/LocalizationProvider";
+import DatePicker from "@mui/lab/DatePicker";
+
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
+const API_URL = "invent/v1/inventoryItem/";
+const SITE_API_URL = "enterp/v1/Site/";
+const ITEM_API_URL = "invent/v1/ItemCatalog/";
 
 const InventoryItem = () => {
   const theme = useTheme();
@@ -37,9 +45,44 @@ const InventoryItem = () => {
   const [isEditEnabled, setIsEditEnabled] = useState(true);
   const [isSaveEnabled, setIsSaveEnabled] = useState(true);
   const [isDeleteEnabled, setIsDeleteEnabled] = useState(true);
-  const [values, setValues] = useState(initialValues);
+  const [values, setValues] = useState(initialState);
   const [newClicked, setNewClicked] = useState(false);
   const [tabValue, setTabValue] = useState("1");
+  const [inputSite, setInputSite] = useState(initialSite);
+  const [inputItemCatalog, setInputItemCatalog] = useState(initialItemCatalog);
+
+  const [sites, setSites] = useState([]);
+  const [catalogItems, setCatalogItems] = useState([]);
+
+  const[createdBy,setCreatedBy] = useState("");
+  const[createdAt,setCreatedAt] = useState(new Date());
+  const[modifiedAt,setModifiedAt] = useState(new Date());
+  const[modifiedBy,setModifiedBy] = useState("");
+
+  const [openDel, setOpenDel] = useState(false);
+
+  useEffect(() => {
+    const getMetaData = async () => {
+      const controller = new AbortController();
+      try {
+        const sites = await axiosPrivate.get(SITE_API_URL + "get_all", {
+          headers: {
+            signal: controller.signal,
+          },
+        });
+
+        const catItems = await axiosPrivate.get(ITEM_API_URL + "get_all", {
+          headers: {
+            signal: controller.signal,
+          },
+        });
+
+        setSites(sites.data);
+        setCatalogItems(catItems.data);
+      } catch (err) {}
+    };
+    getMetaData();
+  }, []);
 
   const showAllToasts = (type, msg) => {
     type === "SUCCESS" &&
@@ -88,16 +131,18 @@ const InventoryItem = () => {
   };
 
   const handleNew = (e) => {
-    setValues(initialValues);
+    setValues(initialState);
     setNewClicked(true);
   };
   const handleEdit = (e) => {
     companyIdRef.current.focus();
   };
+
   const handleSave = async (e) => {
     e.preventDefault();
     const controller = new AbortController();
     try {
+      console.log(values);
       const response = await axiosPrivate.post(
         API_URL + "create",
         JSON.stringify(values),
@@ -109,20 +154,29 @@ const InventoryItem = () => {
         }
       );
       console.log(response.data);
-      // response.data && setCurrentObject(response.data);
+      response.data && setValues(response.data);
+      // response.data && setCreatedAt(response.createdAt);
+      // response.data && setCreatedBy(response.createdBy.userName);
+      // response.data && setModifiedAt(response.modifiedAt);
+      // response.data && setModifiedBy(response.modifiedBy.userName);
       showAllToasts("SUCCESS", "Successfully Saved.");
     } catch (err) {
       showAllToasts("ERROR", err.response.data.apiError.message);
       console.log(err);
     }
   };
-  const handleDelete = (e) => {
-    companyIdRef.current.focus();
-  };
 
   const onFormInputChange = (key, value) => {
+    console.log(value);
     const updated = Object.assign({}, values);
-    updated[key] = value;
+    if (key === "reorderLevel" || key === "availableQuantity") {
+      updated[key] = Number(value);
+    } else if (key === "createdAt" || key === "modifiedAt") {
+      updated[key] = Date(value);
+    } else {
+      updated[key] = value;
+    }
+
     setValues(updated);
   };
 
@@ -130,8 +184,27 @@ const InventoryItem = () => {
     setTabValue(newValue);
   };
 
+  const handleDelete = (e) => {
+    e.preventDefault();
+    setOpenDel(true);
+  };
+
+  const handleClose = () => {
+    setOpenDel(false);
+  };
+
+  const deleteObj = async () => {
+    try {
+      await axiosPrivate.delete(API_URL + "delete/" + values.site);
+      setOpenDel(false);
+      showAllToasts("SUCCESS", "Successfully Deleted.");
+
+      setValues(null);
+    } catch (err) {}
+  };
+
   return (
-    <Box m="20px" backgroundColor={colors.primary[400]}>
+    <Box m="5px">
       <Header title="Inventory Item" subTitle="" />
       <CrudActions
         handleNew={handleNew}
@@ -143,271 +216,279 @@ const InventoryItem = () => {
         handleDelete={handleDelete}
         isDeleteEnabled={isDeleteEnabled}
       />
-
-      <form onSubmit={handleSave}>
-        <fieldset disabled={!newClicked} style={{ border: "0" }}>
-          <Box
-            display="grid"
-            gap="20px"
-            gridTemplateColumns="repeat(6, minmax(0, 1fr))"
-            sx={{
-              "& > div": { gridColumn: isNonMobile ? undefined : "span 6" },
-            }}
-          >
-            <TextField
-              fullWidth
-              variant="outlined"
-              ref={companyIdRef}
-              type="text"
-              label="Item Code"
-              onChange={(e) => onFormInputChange("itemCode", e.target.value)}
-              value={values.itemCode}
-              InputProps={{ sx: { height: 40 } }}
-              name="itemCode"
-              sx={{
-                gridColumn: "span 1",
-                "& .MuiInputBase-root": {
-                  height: 40,
-                },
-              }}
-            />
-            <TextField
-              fullWidth
-              variant="outlined"
-              type="text"
-              label="Description"
-              onChange={(e) => onFormInputChange("description", e.target.value)}
-              value={values.description}
-              name="description"
-              sx={{
-                gridColumn: "span 1",
-                "& .MuiInputBase-root": {
-                  height: 40,
-                },
-              }}
-            />
-
-            <TextField
-              fullWidth
-              variant="outlined"
-              type="text"
-              label="Item Type"
-              onChange={(e) => onFormInputChange("itemType", e.target.value)}
-              value={values.itemType}
-              name="itemType"
-              sx={{
-                gridColumn: "span 1",
-                "& .MuiInputBase-root": {
-                  height: 40,
-                },
-              }}
-            />
-
-            <TextField
-              fullWidth
-              variant="outlined"
-              type="text"
-              label="Created By"
-              onChange={(e) => onFormInputChange("createdBy", e.target.value)}
-              value={values.createdBy}
-              name="createdBy"
-              sx={{
-                gridColumn: "span 1",
-                "& .MuiInputBase-root": {
-                  height: 40,
-                },
-              }}
-            />
-            <TextField
-              fullWidth
-              variant="outlined"
-              type="text"
-              label="Item Discount"
-              onChange={(e) =>
-                onFormInputChange("itemDiscount", e.target.value)
-              }
-              value={values.itemDiscount}
-              name="itemDiscount"
-              sx={{
-                gridColumn: "span 1",
-                "& .MuiInputBase-root": {
-                  height: 40,
-                },
-              }}
-            />
-
-            <TextField
-              fullWidth
-              variant="outlined"
-              type="text"
-              label="Weight (kg)"
-              onChange={(e) =>
-                onFormInputChange("reorderLevel", e.target.value)
-              }
-              value={values.weight}
-              name="reorderLevel"
-              sx={{
-                gridColumn: "span 1",
-                "& .MuiInputBase-root": {
-                  height: 40,
-                },
-              }}
-            />
-            <TextField
-              fullWidth
-              variant="outlined"
-              type="text"
-              label="Reorder Level"
-              onChange={(e) =>
-                onFormInputChange("reorderLevel", e.target.value)
-              }
-              value={values.reorderLevel}
-              name="reorderLevel"
-              sx={{
-                gridColumn: "span 1",
-                "& .MuiInputBase-root": {
-                  height: 40,
-                },
-              }}
-            />
-            <TextField
-              fullWidth
-              variant="outlined"
-              type="text"
-              label="Curr AvgPrice"
-              onChange={(e) =>
-                onFormInputChange("currAvgPrice", e.target.value)
-              }
-              value={values.currAvgPrice}
-              name="currAvgPrice"
-              sx={{
-                gridColumn: "span 1",
-                "& .MuiInputBase-root": {
-                  height: 40,
-                },
-              }}
-            />
-            <TextField
-              fullWidth
-              variant="outlined"
-              type="text"
-              label="Curr AvgCost"
-              onChange={(e) => onFormInputChange("currAvgCost", e.target.value)}
-              value={values.currAvgCost}
-              name="currAvgCost"
-              sx={{
-                gridColumn: "span 1",
-                "& .MuiInputBase-root": {
-                  height: 40,
-                },
-              }}
-            />
-            <TextField
-              fullWidth
-              variant="outlined"
-              type="text"
-              label="Available Quantity"
-              onChange={(e) =>
-                onFormInputChange("availableQuantity", e.target.value)
-              }
-              value={values.availableQuantity}
-              name="availableQuantity"
-              sx={{
-                gridColumn: "span 1",
-                "& .MuiInputBase-root": {
-                  height: 40,
-                },
-              }}
-            />
-            <TextField
-              fullWidth
-              variant="outlined"
-              type="text"
-              label="Date CreatedAt"
-              onChange={(e) =>
-                onFormInputChange("datecreatedAt", e.target.value)
-              }
-              value={values.datecreatedAt}
-              name="datecreatedAt"
-              sx={{
-                gridColumn: "span 1",
-                "& .MuiInputBase-root": {
-                  height: 40,
-                },
-              }}
-            />
-            <TextField
-              fullWidth
-              variant="outlined"
-              type="text"
-              label="Datelast Edited At"
-              onChange={(e) =>
-                onFormInputChange("datelastEditedAt", e.target.value)
-              }
-              value={values.datelastEditedAt}
-              name="datelastEditedAt"
-              sx={{
-                gridColumn: "span 1",
-                "& .MuiInputBase-root": {
-                  height: 40,
-                },
-              }}
-            />
-            <TextField
-              fullWidth
-              variant="outlined"
-              type="text"
-              label="Status"
-              onChange={(e) => onFormInputChange("status", e.target.value)}
-              value={values.status}
-              name="status"
-              sx={{
-                gridColumn: "span 1",
-                "& .MuiInputBase-root": {
-                  height: 40,
-                },
-              }}
-            />
-          </Box>
-        </fieldset>
-      </form>
-      <ToastContainer />
-      <Box sx={{ width: "100%", typography: "body1", pt: "10px" }}>
-        <TabContext value={tabValue}>
-          <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-            <TabList
-              onChange={handleTabChange}
-              aria-label="lab API tabs example"
-            >
-              <Tab label="Address" value="1" />
-              <Tab label="Contact Info" value="2" />
-            </TabList>
-          </Box>
-          <TabPanel value="1">
-            <InventoryAddress />
-          </TabPanel>
-          <TabPanel value="2">
-            <InventoryContactInfo />
-          </TabPanel>
-        </TabContext>
-      </Box>
+      <Paper elevation={2} style={{ padding: "5px" }}>
+        <form onSubmit={handleSave}>
+          <Grid container spacing={2}>
+            <Grid item xs={2}>
+              <Autocomplete
+                variant="outlined"
+                disablePortal
+                isOptionEqualToValue={(option, value) =>
+                  option.site === value.site
+                }
+                id="site"
+                value={values.site}
+                inputValue={inputSite}
+                onInputChange={(event, newInputValue) => {
+                  setInputSite(newInputValue);
+                }}
+                options={sites}
+                onChange={(e, newValue) => onFormInputChange("site", newValue)}
+                getOptionLabel={(option) =>
+                  `${option.site} - ${option.description}` || ""
+                }
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    label="Site"
+                    size="small"
+                    fullWidth
+                    margin="normal"
+                  />
+                )}
+              />
+            </Grid>
+            <Grid item xs={2}>
+              <Autocomplete
+                variant="outlined"
+                disablePortal
+                isOptionEqualToValue={(option, value) =>
+                  option.itemCatalog === value.itemCatalog
+                }
+                id="itemCatalog"
+                value={values.itemCatalog}
+                inputValue={inputItemCatalog}
+                onInputChange={(event, newInputValue) => {
+                  setInputItemCatalog(newInputValue);
+                }}
+                options={catalogItems}
+                onChange={(e, newValue) =>
+                  onFormInputChange("itemCatalog", newValue)
+                }
+                getOptionLabel={(option) =>
+                  `${option.itemCode} - ${option.description}` || ""
+                }
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    label="Item Catalog"
+                    size="small"
+                    fullWidth
+                    margin="normal"
+                  />
+                )}
+              />
+            </Grid>
+            <Grid item xs={2}>
+              <TextField
+                variant="outlined"
+                size="small"
+                fullWidth
+                id="reorderLevel"
+                autoComplete="off"
+                name="reorderLevel"
+                label="Reorder Level"
+                type="number"
+                value={values.reorderLevel}
+                onChange={(e) =>
+                  onFormInputChange("reorderLevel", e.target.value)
+                }
+                margin="normal"
+              />
+            </Grid>
+            <Grid item xs={2}>
+              <TextField
+                variant="outlined"
+                size="small"
+                fullWidth
+                id="availableQuantity"
+                autoComplete="off"
+                name="availableQuantity"
+                label="Quantity"
+                type="number"
+                value={values.availableQuantity}
+                onChange={(e) =>
+                  onFormInputChange("availableQuantity", e.target.value)
+                }
+                margin="normal"
+              />
+            </Grid>
+            <Grid item xs={2}>
+              <FormControl sx={{ m: 1, minWidth: 120 }}>
+                <InputLabel id="statuslbl">Status</InputLabel>
+                <Select
+                  size="small"
+                  margin="normal"
+                  labelId="statuslbl"
+                  id="status"
+                  value={values.status}
+                  label="Status"
+                  onChange={(e) => onFormInputChange("status", e.target.value)}
+                >
+                  <MenuItem value="AVAILABLE">Available</MenuItem>
+                  <MenuItem value="NOT_AVAILABLE">Not Available</MenuItem>
+                  <MenuItem value="RESTRICTED">Restricted</MenuItem>
+                </Select>
+              </FormControl>
+            </Grid>
+          </Grid>
+          <Grid container spacing={2}>
+            <Grid item xs={2}>
+              <TextField
+                variant="outlined"
+                size="small"
+                fullWidth
+                id="createdBy"
+                autoComplete="off"
+                name="createdBy"
+                label="Created By"
+                type="text"
+                value={createdBy}
+                InputLabelProps={{ shrink: createdBy }}
+                disabled
+                margin="normal"
+              />
+            </Grid>
+            <Grid item xs={2}>
+              <TextField
+                variant="outlined"
+                size="small"
+                fullWidth
+                id="createdAt"
+                name="createdAt"
+                label="Created"
+                type="date"
+                value={createdAt}
+                disabled
+                InputLabelProps={{ shrink: createdAt }}
+                margin="normal"
+              />
+            </Grid>
+            <Grid item xs={2}>
+              <TextField
+                variant="outlined"
+                size="small"
+                fullWidth
+                id="modifiedBy"
+                name="modifiedBy"
+                label="Modified By"
+                type="text"
+                value={modifiedBy}
+                InputLabelProps={{ shrink: modifiedBy }}
+                disabled
+                margin="normal"
+              />
+            </Grid>
+            <Grid item xs={2}>
+              <LocalizationProvider dateAdapter={AdapterDateFns}>
+                <DatePicker
+                  label="Created"
+                  value={modifiedAt}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      variant="outlined"
+                      size="small"
+                      fullWidth
+                      margin="normal"
+                    />
+                  )}
+                />
+              </LocalizationProvider>
+              <TextField
+                variant="outlined"
+                size="small"
+                fullWidth
+                id="modifiedAt"
+                autoComplete="off"
+                name="modifiedAt"
+                label="Modified At"
+                type="date"
+                value={modifiedAt}
+                InputLabelProps={{ shrink: modifiedAt }}
+                disabled
+                margin="normal"
+              />
+            </Grid>
+          </Grid>
+        </form>
+        <DeleteModal
+          open={openDel}
+          handleClose={handleClose}
+          Delete={deleteObj}
+        />
+        <ToastContainer />
+        <Box sx={{ width: "100%", typography: "body1", pt: "10px" }}>
+          <TabContext value={tabValue}>
+            <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+              <TabList
+                onChange={handleTabChange}
+                aria-label="lab API tabs example"
+              >
+                <Tab label="Price Hist." value="1" />
+                <Tab label="Cost Hist" value="2" />
+                <Tab label="Batches" value="3" />
+              </TabList>
+            </Box>
+            <TabPanel value="1">
+              <Typography>asdfasf</Typography>
+            </TabPanel>
+            <TabPanel value="2">
+              <Typography>adasfasd</Typography>
+            </TabPanel>
+            <TabPanel value="3">
+              <Typography>adasfasd</Typography>
+            </TabPanel>
+          </TabContext>
+        </Box>
+      </Paper>
     </Box>
   );
 };
 
-const initialValues = {
+const initialSite = {
+  site: "",
+  description: "",
+  address1: "",
+  address2: "",
+  city: "",
+  district: "",
+  province: "",
+  country: "",
+  contact1: "",
+  contact2: "",
+  email: "",
+};
+
+const isoUnit = {
+  unitCode: "",
+  description: "",
+  baseUnit: "",
+  multiFactor: "",
+  divFactor: "",
+  tenPower: "",
+  userDefined: "",
+  unitType: "",
+};
+
+const initialItemCatalog = {
   itemCode: "",
   description: "",
-  itemType: "",
-  createdBy: "",
-  itemDiscount: "",
-  weight: "",
-  reorderLevel: "",
-  currAvgPrice: "",
-  currAvgCost: "",
-  availableQuantity: "",
-  datecreatedAt: "",
-  datelastEditedAt: "",
+  infoText: "",
+  unitCode: isoUnit,
+  configurable: true,
+  weightNet: "",
+  uomForWeightNet: isoUnit,
+  volumeNet: "",
+  uomForVolumeNet: isoUnit,
+  pictureUrl: "",
+};
+
+const initialState = {
+  site: initialSite,
+  itemCatalog: initialItemCatalog,
+  reorderLevel: 0,
+  availableQuantity: 0,
   status: "",
 };
 
