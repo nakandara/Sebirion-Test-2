@@ -4,7 +4,6 @@ import Header from "../../../components/Header";
 import * as yup from "yup";
 import { tokens } from "../../../../theme";
 import CrudActions from "../../../components/CrudActions";
-import { axiosPrivate } from "../../../../Application/fndbas/api/axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import useAxiosPrivate from "../../../../Application/fndbas/hooks/useAxiosPrivate";
@@ -15,10 +14,10 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/lab";
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
-import Select from '@mui/material/Select';
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import Select from "@mui/material/Select";
 
 const API_URL = "hr/v1/PersonaInfo/";
 
@@ -40,7 +39,7 @@ function Person() {
   const [values, setValues] = useState(initialValues);
   const [value, setValue] = React.useState(dayjs("2014-08-18T21:11:54"));
   const [checked, setChecked] = React.useState(false);
-  const [gender, setGender] = React.useState('M')
+  const [gender, setGender] = React.useState("M");
 
   const handleChangecheck = (event) => {
     setChecked(event.target.checked);
@@ -52,8 +51,7 @@ function Person() {
 
   const handleSelect = (event) => {
     setGender(event.target.value);
-  }
-  
+  };
 
   const showAllToasts = (type, msg) => {
     type === "SUCCESS" &&
@@ -270,7 +268,7 @@ function Person() {
               }}
               size="small"
             />
-              <TextField
+            <TextField
               fullWidth
               variant="outlined"
               type="text"
@@ -302,7 +300,6 @@ function Person() {
               }}
               size="small"
             />
-          
 
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <Stack
@@ -323,7 +320,6 @@ function Person() {
                 />
               </Stack>
             </LocalizationProvider>
-            
             <TextField
               disabled
               id="standard-disabled"
@@ -335,7 +331,10 @@ function Person() {
               onChange={handleChangecheck}
               inputProps={{ "aria-label": "controlled" }}
             />
-            <FormControl sx={{ minWidth: 120, gridColumn: "span 1", }} size="small">
+            <FormControl
+              sx={{ minWidth: 120, gridColumn: "span 1" }}
+              size="small"
+            >
               <InputLabel id="demo-select-small">Gender</InputLabel>
               <Select
                 labelId="demo-select-small"
@@ -344,10 +343,9 @@ function Person() {
                 label="Gender"
                 onChange={handleSelect}
               >
-
-                <MenuItem value={'M'}>Male</MenuItem>
-                <MenuItem value={'F'}>Female</MenuItem>
-                <MenuItem value={'N'}>Other</MenuItem>
+                <MenuItem value={"M"}>Male</MenuItem>
+                <MenuItem value={"F"}>Female</MenuItem>
+                <MenuItem value={"N"}>Other</MenuItem>
               </Select>
             </FormControl>
 
@@ -370,6 +368,7 @@ function Person() {
           </Box>
         </fieldset>
       </form>
+      <ToastContainer />
     </Box>
   );
 }
