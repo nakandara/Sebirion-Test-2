@@ -51,6 +51,10 @@ const CatalogItems = lazy(() =>
 const AssociationList = lazy(() =>
   import("./app/bizapp/enterp/Association/associationlist")
 );
+
+const PersonList = lazy(() =>
+  import("./app/bizapp/hr/Person/PersonList")
+);
 const Site = lazy(() =>
   import("./app/bizapp/enterp/Site")
 );
@@ -239,6 +243,14 @@ function App() {
                         element={
                           <Suspense fallback={<>...</>}>
                             <Person />
+                          </Suspense>
+                        }
+                      />
+                        <Route
+                        path="personList"
+                        element={
+                          <Suspense fallback={<>...</>}>
+                            <PersonList />
                           </Suspense>
                         }
                       />
