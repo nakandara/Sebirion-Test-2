@@ -4,8 +4,6 @@ import { tokens } from "../../../../theme";
 
 import "ag-grid-community/dist/styles/ag-grid.css";
 import "ag-grid-community/dist/styles/ag-theme-alpine.css";
-import CustomAgGrid from "../../../components/CustomAgGrid";
-import { DataGrid } from "@mui/x-data-grid";
 
 const API_URL = "v1/Company/";
 
@@ -115,7 +113,7 @@ function InventoryAddress() {
           },
         }}
       >
-        <DataGrid checkboxSelection rows={addrList} columns={columnDef} />
+        
       </Box>
     </Box>
   );

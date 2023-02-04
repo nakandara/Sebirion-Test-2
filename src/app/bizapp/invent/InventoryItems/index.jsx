@@ -2,8 +2,6 @@ import { Box, Typography, useTheme } from "@mui/material";
 import React from "react";
 import Header from "../../../components/Header";
 import { tokens } from "../../../../theme";
-import { DataGrid } from "@mui/x-data-grid";
-import { mockDataInvoices } from "../../../../data/mockData";
 import { useEffect } from "react";
 import useAxiosPrivate from "../../../../Application/fndbas/hooks/useAxiosPrivate";
 import { useState } from "react";
@@ -177,7 +175,6 @@ function InventoryItems() {
           },
         }}
       >
-        <DataGrid checkboxSelection rows={companies} columns={columns} />
       </Box>
     </Box>
   );
