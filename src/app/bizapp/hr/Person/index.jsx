@@ -13,8 +13,12 @@ import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
-import LocalizationProvider from "@mui/lab/LocalizationProvider";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/lab";
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
 
 const API_URL = "hr/v1/PersonaInfo/";
 
@@ -32,11 +36,11 @@ function Person() {
 
   const [newClicked, setNewClicked] = useState(false);
   const [addNewRow, setAddNewRow] = useState(false);
+
   const [values, setValues] = useState(initialValues);
-
   const [value, setValue] = React.useState(dayjs("2014-08-18T21:11:54"));
-
   const [checked, setChecked] = React.useState(false);
+  const [gender, setGender] = React.useState('M')
 
   const handleChangecheck = (event) => {
     setChecked(event.target.checked);
@@ -45,6 +49,11 @@ function Person() {
   const handleChange = (newValue) => {
     setValue(newValue);
   };
+
+  const handleSelect = (event) => {
+    setGender(event.target.value);
+  }
+  
 
   const showAllToasts = (type, msg) => {
     type === "SUCCESS" &&
@@ -104,6 +113,9 @@ function Person() {
     e.preventDefault();
     const controller = new AbortController();
     try {
+      values.dateOfBirth = value;
+      values.married = checked;
+      values.gender = gender;
       const response = await axiosPrivate.post(
         API_URL + "create",
         JSON.stringify(values),
@@ -115,7 +127,8 @@ function Person() {
         }
       );
       setAddNewRow(true);
-      console.log(response.data);
+      // console.log(response.data);
+      console.log(values);
       // response.data && setCurrentObject(response.data);
       showAllToasts("SUCCESS", "Successfully Saved.");
     } catch (err) {
@@ -257,6 +270,22 @@ function Person() {
               }}
               size="small"
             />
+              <TextField
+              fullWidth
+              variant="outlined"
+              type="text"
+              label="Middle Name"
+              onChange={(e) => onFormInputChange("middleName", e.target.value)}
+              value={values.middleName}
+              name="middleName"
+              sx={{
+                gridColumn: "span 2",
+                "& .MuiInputBase-root": {
+                  height: 40,
+                },
+              }}
+              size="small"
+            />
             <TextField
               fullWidth
               variant="outlined"
@@ -273,22 +302,8 @@ function Person() {
               }}
               size="small"
             />
-            <TextField
-              fullWidth
-              variant="outlined"
-              type="text"
-              label="Middle Name"
-              onChange={(e) => onFormInputChange("middleName", e.target.value)}
-              value={values.middleName}
-              name="middleName"
-              sx={{
-                gridColumn: "span 2",
-                "& .MuiInputBase-root": {
-                  height: 40,
-                },
-              }}
-              size="small"
-            />
+          
+
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <Stack
                 spacing={3}
@@ -308,22 +323,7 @@ function Person() {
                 />
               </Stack>
             </LocalizationProvider>
-            <TextField
-              fullWidth
-              variant="outlined"
-              type="text"
-              label="Gender"
-              onChange={(e) => onFormInputChange("gender", e.target.value)}
-              value={values.gender}
-              name="gender"
-              sx={{
-                gridColumn: "span 2",
-                "& .MuiInputBase-root": {
-                  height: 40,
-                },
-              }}
-              size="small"
-            />
+            
             <TextField
               disabled
               id="standard-disabled"
@@ -335,6 +335,21 @@ function Person() {
               onChange={handleChangecheck}
               inputProps={{ "aria-label": "controlled" }}
             />
+            <FormControl sx={{ minWidth: 120, gridColumn: "span 1", }} size="small">
+              <InputLabel id="demo-select-small">Gender</InputLabel>
+              <Select
+                labelId="demo-select-small"
+                id="demo-select-small"
+                value={gender}
+                label="Gender"
+                onChange={handleSelect}
+              >
+
+                <MenuItem value={'M'}>Male</MenuItem>
+                <MenuItem value={'F'}>Female</MenuItem>
+                <MenuItem value={'N'}>Other</MenuItem>
+              </Select>
+            </FormControl>
 
             <TextField
               fullWidth

@@ -30,6 +30,8 @@ import {
   FaUnity,
   FaRegBuilding,
   FaLaptopHouse,
+  FaUserAlt,
+  FaBuilding
 } from "react-icons/fa";
 
 import {
@@ -180,8 +182,8 @@ const SidebarNewV1 = ({
               </MenuItem>
             </SubMenu>
             {/* HR */}
-            <SubMenu title={"HR"} icon={<FaArchway />}>
-              <MenuItem icon={<FaRegBuilding />}>
+            <SubMenu title={"HR"} icon={<FaBuilding />}>
+              <MenuItem icon={<FaUserAlt />}>
                 Person <Link to="/person" />
               </MenuItem>
             </SubMenu>
