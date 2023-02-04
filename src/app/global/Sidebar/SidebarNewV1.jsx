@@ -185,7 +185,7 @@ const SidebarNewV1 = ({
             {/* HR */}
             <SubMenu title={"HR"} icon={<FaBuilding />}>
               <MenuItem icon={<FaUserAlt />}>
-                Person <Link to="/person" />
+                Person <Link to="/person/null" />
               </MenuItem>
               <MenuItem icon={<FaUserFriends />}>
                 Person List <Link to="/personList" />

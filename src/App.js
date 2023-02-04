@@ -239,7 +239,7 @@ function App() {
                         }
                       />
                       <Route
-                        path="person"
+                        path="person/:id"
                         element={
                           <Suspense fallback={<>...</>}>
                             <Person />

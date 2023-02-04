@@ -1,5 +1,5 @@
 import { Box, Checkbox, Tab, useMediaQuery, useTheme } from "@mui/material";
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import Header from "../../../components/Header";
 import * as yup from "yup";
 import { tokens } from "../../../../theme";
@@ -19,6 +19,8 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
+import { useParams } from "react-router-dom";
+import DeleteModal from "../../../components/DeleteModal";
 
 const API_URL = "hr/v1/PersonaInfo/";
 
@@ -42,6 +44,11 @@ function Person() {
   const [checked, setChecked] = React.useState(false);
   const [gender, setGender] = React.useState('M')
 
+  const { id } = useParams();
+  const [reqObjId, setReqObjId] = useState(id);
+
+  const [openDel, setOpenDel] = useState(false);
+
   const handleChangecheck = (event) => {
     setChecked(event.target.checked);
   };
@@ -54,6 +61,102 @@ function Person() {
     setGender(event.target.value);
   }
   
+
+  const handleNew = (e) => {
+    setValues(initialValues);
+    setNewClicked(true);
+  };
+  const handleEdit = (e) => {
+    personIdRef.current.focus();
+  };
+
+
+  useEffect(() => {
+    const fetchLatestObjId = async () => {
+      const controller = new AbortController();
+      try {
+        const latestId = await axiosPrivate.get(API_URL + "latest_id", {
+          headers: {
+            signal: controller.signal,
+          },
+        });
+        setReqObjId(latestId.data);
+      } catch (err) {}
+    };
+    reqObjId === "null" && fetchLatestObjId();
+  }, [reqObjId, axiosPrivate]);
+
+  const getObj = async () => {
+    const controller = new AbortController();
+    try {
+      const response = await axiosPrivate.get(API_URL + "get/" + reqObjId, {
+        headers: {
+          signal: controller.signal,
+        },
+      });
+      console.log(response.data);
+      response.data && setValues(response.data);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  useEffect(() => {
+    reqObjId && reqObjId !== "null" && getObj();
+  }, [reqObjId, axiosPrivate]);
+
+
+  const handleSave = async (e) => {
+      setValues(initialValues);
+    e.preventDefault();
+    const controller = new AbortController();
+    try {
+      values.dateOfBirth = value;
+      values.married = checked;
+      values.gender = gender;
+      const response = await axiosPrivate.post(
+        API_URL + "create",
+        JSON.stringify(values),
+        {
+          headers: {
+            "Content-Type": "application/json",
+            signal: controller.signal,
+          },
+        }
+      );
+      // console.log(response.data);
+      console.log(response.data);
+      // response.data && setCurrentObject(response.data);
+      showAllToasts("SUCCESS", "Successfully Saved.");
+    } catch (err) {
+      showAllToasts("ERROR", err.response.data.apiError.message);
+      console.log(err);
+    }
+  };
+
+  const handleClose = () => {
+    setOpenDel(false);
+  };
+  
+  const handleDelete = (e) => {
+    setOpenDel(true);
+  };
+
+  const deleteObj = async () => {
+    try {
+      await axiosPrivate.delete(API_URL + "delete/" + values.associationId);
+      setOpenDel(false);
+      showAllToasts("SUCCESS", "Successfully Deleted.");
+
+      setValues(initialValues);
+    } catch (err) {}
+  };
+
+  const onFormInputChange = (key, value) => {
+    const updated = Object.assign({}, values);
+    updated[key] = value;
+    setValues(updated);
+  };
 
   const showAllToasts = (type, msg) => {
     type === "SUCCESS" &&
@@ -101,51 +204,6 @@ function Person() {
       });
   };
 
-  const handleNew = (e) => {
-    setValues(initialValues);
-    setNewClicked(true);
-  };
-  const handleEdit = (e) => {
-    personIdRef.current.focus();
-  };
-  const handleSave = async (e) => {
-    setValues(initialValues);
-    e.preventDefault();
-    const controller = new AbortController();
-    try {
-      values.dateOfBirth = value;
-      values.married = checked;
-      values.gender = gender;
-      const response = await axiosPrivate.post(
-        API_URL + "create",
-        JSON.stringify(values),
-        {
-          headers: {
-            "Content-Type": "application/json",
-            signal: controller.signal,
-          },
-        }
-      );
-      setAddNewRow(true);
-      // console.log(response.data);
-      console.log(values);
-      // response.data && setCurrentObject(response.data);
-      showAllToasts("SUCCESS", "Successfully Saved.");
-    } catch (err) {
-      showAllToasts("ERROR", err.response.data.apiError.message);
-      console.log(err);
-    }
-  };
-  const handleDelete = (e) => {
-    personIdRef.current.focus();
-  };
-
-  const onFormInputChange = (key, value) => {
-    const updated = Object.assign({}, values);
-    updated[key] = value;
-    setValues(updated);
-  };
-
   return (
     <Box m="20px" backgroundColor={colors.primary[400]}>
       <Header title="Person" subTitle="" />
@@ -174,9 +232,10 @@ function Person() {
               variant="outlined"
               ref={personIdRef}
               type="text"
+              id="personId"
               label="Person Id"
               onChange={(e) => onFormInputChange("personId", e.target.value)}
-              value={values.small}
+              value={values.personId}
               InputProps={{ sx: { height: 40 } }}
               name="personId"
               size="small"
@@ -193,6 +252,7 @@ function Person() {
               variant="outlined"
               type="text"
               label="Nic No"
+              id="nicNo"
               onChange={(e) => onFormInputChange("nicNo", e.target.value)}
               value={values.nicNo}
               name="nicNo"
@@ -210,6 +270,7 @@ function Person() {
               variant="outlined"
               type="text"
               label="Name"
+              id="name"
               onChange={(e) => onFormInputChange("name", e.target.value)}
               value={values.name}
               name="name"
@@ -226,6 +287,7 @@ function Person() {
               variant="outlined"
               type="text"
               label="FullName"
+              id="fullName"
               onChange={(e) => onFormInputChange("fullName", e.target.value)}
               value={values.fullName}
               name="fullName"
@@ -242,6 +304,7 @@ function Person() {
               variant="outlined"
               type="text"
               label="Initials"
+              id="initials"
               onChange={(e) => onFormInputChange("initials", e.target.value)}
               value={values.initials}
               name="initials"
@@ -259,6 +322,7 @@ function Person() {
               variant="outlined"
               type="text"
               label="First Name"
+              id="firstName"
               onChange={(e) => onFormInputChange("firstName", e.target.value)}
               value={values.firstName}
               name="firstName"
@@ -275,6 +339,7 @@ function Person() {
               variant="outlined"
               type="text"
               label="Middle Name"
+              id="middleName"
               onChange={(e) => onFormInputChange("middleName", e.target.value)}
               value={values.middleName}
               name="middleName"
@@ -291,6 +356,7 @@ function Person() {
               variant="outlined"
               type="text"
               label="Last Name"
+              id="lastName"
               onChange={(e) => onFormInputChange("lastName", e.target.value)}
               value={values.lastName}
               name="lastName"
@@ -317,29 +383,32 @@ function Person() {
                 <DesktopDatePicker
                   label="Date Of Birth"
                   inputFormat="MM/DD/YYYY"
-                  value={value}
+                  id="dateOfBirth"
                   onChange={handleChange}
                   renderInput={(params) => <TextField {...params} />}
+                  value={value.dateOfBirth}
                 />
               </Stack>
             </LocalizationProvider>
             
             <TextField
               disabled
-              id="standard-disabled"
+              id="married"
               defaultValue="Married"
               variant="standard"
+              
             />
             <Checkbox
               checked={checked}
               onChange={handleChangecheck}
               inputProps={{ "aria-label": "controlled" }}
+              value={values.married}
             />
             <FormControl sx={{ minWidth: 120, gridColumn: "span 1", }} size="small">
               <InputLabel id="demo-select-small">Gender</InputLabel>
               <Select
                 labelId="demo-select-small"
-                id="demo-select-small"
+                id="gender"
                 value={gender}
                 label="Gender"
                 onChange={handleSelect}
@@ -356,6 +425,7 @@ function Person() {
               variant="outlined"
               type="text"
               label="Picture URL"
+              id="pictureURL"
               onChange={(e) => onFormInputChange("pictureURL", e.target.value)}
               value={values.pictureURL}
               name="pictureURL"
@@ -370,6 +440,12 @@ function Person() {
           </Box>
         </fieldset>
       </form>
+      <DeleteModal
+          open={openDel}
+          handleClose={handleClose}
+          Delete={deleteObj}
+        />
+      <ToastContainer />
     </Box>
   );
 }
@@ -384,7 +460,7 @@ const initialValues = {
   middleName: "",
   dateOfBirth: "",
   gender: "",
-  married: true,
+  married: false,
   pictureURL: "",
 };
 
