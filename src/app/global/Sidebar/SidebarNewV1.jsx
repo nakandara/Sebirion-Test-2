@@ -119,15 +119,15 @@ const SidebarNewV1 = ({
             style={{
               padding: "5px",
               textTransform: "uppercase",
-              fontSize: 10,
+              fontSize: 6,
               letterSpacing: "1px",
             }}
           >
-            <MenuItem icon={<FaTachometerAlt />}>
+            <MenuItem style={{ fontSize: 14 }} icon={<FaTachometerAlt />}>
               Dashboard
               <NavLink to="/" />
             </MenuItem>
-            <SubMenu title={"Basic Data"} icon={<FaDatabase />}>
+            <SubMenu style={{ fontSize: 14 }} title={"Basic Data"} icon={<FaDatabase />}>
               <MenuItem icon={<FaUnity />}>
                 Units <Link to="/units" />
               </MenuItem>
@@ -178,7 +178,7 @@ const SidebarNewV1 = ({
                 Item Catalog <Link to="/itemcatalog/null" />
               </MenuItem>
               <MenuItem icon={<AutoAwesome />}>
-                Cataog Items
+                Catalog Items
                 <Link to="/catalogitems" />
               </MenuItem>
             </SubMenu>

@@ -4,8 +4,6 @@ import { tokens } from "../../../../theme";
 import { axiosPrivate } from "../../../../Application/fndbas/api/axios";
 import "ag-grid-community/dist/styles/ag-grid.css";
 import "ag-grid-community/dist/styles/ag-theme-alpine.css";
-import CustomAgGrid from "../../../components/CustomAgGrid";
-import { DataGrid } from "@mui/x-data-grid";
 import CrudActions from "../../../../Application/fndbas/CrudActions/CrudActions";
 import useAxiosPrivate from "../../../../Application/fndbas/hooks/useAxiosPrivate";
 import { ToastContainer, toast } from "react-toastify";

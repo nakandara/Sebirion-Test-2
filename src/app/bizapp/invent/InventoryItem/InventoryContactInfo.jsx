@@ -1,5 +1,4 @@
 import { Box, useTheme } from "@mui/material";
-import { DataGrid } from "@mui/x-data-grid";
 import React from "react";
 import { useState } from "react";
 import CrudActions from "../../../../Application/fndbas/CrudActions/CrudActions";
@@ -109,7 +108,6 @@ function InventoryContactInfo() {
           },
         }}
       >
-        <DataGrid checkboxSelection rows={addrList} columns={columns} />
       </Box>
     </Box>
   );

@@ -42,8 +42,8 @@ const Association = lazy(() => import("./app/bizapp/enterp/Association"));
 const Companies = lazy(() => import("./app/bizapp/enterp/Companies"));
 const Company = lazy(() => import("./app/bizapp/enterp/Company"));
 const Units = lazy(() => import("./app/bizapp/appserv/Units"));
-const SalesRepOrder = lazy(() => import("./app/bizapp/order/SalesRepOrder"));
-const IssueNote = lazy(() => import("./app/bizapp/order/IssueNote/IssueNote"));
+const SalesRepOrder = lazy(() => import("./app/bizapp/ordermgt/SalesRepOrder"));
+const IssueNote = lazy(() => import("./app/bizapp/ordermgt/IssueNote/IssueNote"));
 const Person = lazy(() => import("./app/bizapp/hr/Person"));
 const CatalogItems = lazy(() =>
   import("./app/bizapp/invent/ItemCatalog/items")
