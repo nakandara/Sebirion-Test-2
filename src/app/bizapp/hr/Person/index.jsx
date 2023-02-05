@@ -40,7 +40,7 @@ function Person() {
   const [addNewRow, setAddNewRow] = useState(false);
 
   const [values, setValues] = useState(initialValues);
-  const [value, setValue] = React.useState(dayjs("2014-08-18T21:11:54"));
+  const [value, setValue] = React.useState(new Date());
   const [checked, setChecked] = React.useState(false);
   const [gender, setGender] = React.useState("M");
 
