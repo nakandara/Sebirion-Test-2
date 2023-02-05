@@ -37,7 +37,7 @@ const InventoryItems = lazy(() => import("./app/bizapp/invent/InventoryItems"));
 const ItemType = lazy(() =>
   import("./Application/Inventory/ItemType/ItemType")
 );
-const ItemCatalog = lazy(() => import("./app/bizapp/invent/ItemCatalog"));
+const ItemCatalog = lazy(() => import("./app/bizapp/invent/InvItemCatalog"));
 const Association = lazy(() => import("./app/bizapp/enterp/Association"));
 const Companies = lazy(() => import("./app/bizapp/enterp/Companies"));
 const Company = lazy(() => import("./app/bizapp/enterp/Company"));
@@ -46,7 +46,7 @@ const SalesRepOrder = lazy(() => import("./app/bizapp/ordermgt/SalesRepOrder"));
 const IssueNote = lazy(() => import("./app/bizapp/ordermgt/IssueNote/IssueNote"));
 const Person = lazy(() => import("./app/bizapp/hr/Person"));
 const CatalogItems = lazy(() =>
-  import("./app/bizapp/invent/ItemCatalog/items")
+  import("./app/bizapp/invent/InvItemCatalog/items")
 );
 const AssociationList = lazy(() =>
   import("./app/bizapp/enterp/Association/associationlist")
@@ -56,6 +56,10 @@ const Site = lazy(() =>
 );
 const Sites = lazy(() =>
   import("./app/bizapp/enterp/Site/sites")
+);
+
+const PaymentTerm = lazy(() =>
+  import("./app/bizapp/accrul/PaymentTerm")
 );
 
 function App() {
@@ -239,6 +243,14 @@ function App() {
                         element={
                           <Suspense fallback={<>...</>}>
                             <Person />
+                          </Suspense>
+                        }
+                      />
+                      <Route
+                        path="paymentterms"
+                        element={
+                          <Suspense fallback={<>...</>}>
+                            <PaymentTerm />
                           </Suspense>
                         }
                       />
