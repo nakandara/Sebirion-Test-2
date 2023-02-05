@@ -1,19 +1,16 @@
-import { Box, Checkbox, Tab, useMediaQuery, useTheme } from "@mui/material";
+import { Box, Checkbox, useMediaQuery, useTheme } from "@mui/material";
 import React, { useRef, useState, useEffect } from "react";
 import Header from "../../../components/Header";
-import * as yup from "yup";
 import { tokens } from "../../../../theme";
 import CrudActions from "../../../components/CrudActions";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import useAxiosPrivate from "../../../../Application/fndbas/hooks/useAxiosPrivate";
-// import dayjs from "dayjs";
 import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { DatePicker } from "@mui/lab";
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
@@ -37,7 +34,6 @@ function Person() {
   const [isDeleteEnabled, setIsDeleteEnabled] = useState(true);
 
   const [newClicked, setNewClicked] = useState(false);
-  const [addNewRow, setAddNewRow] = useState(false);
 
   const [values, setValues] = useState(initialValues);
   const [value, setValue] = React.useState(new Date());
@@ -368,7 +364,7 @@ function Person() {
               size="small"
             />
 
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <LocalizationProvider dateAdapter={AdapterDateFns}>
               <Stack
                 spacing={3}
                 sx={{
