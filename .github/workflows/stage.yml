@@ -72,4 +72,4 @@ jobs:
           docker pull vijithakn/ozclient:latest
           docker stop ozclient
           docker rm ozclient
-          docker run -d --name ozclient -p 80:80 vijithakn/ozclient:latest
+          docker run -d --name ozclient -p 3000:3000 vijithakn/ozclient:latest
