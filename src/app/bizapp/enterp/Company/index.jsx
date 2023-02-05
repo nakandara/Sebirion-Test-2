@@ -126,7 +126,7 @@ function Company() {
   };  
 
   return (
-    <Box m="20px" backgroundColor={colors.primary[400]}>
+    <Box m="5px" p="5px" backgroundColor={colors.primary[400]}>
       <Header title="Company" subTitle="" />
       <CrudActions
         handleNew={handleNew}

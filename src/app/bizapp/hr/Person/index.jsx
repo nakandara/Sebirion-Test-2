@@ -139,7 +139,7 @@ function Person() {
 
   const deleteObj = async () => {
     try {
-      await axiosPrivate.delete(API_URL + "delete/" + values.associationId);
+      await axiosPrivate.delete(API_URL + "delete/" + values.personId);
       setOpenDel(false);
       showAllToasts("SUCCESS", "Successfully Deleted.");
 

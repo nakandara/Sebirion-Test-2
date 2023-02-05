@@ -24,17 +24,16 @@ import { ToastContainer, toast } from "react-toastify";
 import ListCrudActions from "../../../components/ListCrudActions";
 import useAxiosPrivate from "../../../../Application/fndbas/hooks/useAxiosPrivate";
 import Header from "../../../components/Header";
-import CreateDlg from "./dlgnew";
 
 const API_URL = "/accrul/v1/PaymentTerm/";
 
 function PaymentTerm() {
   const gridRef = useRef();
+  const termIdRef = useRef();
   const axiosPrivate = useAxiosPrivate();
 
-  const [isOpenDlg, setIsOpenDlg] = useState(false);
-
   const [formValues, setFormValues] = useState(initState);
+  const [newClicked, setNewClicked] = useState(false);
 
   const containerStyle = useMemo(() => ({ width: "100%", height: "100%" }), []);
   const gridStyle = useMemo(() => ({ height: "100%", width: "100%" }), []);
@@ -101,6 +100,8 @@ function PaymentTerm() {
 
   const handleNew = (e) => {
     setFormValues(initState);
+    setNewClicked(true);
+    termIdRef.current.focus();
   };
   const handleEdit = (e) => {};
 
@@ -193,82 +194,87 @@ function PaymentTerm() {
         />
         <Paper elevation={2} style={{ padding: "5px" }}>
           <form onSubmit={handleSave}>
-            <Grid container spacing={2}>
-              <Grid item xs={2}>
-                <TextField
-                  variant="outlined"
-                  size="small"
-                  fullWidth
-                  id="termId"
-                  autoComplete="off"
-                  name="termId"
-                  label="Payment Term"
-                  type="text"
-                  value={values.termId}
-                  onChange={(e) => onFormInputChange("termId", e.target.value)}
-                  required
-                  margin="normal"
-                  inputProps={{ style: { textTransform: "uppercase" } }}
-                />
-              </Grid>
-              <Grid item xs={4}>
-                <TextField
-                  variant="outlined"
-                  size="small"
-                  fullWidth
-                  id="description"
-                  autoComplete="off"
-                  name="description"
-                  label="Description"
-                  type="text"
-                  value={values.description}
-                  onChange={(e) =>
-                    onFormInputChange("description", e.target.value)
-                  }
-                  required
-                  margin="normal"
-                />
-              </Grid>
-              <Grid item xs={2}>
-                <TextField
-                  variant="outlined"
-                  size="small"
-                  fullWidth
-                  id="termValue"
-                  autoComplete="off"
-                  name="termValue"
-                  label="Value"
-                  type="text"
-                  value={values.termValue}
-                  onChange={(e) =>
-                    onFormInputChange("termValue", e.target.value)
-                  }
-                  required
-                  margin="normal"
-                />
-              </Grid>
-              <Grid item xs={2}>
-                <FormControl
-                  sx={{ minWidth: 120, gridColumn: "span 1" }}
-                  size="small"
-                >
-                  <InputLabel id="payTermType">Term Function</InputLabel>
-                  <Select
-                    labelId="payTermType"
-                    id="payTermType"
-                    value={values.payTermType}
-                    label="Pay. Term Type"
+            <fieldset disabled={!newClicked} style={{ border: "0" }}>
+              <Grid container spacing={2}>
+                <Grid item xs={2}>
+                  <TextField
+                    variant="outlined"
+                    size="small"
+                    fullWidth
+                    ref={termIdRef}
+                    id="termId"
+                    autoComplete="off"
+                    name="termId"
+                    label="Payment Term"
+                    type="text"
+                    value={values.termId}
                     onChange={(e) =>
-                      onFormInputChange("payTermType", e.target.value)
+                      onFormInputChange("termId", e.target.value)
                     }
+                    required
+                    margin="normal"
+                    inputProps={{ style: { textTransform: "uppercase" } }}
+                  />
+                </Grid>
+                <Grid item xs={4}>
+                  <TextField
+                    variant="outlined"
+                    size="small"
+                    fullWidth
+                    id="description"
+                    autoComplete="off"
+                    name="description"
+                    label="Description"
+                    type="text"
+                    value={values.description}
+                    onChange={(e) =>
+                      onFormInputChange("description", e.target.value)
+                    }
+                    required
+                    margin="normal"
+                  />
+                </Grid>
+                <Grid item xs={2}>
+                  <TextField
+                    variant="outlined"
+                    size="small"
+                    fullWidth
+                    id="termValue"
+                    autoComplete="off"
+                    name="termValue"
+                    label="Value"
+                    type="text"
+                    value={values.termValue}
+                    onChange={(e) =>
+                      onFormInputChange("termValue", e.target.value)
+                    }
+                    required
+                    margin="normal"
+                  />
+                </Grid>
+                <Grid item xs={2}>
+                  <FormControl
+                    sx={{ minWidth: 120, gridColumn: "span 1" }}
+                    size="small"
                   >
-                    <MenuItem value={"M"}>Male</MenuItem>
-                    <MenuItem value={"F"}>Female</MenuItem>
-                    <MenuItem value={"N"}>Other</MenuItem>
-                  </Select>
-                </FormControl>
+                    <InputLabel id="payTermType">Term Function</InputLabel>
+                    <Select
+                      labelId="payTermType"
+                      id="payTermType"
+                      value={values.payTermType}
+                      label="Pay. Term Type"
+                      onChange={(e) =>
+                        onFormInputChange("payTermType", e.target.value)
+                      }
+                    >
+                      <MenuItem value={"M"}>Male</MenuItem>
+                      <MenuItem value={"F"}>Female</MenuItem>
+                      <MenuItem value={"N"}>Other</MenuItem>
+                    </Select>
+                  </FormControl>
+                </Grid>
               </Grid>
-            </Grid>
+            </fieldset>
           </form>
         </Paper>
       </Box>
@@ -286,7 +292,6 @@ function PaymentTerm() {
           ></AgGridReact>
         </div>
       </Box>
-      <CreateDlg openDlg={isOpenDlg} setOpenDlg={setIsOpenDlg} />
     </Box>
   );
 }
