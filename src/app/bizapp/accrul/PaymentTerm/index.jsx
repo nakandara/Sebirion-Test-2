@@ -1,104 +1,73 @@
+import {
+  Box,
+  FormControl,
+  Grid,
+  InputLabel,
+  MenuItem,
+  Paper,
+  Select,
+  TextField,
+} from "@mui/material";
 import React, {
-  useMemo,
   useState,
   useRef,
+  useMemo,
   useCallback,
   useEffect,
 } from "react";
-import { ToastContainer, toast } from "react-toastify";
-import { Box, Tab, TextField, useMediaQuery, useTheme } from "@mui/material";
-import useAxiosPrivate from "../../../../Application/fndbas/hooks/useAxiosPrivate";
 
 import { AgGridReact } from "ag-grid-react";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-balham.css";
-import Header from "../../../components/Header";
+
+import { ToastContainer, toast } from "react-toastify";
 import ListCrudActions from "../../../components/ListCrudActions";
-import CreateDlg from "./createDlg";
+import useAxiosPrivate from "../../../../Application/fndbas/hooks/useAxiosPrivate";
+import Header from "../../../components/Header";
+import CreateDlg from "./dlgnew";
 
-const API_URL = "/appsrv/v1/IsoUnit/";
+const API_URL = "/accrul/v1/PaymentTerm/";
 
-function BasicData() {
+function PaymentTerm() {
   const gridRef = useRef();
   const axiosPrivate = useAxiosPrivate();
 
-  const initialValues = {
-    unitCode: "",
-    description: "",
-    baseUnit: "",
-    multiFactor: "",
-    divFactor: "",
-    tenPower: "",
-    userDefined: "",
-    unitType: "",
-  };
-
-  const isNonMobile = useMediaQuery("(min-width:600px)");
-
-  const [newClicked, setNewClicked] = useState(false);
-
-  const [isNewEnabled, setIsNewEnabled] = useState(true);
-  const [isEditEnabled, setIsEditEnabled] = useState(true);
-  const [isSaveEnabled, setIsSaveEnabled] = useState(true);
-  const [isDeleteEnabled, setIsDeleteEnabled] = useState(true);
-
   const [isOpenDlg, setIsOpenDlg] = useState(false);
 
-  const [formValues, setFormValues] = useState(initialValues);
+  const [formValues, setFormValues] = useState(initState);
 
   const containerStyle = useMemo(() => ({ width: "100%", height: "100%" }), []);
   const gridStyle = useMemo(() => ({ height: "100%", width: "100%" }), []);
   const [isoUnits, setIsoUnits] = useState([]);
+  const [values, setValues] = useState(initState);
+
   const [columnDefs] = useState([
     {
-      field: "unitCode",
-      headerName: "Unit Code",
-      width: 110,
+      field: "termId",
+      headerName: "Payment Term",
+      width: 70,
     },
     {
       field: "description",
       headerName: "Description",
-      width: 110,
-      editable: true,
+      width: 200,
     },
     {
-      field: "baseUnit",
-      headerName: "Base Unit",
-      width: 110,
+      field: "termValue",
+      headerName: "Value",
+      width: 70,
     },
     {
-      field: "multiFactor",
-      headerName: "Multi Factor",
-      width: 110,
-    },
-    {
-      field: "divFactor",
-      headerName: "Div Factor",
-      width: 110,
-      type: "numericColumn",
-    },
-    {
-      field: "tenPower",
-      headerName: "Ten Power",
-      width: 110,
-    },
-    {
-      field: "userDefined",
-      headerName: "User Defined",
-      width: 110,
-    },
-    {
-      field: "unitType",
-      headerName: "Unit Type",
-      width: 110,
+      field: "payTermType",
+      headerName: "Term Function",
+      width: 70,
     },
   ]);
 
   const defaultColDef = useMemo(() => {
     return {
       flex: 1,
-      minWidth: 100,
-      editable: true,
+      minWidth: 70,
     };
   }, []);
 
@@ -131,14 +100,13 @@ function BasicData() {
   }, []);
 
   const handleNew = (e) => {
-    setFormValues(initialValues);
-    setNewClicked(true);
+    setFormValues(initState);
   };
   const handleEdit = (e) => {};
 
   const handleSave = async (e) => {
     e.preventDefault();
-    setFormValues(initialValues);
+    setFormValues(initState);
     const controller = new AbortController();
     try {
       const response = await axiosPrivate.post(
@@ -213,17 +181,96 @@ function BasicData() {
         progress: undefined,
       });
   };
-
   return (
     <Box>
       <Box m="10px">
-        <Header title="ISO Units" subTitle="" />
+        <Header title="Payment Terms" subTitle="" />
         <ListCrudActions
           addItems={handleNew}
           handleSave={handleSave}
           handleEdit={handleEdit}
           handleDelete={handleDelete}
         />
+        <Paper elevation={2} style={{ padding: "5px" }}>
+          <form onSubmit={handleSave}>
+            <Grid container spacing={2}>
+              <Grid item xs={2}>
+                <TextField
+                  variant="outlined"
+                  size="small"
+                  fullWidth
+                  id="termId"
+                  autoComplete="off"
+                  name="termId"
+                  label="Payment Term"
+                  type="text"
+                  value={values.termId}
+                  onChange={(e) => onFormInputChange("termId", e.target.value)}
+                  required
+                  margin="normal"
+                  inputProps={{ style: { textTransform: "uppercase" } }}
+                />
+              </Grid>
+              <Grid item xs={4}>
+                <TextField
+                  variant="outlined"
+                  size="small"
+                  fullWidth
+                  id="description"
+                  autoComplete="off"
+                  name="description"
+                  label="Description"
+                  type="text"
+                  value={values.description}
+                  onChange={(e) =>
+                    onFormInputChange("description", e.target.value)
+                  }
+                  required
+                  margin="normal"
+                />
+              </Grid>
+              <Grid item xs={2}>
+                <TextField
+                  variant="outlined"
+                  size="small"
+                  fullWidth
+                  id="termValue"
+                  autoComplete="off"
+                  name="termValue"
+                  label="Value"
+                  type="text"
+                  value={values.termValue}
+                  onChange={(e) =>
+                    onFormInputChange("termValue", e.target.value)
+                  }
+                  required
+                  margin="normal"
+                />
+              </Grid>
+              <Grid item xs={2}>
+                <FormControl
+                  sx={{ minWidth: 120, gridColumn: "span 1" }}
+                  size="small"
+                >
+                  <InputLabel id="payTermType">Term Function</InputLabel>
+                  <Select
+                    labelId="payTermType"
+                    id="payTermType"
+                    value={values.payTermType}
+                    label="Pay. Term Type"
+                    onChange={(e) =>
+                      onFormInputChange("payTermType", e.target.value)
+                    }
+                  >
+                    <MenuItem value={"M"}>Male</MenuItem>
+                    <MenuItem value={"F"}>Female</MenuItem>
+                    <MenuItem value={"N"}>Other</MenuItem>
+                  </Select>
+                </FormControl>
+              </Grid>
+            </Grid>
+          </form>
+        </Paper>
       </Box>
 
       <Box sx={{ height: 400, margin: "10px" }}>
@@ -244,4 +291,12 @@ function BasicData() {
   );
 }
 
-export default BasicData;
+const initState = {
+  id: "",
+  termId: "",
+  description: "",
+  termValue: "",
+  payTermType: "",
+};
+
+export default PaymentTerm;

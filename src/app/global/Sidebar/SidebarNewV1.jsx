@@ -131,10 +131,12 @@ const SidebarNewV1 = ({
                 Units <Link to="/units" />
               </MenuItem>
             </SubMenu>
-            <MenuItem icon={<AssignmentIndOutlined />}>
-              Person Info
-              <NavLink to="/Personinfo" />
-            </MenuItem>
+            
+            <SubMenu title={"Accounting Rules"} icon={<FaArchway />}>
+            <MenuItem icon={<FaLaptopHouse />}>
+                Payment Terms <Link to="/paymentterms" />
+              </MenuItem>
+            </SubMenu>
             <SubMenu title={"Enterprise"} icon={<FaArchway />}>
               <MenuItem icon={<FaLaptopHouse />}>
                 Association <Link to="/association/null" />
