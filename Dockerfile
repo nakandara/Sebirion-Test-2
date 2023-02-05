@@ -5,7 +5,6 @@ COPY package.json ./
 COPY package-lock.json ./
 RUN npm ci --silent
 COPY . ./
-RUN npm install dayjs
 RUN npm run build
 
 # production environment
