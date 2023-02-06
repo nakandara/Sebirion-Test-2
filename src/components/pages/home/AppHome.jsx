@@ -39,7 +39,6 @@ export default function AppHome() {
         <div className="topbar">
           <TopbarNew setIsSidebar={setIsSidebar} />
         </div>
-
         <Outlet />
       </main>
     </div>

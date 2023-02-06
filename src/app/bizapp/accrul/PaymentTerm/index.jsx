@@ -33,42 +33,48 @@ function PaymentTerm() {
   const axiosPrivate = useAxiosPrivate();
 
   const [formValues, setFormValues] = useState(initState);
-  const [newClicked, setNewClicked] = useState(false);
 
   const containerStyle = useMemo(() => ({ width: "100%", height: "100%" }), []);
-  const gridStyle = useMemo(() => ({ height: "100%", width: "100%" }), []);
-  const [isoUnits, setIsoUnits] = useState([]);
+  const [paymentTerms, setPaymentTerms] = useState([]);
   const [values, setValues] = useState(initState);
 
   const [columnDefs] = useState([
     {
+      field: "id",
+      headerName: "ID",
+      width: 40,
+      checkboxSelection: true,
+    },
+    {
       field: "termId",
       headerName: "Payment Term",
-      width: 70,
+      width: 150,
     },
     {
       field: "description",
       headerName: "Description",
-      width: 200,
+      width: 300,
     },
     {
       field: "termValue",
       headerName: "Value",
-      width: 70,
+      width: 100,
     },
     {
       field: "payTermType",
       headerName: "Term Function",
-      width: 70,
+      width: 150,
     },
   ]);
 
-  const defaultColDef = useMemo(() => {
-    return {
-      flex: 1,
-      minWidth: 70,
-    };
-  }, []);
+  const defaultColDef = useMemo(
+    () => ({
+      resizable: true,
+      sortable: true,
+      filter: true,
+    }),
+    []
+  );
 
   const onSelectionChanged = useCallback(() => {
     const selectedRows = gridRef.current.api.getSelectedRows();
@@ -80,7 +86,7 @@ function PaymentTerm() {
     let isMounted = true;
     const controller = new AbortController();
 
-    const getUnits = async () => {
+    const getPayTerms = async () => {
       try {
         const response = await axiosPrivate.get(API_URL + "get_all", {
           headers: {
@@ -88,10 +94,10 @@ function PaymentTerm() {
           },
         });
 
-        isMounted && setIsoUnits(response.data);
+        isMounted && setPaymentTerms(response.data);
       } catch (err) {}
     };
-    getUnits();
+    getPayTerms();
     return () => {
       isMounted = false;
       controller.abort();
@@ -100,19 +106,19 @@ function PaymentTerm() {
 
   const handleNew = (e) => {
     setFormValues(initState);
-    setNewClicked(true);
-    termIdRef.current.focus();
   };
+
   const handleEdit = (e) => {};
 
   const handleSave = async (e) => {
     e.preventDefault();
-    setFormValues(initState);
+    
+    let isMounted = true;
     const controller = new AbortController();
     try {
       const response = await axiosPrivate.post(
         API_URL + "create",
-        JSON.stringify(formValues),
+        JSON.stringify(values),
         {
           headers: {
             "Content-Type": "application/json",
@@ -121,7 +127,7 @@ function PaymentTerm() {
         }
       );
       console.log(response.data);
-      // response.data && setCurrentObject(response.data);
+      isMounted && setPaymentTerms(...paymentTerms, response.data);
       showAllToasts("SUCCESS", "Successfully Saved.");
     } catch (err) {
       showAllToasts("ERROR", err.response.data.apiError.message);
@@ -132,9 +138,9 @@ function PaymentTerm() {
   const handleDelete = (e) => {};
 
   const onFormInputChange = (key, value) => {
-    const updated = Object.assign({}, formValues);
+    const updated = Object.assign({}, values);
     updated[key] = value;
-    setFormValues(updated);
+    setValues(updated);
   };
 
   const showAllToasts = (type, msg) => {
@@ -194,7 +200,7 @@ function PaymentTerm() {
         />
         <Paper elevation={2} style={{ padding: "5px" }}>
           <form onSubmit={handleSave}>
-            <fieldset disabled={!newClicked} style={{ border: "0" }}>
+            <fieldset style={{ border: "0" }}>
               <Grid container spacing={2}>
                 <Grid item xs={2}>
                   <TextField
@@ -243,7 +249,7 @@ function PaymentTerm() {
                     autoComplete="off"
                     name="termValue"
                     label="Value"
-                    type="text"
+                    type="number"
                     value={values.termValue}
                     onChange={(e) =>
                       onFormInputChange("termValue", e.target.value)
@@ -267,9 +273,10 @@ function PaymentTerm() {
                         onFormInputChange("payTermType", e.target.value)
                       }
                     >
-                      <MenuItem value={"M"}>Male</MenuItem>
-                      <MenuItem value={"F"}>Female</MenuItem>
-                      <MenuItem value={"N"}>Other</MenuItem>
+                      <MenuItem value={"DAYS"}>Days</MenuItem>
+                      <MenuItem value={"WEEKS"}>Weeks</MenuItem>
+                      <MenuItem value={"MONTHS"}>Months</MenuItem>
+                      <MenuItem value={"YEARS"}>Years</MenuItem>
                     </Select>
                   </FormControl>
                 </Grid>
@@ -280,17 +287,16 @@ function PaymentTerm() {
       </Box>
 
       <Box sx={{ height: 400, margin: "10px" }}>
-        <div style={gridStyle} className="ag-theme-balham">
-          <AgGridReact
-            ref={gridRef}
-            rowData={isoUnits}
-            columnDefs={columnDefs}
-            defaultColDef={defaultColDef}
-            rowSelection={"single"}
-            animateRows={true}
-            onSelectionChanged={onSelectionChanged}
-          ></AgGridReact>
-        </div>
+        <AgGridReact
+          ref={gridRef}
+          className="ag-theme-balham"
+          rowData={paymentTerms}
+          columnDefs={columnDefs}
+          defaultColDef={defaultColDef}
+          rowSelection={"single"}
+          animateRows={true}
+          onSelectionChanged={onSelectionChanged}
+        ></AgGridReact>
       </Box>
     </Box>
   );
