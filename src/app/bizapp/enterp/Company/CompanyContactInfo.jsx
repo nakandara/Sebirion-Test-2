@@ -1,4 +1,13 @@
-import { Box, useTheme } from "@mui/material";
+import { Box, useTheme,   Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Button,
+  Slide,
+  Grid,
+  TextField
+
+ } from "@mui/material";
 import React, { useState, useRef, useMemo, useCallback } from "react";
 import CrudActions from "../../../../Application/fndbas/CrudActions/CrudActions";
 import { tokens } from "../../../../theme";
@@ -6,20 +15,38 @@ import { ToastContainer, toast } from "react-toastify";
 import { AgGridReact } from "ag-grid-react";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-balham.css";
+import useAxiosPrivate from "../../../../Application/fndbas/hooks/useAxiosPrivate";
 
-function CompanyContactInfo({row}) {
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="left" ref={ref} {...props} />;
+});
+
+const API_URL = "v1/Company/";
+
+function CompanyContactInfo({addCompanyContactForm, setAddCompanyContactForm}) {
+  const axiosPrivate = useAxiosPrivate();
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const gridRef = useRef();
   const containerStyle = useMemo(() => ({ width: "100%", height: "100%" }), []);
   const gridStyle = useMemo(() => ({ height: "100%", width: "100%" }), []);
 
-  const [isNewEnabled, setIsNewEnabled] = useState(row);
+
   const [isEditEnabled, setIsEditEnabled] = useState(true);
   const [isSaveEnabled, setIsSaveEnabled] = useState(true);
   const [isDeleteEnabled, setIsDeleteEnabled] = useState(true);
 
   const [contacts, setContacts] = useState([])
+  const [isItemKeyDisabled, setIsItemKeyDisabled] = useState(false);
+
+  const [openNewItemDlg, setOpenNewItemDlg] = useState(false);
+  const [commId, setCommId] = useState("");
+  const [commType, setCommType] = useState("");
+  const [commValue, setCommValue] = useState("");
+  const [description, setDescription] = useState("");
+  const [defaultMethod, setDefaultMethod] = useState("");
+  const [addressId, setAddressId] = useState("");
+
 
   const initialValue = {
     id: "",
@@ -95,10 +122,47 @@ function CompanyContactInfo({row}) {
   }, []);
 
   const handleNew = (e) => {
-    setTableValues(initialValue);
-    setNewClicked(true)
-    addItems(undefined)
+    setOpenNewItemDlg(true);
+ 
   
+  }
+
+  const handleContactForm = async (e) => {
+    e.preventDefault();
+    const controller = new AbortController();
+    try {
+      const itemResponse = await axiosPrivate.post(
+        API_URL + "/save",
+        JSON.stringify({
+          commId: commId,
+          commType: commType,
+          commValue: commValue,
+          description: description,
+          defaultMethod: defaultMethod,
+          addressId:addressId
+        }),
+        {
+          headers: {
+            "Content-Type": "application/json",
+            signal: controller.signal,
+          },
+        }
+      );
+
+      const item = itemResponse.data;
+      const responseItem = {
+        commId: item.commId,
+        commType: item.commType,
+        commValue: item.commValue,
+        description: item.description,
+        defaultMethod: item.defaultMethod,
+        addressId: item.addressId
+      };
+
+      setAddCompanyContactForm([...addCompanyContactForm, responseItem]);
+
+      setOpenNewItemDlg(false);
+    } catch (err) {}
   }
 
 
@@ -153,6 +217,10 @@ function CompanyContactInfo({row}) {
 
   const [addrList, setAddrList] = useState([]);
 
+  const handleNewItemClose = () => {
+    setOpenNewItemDlg(false);
+  };
+
 
   const handleEdit = (e) => {};
 
@@ -172,13 +240,13 @@ function CompanyContactInfo({row}) {
     <Box backgroundColor={colors.primary[400]}>
       <CrudActions
         handleNew={handleNew}
-        isNewEnabled={isNewEnabled}
+        isNewEnabled={true}
         handleEdit={handleEdit}
-        isEditEnabled={isEditEnabled}
+        // isEditEnabled={isEditEnabled}
         handleSave={handleSave}
-        isSaveEnabled={isSaveEnabled}
+        // isSaveEnabled={isSaveEnabled}
         handleDelete={handleDelete}
-        isDeleteEnabled={isDeleteEnabled}
+        // isDeleteEnabled={isDeleteEnabled}
       />
 
       <Box sx={{ height: 500, margin: "10px" }}>
@@ -194,6 +262,133 @@ function CompanyContactInfo({row}) {
           ></AgGridReact>
         </div>
       </Box>
+      <Dialog
+        open={openNewItemDlg}
+        onClose={handleNewItemClose}
+        TransitionComponent={Transition}
+        sx={{
+          "& .MuiDialog-container": {
+            "& .MuiPaper-root": {
+              width: "100%",
+              maxWidth: "750px", // Set your width here
+            },
+          },
+        }}
+      >
+        <DialogTitle>Add Company Contact Info</DialogTitle>
+        <DialogContent>
+          <form className="inquiry-item-form" onClick={handleContactForm}>
+            <Grid container spacing={1} direction="row">
+              <Grid item xs={3}>
+                <TextField
+                  variant="outlined"
+                  disabled={isItemKeyDisabled}
+                  size="small"
+                  fullWidth
+                  id="commId"
+                  autoComplete="off"
+                  name="commId"
+                  label="Comm. ID"
+                  type="text"
+                  value={commId}
+                  onChange={(e) => setCommId(e.target.value)}
+                  required
+                  margin="normal"
+                />
+              </Grid>
+              <Grid item xs={3}>
+                <TextField
+                  variant="outlined"
+                  disabled={isItemKeyDisabled}
+                  size="small"
+                  fullWidth
+                  id="commType"
+                  autoComplete="off"
+                  name="commType"
+                  label="Address 1"
+                  type="text"
+                  value={commType}
+                  onChange={(e) => setCommType(e.target.value)}
+                  required
+                  margin="normal"
+                />
+              </Grid>
+                <Grid item xs={3}>
+                <TextField
+                  variant="outlined"
+                  disabled={isItemKeyDisabled}
+                  size="small"
+                  fullWidth
+                  id="commValue"
+                  autoComplete="off"
+                  name="commValue"
+                  label="Comm Value"
+                  type="text"
+                  value={commValue}
+                  onChange={(e) => setCommValue(e.target.value)}
+                  required
+                  margin="normal"
+                />
+              </Grid>
+              <Grid item xs={3}>
+                <TextField
+                  variant="outlined"
+                  disabled={isItemKeyDisabled}
+                  size="small"
+                  fullWidth
+                  id="description"
+                  autoComplete="off"
+                  name="description"
+                  label="Description"
+                  type="text"
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                  required
+                  margin="normal"
+                />
+              </Grid>
+              <Grid item xs={3}>
+                <TextField
+                  variant="outlined"
+                  disabled={isItemKeyDisabled}
+                  size="small"
+                  fullWidth
+                  id="defaultMethod"
+                  autoComplete="off"
+                  name="defaultMethod"
+                  label="Defaul tMethod"
+                  type="text"
+                  value={defaultMethod}
+                  onChange={(e) => setDefaultMethod(e.target.value)}
+                  required
+                  margin="normal"
+                />
+              </Grid>
+              <Grid item xs={3}>
+                <TextField
+                  variant="outlined"
+                  disabled={isItemKeyDisabled}
+                  size="small"
+                  fullWidth
+                  id="addressId"
+                  autoComplete="off"
+                  name="addressId"
+                  label="AddressId"
+                  type="text"
+                  value={addressId}
+                  onChange={(e) => setAddressId(e.target.value)}
+                  required
+                  margin="normal"
+                />
+              </Grid>
+            </Grid>
+          </form>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleNewItemClose}>Cancel</Button>
+          <Button onClick={handleContactForm}>Save</Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 }
