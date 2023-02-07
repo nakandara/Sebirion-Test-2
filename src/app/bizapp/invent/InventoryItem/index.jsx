@@ -47,7 +47,7 @@ const InventoryItem = () => {
   const [isDeleteEnabled, setIsDeleteEnabled] = useState(true);
   const [values, setValues] = useState(initialState);
   const [newClicked, setNewClicked] = useState(false);
-  const [tabValue, setTabValue] = useState("1");
+  
   const [inputSite, setInputSite] = useState(initialSite);
   const [inputItemCatalog, setInputItemCatalog] = useState(initialItemCatalog);
 
@@ -178,11 +178,7 @@ const InventoryItem = () => {
     }
 
     setValues(updated);
-  };
-
-  const handleTabChange = (event, newValue) => {
-    setTabValue(newValue);
-  };
+  };   
 
   const handleDelete = (e) => {
     e.preventDefault();
@@ -418,29 +414,7 @@ const InventoryItem = () => {
           Delete={deleteObj}
         />
         <ToastContainer />
-        <Box sx={{ width: "100%", typography: "body1", pt: "10px" }}>
-          <TabContext value={tabValue}>
-            <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-              <TabList
-                onChange={handleTabChange}
-                aria-label="lab API tabs example"
-              >
-                <Tab label="Price Hist." value="1" />
-                <Tab label="Cost Hist" value="2" />
-                <Tab label="Batches" value="3" />
-              </TabList>
-            </Box>
-            <TabPanel value="1">
-              <Typography>asdfasf</Typography>
-            </TabPanel>
-            <TabPanel value="2">
-              <Typography>adasfasd</Typography>
-            </TabPanel>
-            <TabPanel value="3">
-              <Typography>adasfasd</Typography>
-            </TabPanel>
-          </TabContext>
-        </Box>
+        
       </Paper>
     </Box>
   );

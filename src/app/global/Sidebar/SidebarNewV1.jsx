@@ -1,6 +1,6 @@
-import { useState, useEffect, useCallback, useContext } from "react";
+import { useState } from "react";
 
-import { Box, IconButton, Typography, useTheme } from "@mui/material";
+import { Box,  useTheme } from "@mui/material";
 import { Link, NavLink } from "react-router-dom";
 import "react-pro-sidebar/dist/css/styles.css";
 import { tokens } from "../../../theme";
@@ -35,30 +35,10 @@ import {
   FaUserFriends
 } from "react-icons/fa";
 
-import {
-  AssignmentIndOutlined,
-  AutoAwesome,
-  ChildFriendly,
+import {  
+  AutoAwesome,  
   ViewAgenda,
 } from "@mui/icons-material";
-// import downloadl from "../../assets/p2.jpg";
-// const Item = ({ title, to, icon, selected, setSelected }) => {
-//   const theme = useTheme();
-//   const colors = tokens(theme.palette.mode);
-//   return (
-//     <MenuItem
-//       active={selected === title}
-//       style={{
-//         color: colors.blueAccent[100],
-//       }}
-//       onClick={() => setSelected(title)}
-//       icon={icon}
-//     >
-//       <Typography>{title}</Typography>
-//       <Link to={to} />
-//     </MenuItem>
-//   );
-// };
 
 const SidebarNewV1 = ({
   image,
@@ -75,7 +55,6 @@ const SidebarNewV1 = ({
   return (
     <>
       <ProSidebar
-        backgroundColor={colors.primary[400]}
         collapsed={collapsed}
         toggled={toggled}
         onToggle={handleToggleSidebar}
@@ -113,7 +92,7 @@ const SidebarNewV1 = ({
           </Menu>
         </SidebarHeader>
         {/* Content */}
-        <SidebarContent backgroundColor={colors.primary[400]}>
+        <SidebarContent>
           <Menu
             iconShape="circle"
             style={{

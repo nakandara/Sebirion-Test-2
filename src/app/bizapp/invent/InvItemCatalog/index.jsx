@@ -5,7 +5,9 @@ import {
   Grid,
   Paper,
   Switch,
+  Tab,
   TextField,
+  Typography,
   useMediaQuery,
   useTheme,
 } from "@mui/material";
@@ -20,6 +22,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useParams } from "react-router-dom";
 import DeleteModal from "../../../components/DeleteModal";
+import { TabContext, TabList, TabPanel } from "@mui/lab";
 
 const API_URL = "invent/v1/ItemCatalog/";
 const UNITS_API_URL = "appsrv/v1/IsoUnit/";
@@ -39,6 +42,7 @@ const Itemcatalog = () => {
   const [isDeleteEnabled, setIsDeleteEnabled] = useState(true);
   const [values, setValues] = useState(initialState);
   const [newClicked, setNewClicked] = useState(false);
+  const [tabValue, setTabValue] = useState("1");
 
   const [requestObjId, setRequestObjId] = useState(id);
 
@@ -187,6 +191,11 @@ const Itemcatalog = () => {
     setValues(initialState);
     setNewClicked(true);
   };
+
+  const handleTabChange = (event, newValue) => {
+    setTabValue(newValue);
+  };
+  
   const handleEdit = (e) => {
     companyIdRef.current.focus();
   };
@@ -443,6 +452,29 @@ const Itemcatalog = () => {
           Delete={deleteObj}
         />
         <ToastContainer />
+        <Box sx={{ width: "100%", typography: "body1", pt: "10px" }}>
+          <TabContext value={tabValue}>
+            <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+              <TabList
+                onChange={handleTabChange}
+                aria-label="lab API tabs example"
+              >
+                <Tab label="Price Hist." value="1" />
+                <Tab label="Cost Hist" value="2" />
+                <Tab label="Batches" value="3" />
+              </TabList>
+            </Box>
+            <TabPanel value="1">
+              <Typography>asdfasf</Typography>
+            </TabPanel>
+            <TabPanel value="2">
+              <Typography>adasfasd</Typography>
+            </TabPanel>
+            <TabPanel value="3">
+              <Typography>adasfasd</Typography>
+            </TabPanel>
+          </TabContext>
+        </Box>
       </Paper>
     </Box>
   );
