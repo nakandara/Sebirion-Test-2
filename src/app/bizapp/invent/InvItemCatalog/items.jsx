@@ -62,7 +62,7 @@ function CatalogItems() {
   }, []);
 
   const [columnDefs] = useState([
-    { field: "id", headerName: "ID" },
+    { field: "id", headerName: "ID", width: 40, checkboxSelection: true, },
     {
       field: "itemCode",
       headerName: "Item Code",
