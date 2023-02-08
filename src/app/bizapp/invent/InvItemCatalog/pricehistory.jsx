@@ -14,7 +14,7 @@ function PriceHistory({priceHistItems}) {
 //   const [priceHistItems, setPriceHistItems] = useState([]);
 
   const [columnDefs] = useState([
-    { field: "id", headerName: "ID" },
+    { field: "id", headerName: "ID", width: 40,checkboxSelection: true, },
     {
       field: "dateCreated",
       headerName: "Start Date",

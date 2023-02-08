@@ -38,11 +38,6 @@ function BasicData() {
 
   const [newClicked, setNewClicked] = useState(false);
 
-  const [isNewEnabled, setIsNewEnabled] = useState(true);
-  const [isEditEnabled, setIsEditEnabled] = useState(true);
-  const [isSaveEnabled, setIsSaveEnabled] = useState(true);
-  const [isDeleteEnabled, setIsDeleteEnabled] = useState(true);
-
   const [formValues, setFormValues] = useState(initialValues);
   const [rePopulate, setRePopulate] = useState(false);
 

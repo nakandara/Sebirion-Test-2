@@ -71,12 +71,7 @@ function AssociationList() {
   }, []);
 
   const [columnDefs] = useState([
-    {
-      field: "id",
-      headerName: "ID",
-      flex: 1,
-      checkboxSelection: true,
-    },
+    { field: "id", headerName: "ID", width: 40,checkboxSelection: true, },
     {
       field: "associationId",
       headerName: "Association",
@@ -112,15 +107,15 @@ function AssociationList() {
     },
   ]);
 
-  const defaultColDef = useMemo(() => {
-    return {
-      flex: 1,
-      minWidth: 100,
-      filter: true,
+  const defaultColDef = useMemo(
+    () => ({
+      resizable: true,
       sortable: true,
-    };
-  }, []);
-
+      filter: true,
+    }),
+    []
+  );
+  
   const onSelectionChanged = useCallback(() => {
     const selectedRows = gridRef.current.api.getSelectedRows();
     document.querySelector("#selectedRows").innerHTML =

@@ -21,9 +21,11 @@ import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-balham.css";
 
 import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import ListCrudActions from "../../../components/ListCrudActions";
 import useAxiosPrivate from "../../../../Application/fndbas/hooks/useAxiosPrivate";
 import Header from "../../../components/Header";
+import DeleteModal from "../../../components/DeleteModal";
 
 const API_URL = "/accrul/v1/PaymentTerm/";
 
@@ -33,6 +35,9 @@ function PaymentTerm() {
   const axiosPrivate = useAxiosPrivate();
 
   const [formValues, setFormValues] = useState(initState);
+
+  const [openDel, setOpenDel] = useState(false);
+  const [rePopulate, setRePopulate] = useState(false);
 
   const containerStyle = useMemo(() => ({ width: "100%", height: "100%" }), []);
   const [paymentTerms, setPaymentTerms] = useState([]);
@@ -75,13 +80,7 @@ function PaymentTerm() {
     }),
     []
   );
-
-  const onSelectionChanged = useCallback(() => {
-    const selectedRows = gridRef.current.api.getSelectedRows();
-    document.querySelector("#selectedRows").innerHTML =
-      selectedRows.length === 1 ? selectedRows[0].athlete : "";
-  }, []);
-
+  
   useEffect(() => {
     let isMounted = true;
     const controller = new AbortController();
@@ -94,25 +93,26 @@ function PaymentTerm() {
           },
         });
 
-        isMounted && setPaymentTerms(response.data);
+        rePopulate || (isMounted && setPaymentTerms)(response.data);
       } catch (err) {}
     };
     getPayTerms();
     return () => {
       isMounted = false;
       controller.abort();
+      setRePopulate(false);
     };
-  }, []);
+  }, [rePopulate]);
 
   const handleNew = (e) => {
-    setFormValues(initState);
+    setValues(initState);
   };
 
   const handleEdit = (e) => {};
 
   const handleSave = async (e) => {
     e.preventDefault();
-    
+
     let isMounted = true;
     const controller = new AbortController();
     try {
@@ -127,7 +127,8 @@ function PaymentTerm() {
         }
       );
       console.log(response.data);
-      isMounted && setPaymentTerms(...paymentTerms, response.data);
+      setValues(initState);
+      isMounted && setPaymentTerms([...paymentTerms, response.data]);
       showAllToasts("SUCCESS", "Successfully Saved.");
     } catch (err) {
       showAllToasts("ERROR", err.response.data.apiError.message);
@@ -135,7 +136,36 @@ function PaymentTerm() {
     }
   };
 
-  const handleDelete = (e) => {};
+  const handleDelete = (e) => {
+    e.preventDefault();
+    setOpenDel(true);
+  };
+
+  const handleClose = () => {
+    setOpenDel(false);
+  };
+
+  const deleteObj = async () => {
+    try {
+      await axiosPrivate.delete(API_URL + "delete/" + values.termId);
+      setOpenDel(false);
+      showAllToasts("SUCCESS", "Successfully Deleted.");
+
+      setValues(initState);
+      setRePopulate(true);
+    } catch (err) {}
+  };
+
+  const onSelectionChanged = () => {
+    const selectedRows = gridRef.current.api.getSelectedRows();
+
+    setValues({
+      termId: selectedRows[0].termId,
+      description: selectedRows[0].description,
+      termValue: selectedRows[0].termValue,
+      payTermType: (selectedRows[0].payTermType).toUpperCase(),
+    })
+  };
 
   const onFormInputChange = (key, value) => {
     const updated = Object.assign({}, values);
@@ -298,6 +328,12 @@ function PaymentTerm() {
           onSelectionChanged={onSelectionChanged}
         ></AgGridReact>
       </Box>
+      <ToastContainer />
+      <DeleteModal
+        open={openDel}
+        handleClose={handleClose}
+        Delete={deleteObj}
+      />
     </Box>
   );
 }
