@@ -5,8 +5,8 @@ import React, {
   useCallback,
   useEffect,
 } from "react";
-import { ToastContainer, toast } from "react-toastify";
-import { Box, Tab, TextField, useMediaQuery, useTheme } from "@mui/material";
+
+import { Box, FormControl, Grid, InputLabel, MenuItem, Paper, Select,  TextField, useMediaQuery, useTheme } from "@mui/material";
 import useAxiosPrivate from "../../../../Application/fndbas/hooks/useAxiosPrivate";
 
 import { AgGridReact } from "ag-grid-react";
@@ -14,7 +14,10 @@ import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-balham.css";
 import Header from "../../../components/Header";
 import ListCrudActions from "../../../components/ListCrudActions";
-import CreateDlg from "./createDlg";
+
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import DeleteModal from "../../../components/DeleteModal";
 
 const API_URL = "/appsrv/v1/IsoUnit/";
 
@@ -29,7 +32,6 @@ function BasicData() {
     multiFactor: "",
     divFactor: "",
     tenPower: "",
-    userDefined: "",
     unitType: "",
   };
 
@@ -42,14 +44,15 @@ function BasicData() {
   const [isSaveEnabled, setIsSaveEnabled] = useState(true);
   const [isDeleteEnabled, setIsDeleteEnabled] = useState(true);
 
-  const [isOpenDlg, setIsOpenDlg] = useState(false);
-
   const [formValues, setFormValues] = useState(initialValues);
+
+  const [openDel, setOpenDel] = useState(false);
 
   const containerStyle = useMemo(() => ({ width: "100%", height: "100%" }), []);
   const gridStyle = useMemo(() => ({ height: "100%", width: "100%" }), []);
   const [isoUnits, setIsoUnits] = useState([]);
   const [columnDefs] = useState([
+    { field: "id", headerName: "ID", width: 40,checkboxSelection: true, },
     {
       field: "unitCode",
       headerName: "Unit Code",
@@ -58,7 +61,7 @@ function BasicData() {
     {
       field: "description",
       headerName: "Description",
-      width: 110,
+      width: 250,
       editable: true,
     },
     {
@@ -94,19 +97,43 @@ function BasicData() {
     },
   ]);
 
-  const defaultColDef = useMemo(() => {
-    return {
-      flex: 1,
-      minWidth: 100,
-      editable: true,
-    };
-  }, []);
+  const defaultColDef = useMemo(
+    () => ({
+      resizable: true,
+      sortable: true,
+      filter: true,
+    }),
+    []
+  );
 
-  const onSelectionChanged = useCallback(() => {
+  const handleClose = () => {
+    setOpenDel(false);
+  };
+
+  const deleteObj = async () => {
+    try {
+      await axiosPrivate.delete(API_URL + "delete/" + formValues.unitCode);
+      setOpenDel(false);
+      showAllToasts("SUCCESS", "Successfully Deleted.");
+
+      setFormValues(null);
+    } catch (err) {}
+  };
+
+  const onSelectionChanged = () => {
     const selectedRows = gridRef.current.api.getSelectedRows();
-    document.querySelector("#selectedRows").innerHTML =
-      selectedRows.length === 1 ? selectedRows[0].athlete : "";
-  }, []);
+
+    setFormValues({
+      unitCode: selectedRows[0].unitCode,
+      description: selectedRows[0].description,
+      baseUnit: selectedRows[0].baseUnit,
+      multiFactor: selectedRows[0].multiFactor,
+      divFactor: selectedRows[0].divFactor,
+      tenPower: selectedRows[0].tenPower,
+      userDefined: selectedRows[0].userDefined,
+      unitType: (selectedRows[0].unitType).toUpperCase(),
+    })
+  };
 
   useEffect(() => {
     let isMounted = true;
@@ -152,7 +179,21 @@ function BasicData() {
         }
       );
       console.log(response.data);
-      // response.data && setCurrentObject(response.data);
+      let resObj = response.data;
+
+      const responseItem={
+        id: resObj.id,
+        unitCode: resObj.unitCode,
+        description: resObj.description,
+        baseUnit: resObj.baseUnit,
+        multiFactor: resObj.multiFactor,
+        divFactor: resObj.divFactor,
+        tenPower: resObj.tenPower,
+        userDefined: resObj.userDefined,
+        unitType: resObj.unitType,
+      }      
+
+      response.data && setIsoUnits([... isoUnits,responseItem]);
       showAllToasts("SUCCESS", "Successfully Saved.");
     } catch (err) {
       showAllToasts("ERROR", err.response.data.apiError.message);
@@ -160,7 +201,10 @@ function BasicData() {
     }
   };
 
-  const handleDelete = (e) => {};
+  const handleDelete = (e) => {
+    e.preventDefault();
+    setOpenDel(true);
+  };
 
   const onFormInputChange = (key, value) => {
     const updated = Object.assign({}, formValues);
@@ -226,6 +270,148 @@ function BasicData() {
         />
       </Box>
 
+      <Paper elevation={1} style={{ padding: "5px" }}>
+          <form onSubmit={handleSave}>
+            <fieldset style={{ border: "0" }}>
+              <Grid container spacing={1}>
+                <Grid item xs={2}>
+                  <TextField
+                    variant="outlined"
+                    size="small"
+                    fullWidth
+                    id="unitCode"
+                    autoComplete="off"
+                    name="unitCode"
+                    label="Unit Code"
+                    type="text"
+                    value={formValues.unitCode}
+                    onChange={(e) =>
+                      onFormInputChange("unitCode", e.target.value)
+                    }
+                    required
+                    margin="normal"
+                  />
+                </Grid>
+                <Grid item xs={3}>
+                  <TextField
+                    variant="outlined"
+                    size="small"
+                    fullWidth
+                    id="description"
+                    autoComplete="off"
+                    name="description"
+                    label="Description"
+                    type="text"
+                    value={formValues.description}
+                    onChange={(e) =>
+                      onFormInputChange("description", e.target.value)
+                    }
+                    required
+                    margin="normal"
+                  />
+                </Grid>
+                <Grid item xs={1}>
+                  <TextField
+                    variant="outlined"
+                    size="small"
+                    fullWidth
+                    id="baseUnit"
+                    autoComplete="off"
+                    name="baseUnit"
+                    label="Base Unit"
+                    type="text"
+                    value={formValues.baseUnit}
+                    onChange={(e) =>
+                      onFormInputChange("baseUnit", e.target.value)
+                    }
+                    required
+                    margin="normal"
+                  />
+                </Grid>
+                <Grid item xs={1}>
+                  <TextField
+                    variant="outlined"
+                    size="small"
+                    fullWidth
+                    id="multiFactor"
+                    autoComplete="off"
+                    name="multiFactor"
+                    label="Multi. Factor"
+                    type="number"
+                    value={formValues.multiFactor}
+                    onChange={(e) =>
+                      onFormInputChange("multiFactor", e.target.value)
+                    }
+                    required
+                    margin="normal"
+                  />
+                </Grid>
+                <Grid item xs={1}>
+                  <TextField
+                    variant="outlined"
+                    size="small"
+                    fullWidth
+                    id="divFactor"
+                    autoComplete="off"
+                    name="divFactor"
+                    label="Div. Factor"
+                    type="number"
+                    value={formValues.divFactor}
+                    onChange={(e) =>
+                      onFormInputChange("divFactor", e.target.value)
+                    }
+                    required
+                    margin="normal"
+                  />
+                </Grid>
+                <Grid item xs={1}>
+                  <TextField
+                    variant="outlined"
+                    size="small"
+                    fullWidth
+                    id="tenPower"
+                    autoComplete="off"
+                    name="tenPower"
+                    label="Ten Power"
+                    type="number"
+                    value={formValues.tenPower}
+                    onChange={(e) =>
+                      onFormInputChange("tenPower", e.target.value)
+                    }
+                    required
+                    margin="normal"
+                  />
+                </Grid>
+                <Grid item xs={1}>
+                  <FormControl
+                    sx={{ minWidth: 120, gridColumn: "span 1" }}
+                    size="small"
+                  >
+                    <InputLabel id="unitType">Unit Type</InputLabel>
+                    <Select
+                      labelId="unitType"
+                      id="unitType"
+                      value={formValues.unitType}
+                      label="Unit Type"
+                      onChange={(e) =>
+                        onFormInputChange("unitType", e.target.value)
+                      }
+                    >
+                      <MenuItem value={"NOT_USED"}>Not Used</MenuItem>
+                      <MenuItem value={"WEIGHT"}>Weight</MenuItem>
+                      <MenuItem value={"VOLUME"}>Volume</MenuItem>
+                      <MenuItem value={"LENGTH"}>Length</MenuItem>
+                      <MenuItem value={"TEMPERATURE"}>Temperature</MenuItem>
+                      <MenuItem value={"DISCRETE"}>Discrete</MenuItem>
+                      <MenuItem value={"DENSITY"}>Density</MenuItem>
+                    </Select>
+                  </FormControl>
+                </Grid>
+              </Grid>
+            </fieldset>
+          </form>
+        </Paper>
+
       <Box sx={{ height: 400, margin: "10px" }}>
         <div style={gridStyle} className="ag-theme-balham">
           <AgGridReact
@@ -239,7 +425,12 @@ function BasicData() {
           ></AgGridReact>
         </div>
       </Box>
-      <CreateDlg openDlg={isOpenDlg} setOpenDlg={setIsOpenDlg} />
+      <DeleteModal
+          open={openDel}
+          handleClose={handleClose}
+          Delete={deleteObj}
+        />
+      <ToastContainer/>
     </Box>
   );
 }
