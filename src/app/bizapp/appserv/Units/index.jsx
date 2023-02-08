@@ -2,7 +2,6 @@ import React, {
   useMemo,
   useState,
   useRef,
-  useCallback,
   useEffect,
 } from "react";
 
@@ -45,6 +44,7 @@ function BasicData() {
   const [isDeleteEnabled, setIsDeleteEnabled] = useState(true);
 
   const [formValues, setFormValues] = useState(initialValues);
+  const [rePopulate, setRePopulate] = useState(false);
 
   const [openDel, setOpenDel] = useState(false);
 
@@ -116,7 +116,8 @@ function BasicData() {
       setOpenDel(false);
       showAllToasts("SUCCESS", "Successfully Deleted.");
 
-      setFormValues(null);
+      setFormValues(initialValues);
+      setRePopulate(true);
     } catch (err) {}
   };
 
@@ -147,15 +148,16 @@ function BasicData() {
           },
         });
 
-        isMounted && setIsoUnits(response.data);
+        rePopulate || (isMounted && setIsoUnits)(response.data);
       } catch (err) {}
     };
     getUnits();
     return () => {
       isMounted = false;
       controller.abort();
+      setRePopulate(false);
     };
-  }, []);
+  }, [rePopulate]);
 
   const handleNew = (e) => {
     setFormValues(initialValues);
