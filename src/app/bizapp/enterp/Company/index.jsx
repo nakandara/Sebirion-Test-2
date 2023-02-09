@@ -19,13 +19,15 @@ function Company() {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const companyIdRef = useRef();
-  const axiosPrivate = useAxiosPrivate();  
+  const axiosPrivate = useAxiosPrivate();
 
   const isNonMobile = useMediaQuery("(min-width:600px)");
   const [isNewEnabled, setIsNewEnabled] = useState(true);
   const [isEditEnabled, setIsEditEnabled] = useState(true);
   const [isSaveEnabled, setIsSaveEnabled] = useState(true);
   const [isDeleteEnabled, setIsDeleteEnabled] = useState(true);
+
+  const [addCompanyAddressForm, setAddCompanyAddressForm] = useState([]);
 
   const [newClicked, setNewClicked] = useState(false);
   const [addNewRow, setAddNewRow] = useState(true);
@@ -85,7 +87,6 @@ function Company() {
     companyIdRef.current.focus();
   };
   const handleSave = async (e) => {
-    
     setValues(initialValues);
     e.preventDefault();
     const controller = new AbortController();
@@ -123,7 +124,7 @@ function Company() {
 
   const handleTabChange = (event, newValue) => {
     setTabValue(newValue);
-  };  
+  };
 
   return (
     <Box m="5px" p="5px" backgroundColor={colors.primary[400]}>
@@ -253,7 +254,11 @@ function Company() {
             </TabList>
           </Box>
           <TabPanel value="1">
-            <CompanyAddress row={addNewRow} />
+            <CompanyAddress
+              row={addNewRow}
+              addCompanyAddressForm={addCompanyAddressForm}
+              setAddCompanyAddressForm={setAddCompanyAddressForm}
+            />
           </TabPanel>
           <TabPanel value="2">
             <CompanyContactInfo row={addNewRow} />
