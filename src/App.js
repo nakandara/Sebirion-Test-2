@@ -5,7 +5,6 @@ import { CssBaseline, ThemeProvider } from "@mui/material";
 import { ColorModeContext, useMode } from "./theme";
 import "./styles.scss";
 
-import { FaBars } from "react-icons/fa";
 import RequireAuth from "./components/pages/RequireAuth";
 import { AuthProvider } from "./context/AuthProvider";
 import Dashboard from "./app/dashboard/Dashboard";
@@ -19,8 +18,8 @@ const Unauthorized = lazy(() => import("./components/pages/Unauthorized"));
 // const UserRoles = lazy(() => import('./components/enterp/UserRoles'));
 // const Project = lazy(() => import('./components/Application/Proj/Project/Project'));
 // const Material = lazy(() => import('./components/Application/Manufacturing/Material/Material'));
-// const MaterialGroup = lazy(() => import('./components/Application/Manufacturing/MaterialGroup/MaterialGroup'));
-// const CoveringType = lazy(() => import('./components/Application/Invent/CoveringTypes/CoveringType'));
+const Customers = lazy(() => import('./app/bizapp/enterp/Customer/customerlist'));
+const Customer = lazy(() => import('./app/bizapp/enterp/Customer'));
 const Login = lazy(() => import("./app/login/Login"));
 const FndUser = lazy(() => import("./Application/Enterprise/User/FndUser"));
 const PersonInfo = lazy(() => import("./Application/Pageinfo/PersonInfo"));
@@ -174,6 +173,22 @@ function App() {
                         element={
                           <Suspense fallback={<>...</>}>
                             <Sites />
+                          </Suspense>
+                        }
+                      />
+                       <Route
+                        path="customer/:id"
+                        element={
+                          <Suspense fallback={<>...</>}>
+                            <Customer />
+                          </Suspense>
+                        }
+                      />
+                      <Route
+                        path="customers"
+                        element={
+                          <Suspense fallback={<>...</>}>
+                            <Customers />
                           </Suspense>
                         }
                       />

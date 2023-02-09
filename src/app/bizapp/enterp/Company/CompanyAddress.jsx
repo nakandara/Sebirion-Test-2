@@ -23,7 +23,7 @@ import { AgGridReact } from "ag-grid-react";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-balham.css";
 
-const API_URL = "v1/Company/";
+const API_URL = "enterp/v1/Company/";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="left" ref={ref} {...props} />;
@@ -191,7 +191,7 @@ function CompanyAddress({ addCompanyAddressForm, setAddCompanyAddressForm }) {
     const controller = new AbortController();
     try {
       const itemResponse = await axiosPrivate.post(
-        API_URL + "/save",
+        API_URL + "save",
         JSON.stringify({
           addressId: addressId,
           address1: address1,
