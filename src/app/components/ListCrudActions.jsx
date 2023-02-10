@@ -9,7 +9,7 @@ export default function ListCrudActions({ addItems, handleSave, handleEdit, hand
 
     const buttonStyle = { maxWidth: '40px', maxHeight: '30px', minWidth: '40px', minHeight: '30px' }
     return (
-        <Box mb="20px" sx={{ color: colors.grey[100] }}>
+        <Box mb="2px" sx={{ color: colors.grey[100] }}>
             <ButtonGroup sx={{ color: colors.grey[100] }}>
                 <Button
                     sx={{ color: colors.grey[100] }}

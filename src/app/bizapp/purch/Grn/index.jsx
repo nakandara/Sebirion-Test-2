@@ -18,9 +18,11 @@ import "react-toastify/dist/ReactToastify.css";
 import useAxiosPrivate from "../../../../Application/fndbas/hooks/useAxiosPrivate";
 import DeleteModal from "../../../components/DeleteModal";
 
-import LocalizationProvider from "@mui/lab/LocalizationProvider";
-import AdapterDateFns from "@mui/lab/AdapterDateFns";
-import { DatePicker } from "@mui/lab";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import GrnItems from "./grnItem";
+import { useParams } from "react-router-dom";
 
 const API_URL = "purch/v1/Grn/";
 const SUPPLIER_API_URL = "enterp/v1/SupplierInfo/";
@@ -38,6 +40,7 @@ function Grn() {
     createdAt: "",
     createdBy: "",
     status: "",
+    lineItems:[],
   };
 
   const isNonMobile = useMediaQuery("(min-width:600px)");
@@ -45,13 +48,64 @@ function Grn() {
   const [isEditEnabled, setIsEditEnabled] = useState(true);
   const [isSaveEnabled, setIsSaveEnabled] = useState(true);
   const [isDeleteEnabled, setIsDeleteEnabled] = useState(true);
-  const [orderLines, setOrderLines] = useState([]);
+  const [lineItems, setLineItems] = useState([]);
 
   const [formValues, setFormValues] = useState(initialState);
   const [suppliers, setSuppliers] = useState([]);
   const [inputSupplier, setInputSupplier] = useState([]);
 
+  const { id } = useParams();
+  const [reqObjId, setReqObjId] = useState(id);
+
   const [openDel, setOpenDel] = useState(false);
+
+  useEffect(() => {
+    const fetchLatestObjId = async () => {
+      const controller = new AbortController();
+      try {
+        const latestId = await axiosPrivate.get(API_URL + "latest_id", {
+          headers: {
+            signal: controller.signal,
+          },
+        });
+        setReqObjId(latestId.data);
+      } catch (err) {}
+    };
+    reqObjId === "null" && fetchLatestObjId();
+  }, [reqObjId, axiosPrivate]);
+
+  const getObj = async () => {
+    const controller = new AbortController();
+    try {
+      const response = await axiosPrivate.get(API_URL + "get/" + reqObjId, {
+        headers: {
+          signal: controller.signal,
+        },
+      });
+      console.log(response.data);
+      let grnItems = response.data.grnItemList;
+
+      const dataArray = grnItems.map((item, idx) => ({
+        id: idx + 1,
+        site: item.site.site + " - " + item.site.description,
+        itemCatalog:
+          item.itemCatalog.itemCode + " - " + item.itemCatalog.description,
+        batchNo: item.batchNo,
+        price: item.price,
+        quantity: item.quantity,
+      }));
+
+      response.data && setLineItems(dataArray);
+
+      response.data && setFormValues(response.data);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  useEffect(() => {
+    reqObjId && reqObjId !== "null" && getObj();
+  }, [reqObjId, axiosPrivate]);
 
   const handleClose = () => {
     setOpenDel(false);
@@ -68,8 +122,8 @@ function Grn() {
   };
 
   const handleNew = (e) => {
-    orderIdRef.current.focus();
     setFormValues(initialState);
+    setLineItems([]);
   };
   const handleEdit = (e) => {
     orderIdRef.current.focus();
@@ -275,26 +329,6 @@ function Grn() {
           </Grid>
           <Grid container spacing={2}>
             <Grid item xs={2}>
-              <LocalizationProvider dateAdapter={AdapterDateFns}>
-                <DatePicker
-                  label="Created"
-                  value={formValues.createdAt}
-                  onChange={(e) =>
-                    onFormInputChange("createdAt", e.target.value)
-                  }
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      variant="outlined"
-                      size="small"
-                      fullWidth
-                      margin="normal"
-                    />
-                  )}
-                />
-              </LocalizationProvider>
-            </Grid>
-            <Grid item xs={2}>
               <TextField
                 variant="outlined"
                 size="small"
@@ -311,6 +345,25 @@ function Grn() {
                 margin="normal"
               />
             </Grid>
+            <Grid item xs={2}>
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <DatePicker
+                  label="Created"
+                  disabled
+                  value={formValues.createdAt}
+                  onChange={(e) => onFormInputChange("createdAt", e)}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      variant="outlined"
+                      size="small"
+                      fullWidth
+                      margin="normal"
+                    />
+                  )}
+                />
+              </LocalizationProvider>
+            </Grid>
           </Grid>
         </form>
         <DeleteModal
@@ -321,7 +374,11 @@ function Grn() {
         <ToastContainer />
       </Paper>
       <ToastContainer />
-      {/* <OrderLine orderLines={orderLines} /> */}
+      <GrnItems
+        grnId={formValues.grnId}
+        lineItems={lineItems}
+        setLineItems={setLineItems}
+      />
     </Box>
   );
 }

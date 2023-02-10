@@ -43,25 +43,16 @@ function Person() {
 
   const [formValues, setFormValues] = useState(initialValues);
   const [value, setValue] = React.useState(new Date());
-  const [checked, setChecked] = React.useState(false);
-  const [gender, setGender] = React.useState("M");
 
   const { id } = useParams();
   const [reqObjId, setReqObjId] = useState(id);
 
-  const [openDel, setOpenDel] = useState(false);
-
-  const handleChangecheck = (event) => {
-    setChecked(event.target.checked);
-  };
+  const [openDel, setOpenDel] = useState(false);  
 
   const handleChange = (newValue) => {
     setValue(newValue);
   };
 
-  const handleSelect = (event) => {
-    setGender(event.target.value);
-  };
 
   const handleNew = (e) => {
     setFormValues(initialValues);
@@ -110,9 +101,6 @@ function Person() {
     e.preventDefault();
     const controller = new AbortController();
     try {
-      formValues.dateOfBirth = value;
-      formValues.married = checked;
-      formValues.gender = gender;
       const response = await axiosPrivate.post(
         API_URL + "create",
         JSON.stringify(formValues),
@@ -125,7 +113,7 @@ function Person() {
       );
       // console.log(response.data);
       console.log(response.data);
-      // response.data && setCurrentObject(response.data);
+      //  response.data && setFormValues(response.data);
       showAllToasts("SUCCESS", "Successfully Saved.");
     } catch (err) {
       showAllToasts("ERROR", err.response.data.apiError.message);
@@ -281,9 +269,10 @@ function Person() {
                 margin="normal"
               />
             </Grid>
-
+          </Grid>
+          <Grid container spacing={2}>
             <Grid item xs={2}>
-              <FormControl sx={{ m: 1, minWidth: 120 }}>
+              <FormControl sx={{ mt: 2, minWidth: 120 }}>
                 <InputLabel id="titlelbl">Title</InputLabel>
                 <Select
                   size="small"
@@ -294,9 +283,9 @@ function Person() {
                   label="Title"
                   onChange={(e) => onFormInputChange("title", e.target.value)}
                 >
-                  <MenuItem value="MR">Mr.</MenuItem>
-                  <MenuItem value="MISS">Miss.</MenuItem>
-                  <MenuItem value="MRS">Mrs.</MenuItem>
+                  <MenuItem value="MR">Mr</MenuItem>
+                  <MenuItem value="MISS">Miss</MenuItem>
+                  <MenuItem value="MRS">Mrs</MenuItem>
                 </Select>
               </FormControl>
             </Grid>
@@ -366,39 +355,41 @@ function Person() {
                 margin="normal"
               />
             </Grid>
-          </Grid>
-          <Grid container spacing={2}>
+            <Grid item xs={2}>
+              <FormControl sx={{ mt: 2, minWidth: 120 }}>
+                <InputLabel id="titlelbl">Gender</InputLabel>
+                <Select
+                  size="small"
+                  margin="normal"
+                  labelId="titlelbl"
+                  id="gender"
+                  value={formValues.gender}
+                  label="Gender"
+                  onChange={(e) => onFormInputChange("gender", e.target.value)}
+                >
+                  <MenuItem value="M">Male</MenuItem>
+                  <MenuItem value="F">Female</MenuItem>
+                  <MenuItem value="N">Not Mentioned</MenuItem>
+                </Select>
+              </FormControl>
+            </Grid>
             <Grid item xs={2}>
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DatePicker
                   label="Date of Birth"
                   value={formValues.dateOfBirth}
-                  margin="normal"
-                  size="small"
-                  fullWidth
-                  onChange={(e) =>
-                    onFormInputChange("dateOfBirth", e.target.value)
-                  }
-                  renderInput={(params) => <TextField {...params} />}
+                  onChange={(e) => onFormInputChange("dateOfBirth", e)}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      variant="outlined"
+                      size="small"
+                      fullWidth
+                      margin="normal"
+                    />
+                  )}
                 />
               </LocalizationProvider>
-            </Grid>
-            <Grid item xs={2}>
-              <TextField
-                variant="outlined"
-                size="small"
-                fullWidth
-                id="createdBy"
-                autoComplete="off"
-                name="createdBy"
-                label="Created By"
-                type="text"
-                value={formValues.createdBy && formValues.createdBy.userName}
-                onChange={(e) => onFormInputChange("createdBy", e.target.value)}
-                InputLabelProps={{ shrink: formValues.createdBy }}
-                disabled
-                margin="normal"
-              />
             </Grid>
           </Grid>
         </form>
@@ -423,7 +414,7 @@ const initialValues = {
   firstName: "",
   lastName: "",
   middleName: "",
-  dateOfBirth: "",
+  dateOfBirth: new Date(),
   gender: "",
   married: false,
   pictureURL: "",

@@ -1,18 +1,8 @@
-import {
-  Box,
-  FormControl,
-  Grid,
-  InputLabel,
-  MenuItem,
-  Paper,
-  Select,
-  TextField,
-} from "@mui/material";
+import { Autocomplete, Box, Grid, Paper, TextField } from "@mui/material";
 import React, {
   useState,
   useRef,
   useMemo,
-  useCallback,
   useEffect,
 } from "react";
 
@@ -24,24 +14,28 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import ListCrudActions from "../../../components/ListCrudActions";
 import useAxiosPrivate from "../../../../Application/fndbas/hooks/useAxiosPrivate";
-import Header from "../../../components/Header";
 import DeleteModal from "../../../components/DeleteModal";
 
-const API_URL = "/accrul/v1/PaymentTerm/";
+const API_URL = "/purch/v1/Grn/";
+const SITE_API_URL = "enterp/v1/Site/";
+const ITEM_API_URL = "invent/v1/ItemCatalog/";
 
-function GrnItems({ grnItems }) {
+function GrnItems({ grnId, lineItems, setLineItems }) {
   const gridRef = useRef();
   const termIdRef = useRef();
   const axiosPrivate = useAxiosPrivate();
-
-  const [formValues, setFormValues] = useState(initState);
 
   const [openDel, setOpenDel] = useState(false);
   const [rePopulate, setRePopulate] = useState(false);
 
   const containerStyle = useMemo(() => ({ width: "100%", height: "100%" }), []);
-  const [paymentTerms, setPaymentTerms] = useState([]);
   const [values, setValues] = useState(initState);
+
+  const [inputSite, setInputSite] = useState(initialSite);
+  const [inputItemCatalog, setInputItemCatalog] = useState(initialItemCatalog);
+
+  const [sites, setSites] = useState([]);
+  const [catalogItems, setCatalogItems] = useState([]);
 
   const [columnDefs] = useState([
     {
@@ -53,17 +47,12 @@ function GrnItems({ grnItems }) {
     {
       field: "site",
       headerName: "Site",
-      width: 150,
-    },
-    {
-      field: "description",
-      headerName: "Description",
-      width: 300,
+      width: 350,
     },
     {
       field: "itemCatalog",
       headerName: "Item",
-      width: 100,
+      width: 350,
     },
     {
       field: "batchNo",
@@ -91,28 +80,28 @@ function GrnItems({ grnItems }) {
     []
   );
 
-  useEffect(() => {
-    let isMounted = true;
-    const controller = new AbortController();
+  //   useEffect(() => {
+  //     let isMounted = true;
+  //     const controller = new AbortController();
 
-    const getPayTerms = async () => {
-      try {
-        const response = await axiosPrivate.get(API_URL + "get_all", {
-          headers: {
-            signal: controller.signal,
-          },
-        });
+  //     const getPayTerms = async () => {
+  //       try {
+  //         const response = await axiosPrivate.get(API_URL + "get_all", {
+  //           headers: {
+  //             signal: controller.signal,
+  //           },
+  //         });
 
-        rePopulate || (isMounted && setPaymentTerms)(response.data);
-      } catch (err) {}
-    };
-    getPayTerms();
-    return () => {
-      isMounted = false;
-      controller.abort();
-      setRePopulate(false);
-    };
-  }, [rePopulate]);
+  //         rePopulate || (isMounted && setPaymentTerms)(response.data);
+  //       } catch (err) {}
+  //     };
+  //     getPayTerms();
+  //     return () => {
+  //       isMounted = false;
+  //       controller.abort();
+  //       setRePopulate(false);
+  //     };
+  //   }, [rePopulate]);
 
   const handleNew = (e) => {
     setValues(initState);
@@ -127,7 +116,7 @@ function GrnItems({ grnItems }) {
     const controller = new AbortController();
     try {
       const response = await axiosPrivate.post(
-        API_URL + "create",
+        API_URL +grnId+ "/GrnItem/create",
         JSON.stringify(values),
         {
           headers: {
@@ -138,7 +127,18 @@ function GrnItems({ grnItems }) {
       );
       console.log(response.data);
       setValues(initState);
-      isMounted && setPaymentTerms([...paymentTerms, response.data]);
+
+      let resItems = response.data;
+
+      const dataObject = {
+        site: resItems.site.site +" - "+ resItems.site.description,
+        itemCatalog: resItems.itemCatalog.itemCode +" - "+ resItems.itemCatalog.description,
+        batchNo: resItems.batchNo,
+        price: resItems.price,
+        quantity: resItems.quantity,
+      };
+
+      isMounted && setLineItems([...lineItems, dataObject]);
       showAllToasts("SUCCESS", "Successfully Saved.");
     } catch (err) {
       showAllToasts("ERROR", err.response.data.apiError.message);
@@ -182,6 +182,29 @@ function GrnItems({ grnItems }) {
     updated[key] = value;
     setValues(updated);
   };
+
+  useEffect(() => {
+    const getMetaData = async () => {
+      const controller = new AbortController();
+      try {
+        const sites = await axiosPrivate.get(SITE_API_URL + "get_all", {
+          headers: {
+            signal: controller.signal,
+          },
+        });
+
+        const catItems = await axiosPrivate.get(ITEM_API_URL + "get_all", {
+          headers: {
+            signal: controller.signal,
+          },
+        });
+
+        setSites(sites.data);
+        setCatalogItems(catItems.data);
+      } catch (err) {}
+    };
+    getMetaData();
+  }, []);
 
   const showAllToasts = (type, msg) => {
     type === "SUCCESS" &&
@@ -230,52 +253,92 @@ function GrnItems({ grnItems }) {
   };
   return (
     <Box>
-      <Box m="10px">
-        <Header title="Payment Terms" subTitle="" />
-        <ListCrudActions
-          addItems={handleNew}
-          handleSave={handleSave}
-          handleEdit={handleEdit}
-          handleDelete={handleDelete}
-        />
-        <Paper elevation={2} style={{ padding: "5px" }}>
+      <Paper elevation={2} style={{ padding: "5px", margin: "10px" }}>
+        <Box m="10px">
+          <ListCrudActions
+            addItems={handleNew}
+            handleSave={handleSave}
+            handleEdit={handleEdit}
+            handleDelete={handleDelete}
+          />
+
           <form onSubmit={handleSave}>
             <fieldset style={{ border: "0" }}>
               <Grid container spacing={2}>
                 <Grid item xs={2}>
-                  <TextField
+                  <Autocomplete
                     variant="outlined"
-                    size="small"
-                    fullWidth
-                    ref={termIdRef}
-                    id="termId"
-                    autoComplete="off"
-                    name="termId"
-                    label="Payment Term"
-                    type="text"
-                    value={values.termId}
-                    onChange={(e) =>
-                      onFormInputChange("termId", e.target.value)
+                    disablePortal
+                    isOptionEqualToValue={(option, value) =>
+                      option.site === value.site
                     }
-                    required
-                    margin="normal"
-                    inputProps={{ style: { textTransform: "uppercase" } }}
+                    id="site"
+                    value={values.site}
+                    inputValue={inputSite}
+                    onInputChange={(event, newInputValue) => {
+                      setInputSite(newInputValue);
+                    }}
+                    options={sites}
+                    onChange={(e, newValue) =>
+                      onFormInputChange("site", newValue)
+                    }
+                    getOptionLabel={(option) =>
+                      `${option.site} - ${option.description}` || ""
+                    }
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        label="Site"
+                        size="small"
+                        fullWidth
+                        margin="normal"
+                      />
+                    )}
                   />
                 </Grid>
-                <Grid item xs={4}>
+                <Grid item xs={3}>
+                  <Autocomplete
+                    variant="outlined"
+                    disablePortal
+                    isOptionEqualToValue={(option, value) =>
+                      option.itemCatalog === value.itemCatalog
+                    }
+                    id="itemCatalog"
+                    value={values.itemCatalog}
+                    inputValue={inputItemCatalog}
+                    onInputChange={(event, newInputValue) => {
+                      setInputItemCatalog(newInputValue);
+                    }}
+                    options={catalogItems}
+                    onChange={(e, newValue) =>
+                      onFormInputChange("itemCatalog", newValue)
+                    }
+                    getOptionLabel={(option) =>
+                      `${option.itemCode} - ${option.description}` || ""
+                    }
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        label="Item Catalog"
+                        size="small"
+                        fullWidth
+                        margin="normal"
+                      />
+                    )}
+                  />
+                </Grid>
+                <Grid item xs={2}>
                   <TextField
                     variant="outlined"
                     size="small"
                     fullWidth
-                    id="description"
+                    id="batchNo"
                     autoComplete="off"
-                    name="description"
-                    label="Description"
+                    name="batchNo"
+                    label="Batch"
                     type="text"
-                    value={values.description}
-                    onChange={(e) =>
-                      onFormInputChange("description", e.target.value)
-                    }
+                    value={values.batchNo}
+                    onChange={(e) => onFormInputChange("batchNo", e.target.value)}
                     required
                     margin="normal"
                   />
@@ -285,59 +348,52 @@ function GrnItems({ grnItems }) {
                     variant="outlined"
                     size="small"
                     fullWidth
-                    id="termValue"
+                    id="price"
                     autoComplete="off"
-                    name="termValue"
-                    label="Value"
+                    name="price"
+                    label="Price"
                     type="number"
-                    value={values.termValue}
-                    onChange={(e) =>
-                      onFormInputChange("termValue", e.target.value)
-                    }
+                    value={values.price}
+                    onChange={(e) => onFormInputChange("price", e.target.value)}
                     required
                     margin="normal"
                   />
                 </Grid>
                 <Grid item xs={2}>
-                  <FormControl
-                    sx={{ minWidth: 120, gridColumn: "span 1" }}
+                  <TextField
+                    variant="outlined"
                     size="small"
-                  >
-                    <InputLabel id="payTermType">Term Function</InputLabel>
-                    <Select
-                      labelId="payTermType"
-                      id="payTermType"
-                      value={values.payTermType}
-                      label="Pay. Term Type"
-                      onChange={(e) =>
-                        onFormInputChange("payTermType", e.target.value)
-                      }
-                    >
-                      <MenuItem value={"DAYS"}>Days</MenuItem>
-                      <MenuItem value={"WEEKS"}>Weeks</MenuItem>
-                      <MenuItem value={"MONTHS"}>Months</MenuItem>
-                      <MenuItem value={"YEARS"}>Years</MenuItem>
-                    </Select>
-                  </FormControl>
+                    fullWidth
+                    id="quantity"
+                    autoComplete="off"
+                    name="quantity"
+                    label="Quantity"
+                    type="number"
+                    value={values.quantity}
+                    onChange={(e) =>
+                      onFormInputChange("quantity", e.target.value)
+                    }
+                    required
+                    margin="normal"
+                  />
                 </Grid>
               </Grid>
             </fieldset>
           </form>
-        </Paper>
-      </Box>
-
-      <Box sx={{ height: 400, margin: "10px" }}>
-        <AgGridReact
-          ref={gridRef}
-          className="ag-theme-balham"
-          rowData={paymentTerms}
-          columnDefs={columnDefs}
-          defaultColDef={defaultColDef}
-          rowSelection={"single"}
-          animateRows={true}
-          onSelectionChanged={onSelectionChanged}
-        ></AgGridReact>
-      </Box>
+        </Box>
+        <Box sx={{ height: 400, margin: "5px" }}>
+          <AgGridReact
+            ref={gridRef}
+            className="ag-theme-balham"
+            rowData={lineItems}
+            columnDefs={columnDefs}
+            defaultColDef={defaultColDef}
+            rowSelection={"single"}
+            animateRows={true}
+            onSelectionChanged={onSelectionChanged}
+          ></AgGridReact>
+        </Box>
+      </Paper>
       <ToastContainer />
       <DeleteModal
         open={openDel}
@@ -348,11 +404,47 @@ function GrnItems({ grnItems }) {
   );
 }
 
-const initState = {
-  id: "",
-  grnId: "",
+const initialSite = {
   site: "",
-  itemCatalog: "",
+  description: "",
+  address1: "",
+  address2: "",
+  city: "",
+  district: "",
+  province: "",
+  country: "",
+  contact1: "",
+  contact2: "",
+  email: "",
+};
+
+const isoUnit = {
+  unitCode: "",
+  description: "",
+  baseUnit: "",
+  multiFactor: "",
+  divFactor: "",
+  tenPower: "",
+  userDefined: "",
+  unitType: "",
+};
+
+const initialItemCatalog = {
+  itemCode: "",
+  description: "",
+  infoText: "",
+  unitCode: isoUnit,
+  configurable: true,
+  weightNet: "",
+  uomForWeightNet: isoUnit,
+  volumeNet: "",
+  uomForVolumeNet: isoUnit,
+  pictureUrl: "",
+};
+
+const initState = {
+  site: initialSite,
+  itemCatalog: initialItemCatalog,
   batchNo: "",
   price: "",
   quantity: "",

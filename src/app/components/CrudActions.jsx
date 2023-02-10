@@ -9,7 +9,7 @@ function CrudActions({ handleNew, isNewEnabled, handleEdit, isEditEnabled, handl
 
     const buttonStyle = { maxWidth: '40px', maxHeight: '30px', minWidth: '40px', minHeight: '30px' }
     return (
-        <Box mb="20px" sx={{color: colors.grey[100]}}>
+        <Box mb="10px" sx={{color: colors.grey[100]}}>
             <ButtonGroup>
                 <Button
                     sx={{ color: colors.grey[100] }}
