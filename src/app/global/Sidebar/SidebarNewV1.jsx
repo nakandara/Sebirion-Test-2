@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import { Box,  useTheme } from "@mui/material";
+import { Box, useTheme } from "@mui/material";
 import { Link, NavLink } from "react-router-dom";
 import "react-pro-sidebar/dist/css/styles.css";
 import { tokens } from "../../../theme";
@@ -32,13 +32,10 @@ import {
   FaLaptopHouse,
   FaUserAlt,
   FaBuilding,
-  FaUserFriends
+  FaUserFriends,
 } from "react-icons/fa";
 
-import {  
-  AutoAwesome,  
-  ViewAgenda,
-} from "@mui/icons-material";
+import { AutoAwesome, ViewAgenda } from "@mui/icons-material";
 
 const SidebarNewV1 = ({
   image,
@@ -106,14 +103,18 @@ const SidebarNewV1 = ({
               Dashboard
               <NavLink to="/" />
             </MenuItem>
-            <SubMenu style={{ fontSize: 14 }} title={"Basic Data"} icon={<FaDatabase />}>
+            <SubMenu
+              style={{ fontSize: 14 }}
+              title={"Basic Data"}
+              icon={<FaDatabase />}
+            >
               <MenuItem icon={<FaUnity />}>
                 Units <Link to="/units" />
               </MenuItem>
             </SubMenu>
-            
+
             <SubMenu title={"Accounting Rules"} icon={<FaArchway />}>
-            <MenuItem icon={<FaLaptopHouse />}>
+              <MenuItem icon={<FaLaptopHouse />}>
                 Payment Terms <Link to="/paymentterms" />
               </MenuItem>
             </SubMenu>
@@ -149,7 +150,7 @@ const SidebarNewV1 = ({
                 Suppliers <Link to="/suppliers" />
               </MenuItem>
             </SubMenu>
-
+            {/* Order  */}
             <SubMenu title={"Order"} icon={<FaRegLaughWink />}>
               <MenuItem>
                 Sales Rep Order <Link to="/Salesreporder" />
@@ -157,7 +158,6 @@ const SidebarNewV1 = ({
               <MenuItem>
                 Issue Note <Link to="/Issuenote" />
               </MenuItem>
-              {/* <MenuItem>Submenu 3</MenuItem> */}
             </SubMenu>
             {/* Inventory  */}
             <SubMenu title={"Inventory"} icon={<ViewAgenda />}>
@@ -184,15 +184,15 @@ const SidebarNewV1 = ({
                 Person List <Link to="/personList" />
               </MenuItem>
             </SubMenu>
-            <SubMenu
-              prefix={<span className="badge gray">3</span>}
-              title={"With Prefix"}
-              icon={<FaHeart />}
-            >
-              <MenuItem>Submenu 1</MenuItem>
-              <MenuItem>Submenu 2</MenuItem>
-              <MenuItem>Submenu 3</MenuItem>
+            <SubMenu title={"Purchase"} icon={<FaBuilding />}>
+              <MenuItem icon={<FaUserAlt />}>
+                GRN <Link to="/grn/null" />
+              </MenuItem>
+              <MenuItem icon={<FaUserFriends />}>
+                GRNs <Link to="/grns" />
+              </MenuItem>
             </SubMenu>
+            
             {/* <SubMenu title={"Multi Level"} icon={<FaList />}>
               <MenuItem>Submenu 1 </MenuItem>
               <MenuItem>Submenu 2 </MenuItem>

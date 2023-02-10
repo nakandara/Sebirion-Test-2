@@ -15,11 +15,15 @@ const Page404 = lazy(() => import("./components/pages/page404/Page404"));
 const AppHome = lazy(() => import("./components/pages/home/AppHome"));
 const Unauthorized = lazy(() => import("./components/pages/Unauthorized"));
 // const UserRole = lazy(() => import('./components/enterp/UserRole'));
-// const UserRoles = lazy(() => import('./components/enterp/UserRoles'));
-const Suppliers = lazy(() => import('./app/bizapp/enterp/Supplier/supplierlist'));
-const Supplier = lazy(() => import('./app/bizapp/enterp/Supplier'));
-const Customers = lazy(() => import('./app/bizapp/enterp/Customer/customerlist'));
-const Customer = lazy(() => import('./app/bizapp/enterp/Customer'));
+const Grn = lazy(() => import('./app/bizapp/purch/Grn'));
+const Suppliers = lazy(() =>
+  import("./app/bizapp/enterp/Supplier/supplierlist")
+);
+const Supplier = lazy(() => import("./app/bizapp/enterp/Supplier"));
+const Customers = lazy(() =>
+  import("./app/bizapp/enterp/Customer/customerlist")
+);
+const Customer = lazy(() => import("./app/bizapp/enterp/Customer"));
 const Login = lazy(() => import("./app/login/Login"));
 const FndUser = lazy(() => import("./Application/Enterprise/User/FndUser"));
 const PersonInfo = lazy(() => import("./Application/Pageinfo/PersonInfo"));
@@ -42,7 +46,9 @@ const Companies = lazy(() => import("./app/bizapp/enterp/Companies"));
 const Company = lazy(() => import("./app/bizapp/enterp/Company"));
 const Units = lazy(() => import("./app/bizapp/appserv/Units"));
 const SalesRepOrder = lazy(() => import("./app/bizapp/ordermgt/SalesRepOrder"));
-const IssueNote = lazy(() => import("./app/bizapp/ordermgt/IssueNote/IssueNote"));
+const IssueNote = lazy(() =>
+  import("./app/bizapp/ordermgt/IssueNote/IssueNote")
+);
 const Person = lazy(() => import("./app/bizapp/hr/Person"));
 const CatalogItems = lazy(() =>
   import("./app/bizapp/invent/InvItemCatalog/items")
@@ -51,19 +57,11 @@ const AssociationList = lazy(() =>
   import("./app/bizapp/enterp/Association/associationlist")
 );
 
-const PersonList = lazy(() =>
-  import("./app/bizapp/hr/Person/PersonList")
-);
-const Site = lazy(() =>
-  import("./app/bizapp/enterp/Site")
-);
-const Sites = lazy(() =>
-  import("./app/bizapp/enterp/Site/sites")
-);
+const PersonList = lazy(() => import("./app/bizapp/hr/Person/PersonList"));
+const Site = lazy(() => import("./app/bizapp/enterp/Site"));
+const Sites = lazy(() => import("./app/bizapp/enterp/Site/sites"));
 
-const PaymentTerm = lazy(() =>
-  import("./app/bizapp/accrul/PaymentTerm")
-);
+const PaymentTerm = lazy(() => import("./app/bizapp/accrul/PaymentTerm"));
 
 function App() {
   const [theme, colorMode] = useMode();
@@ -176,7 +174,7 @@ function App() {
                           </Suspense>
                         }
                       />
-                       <Route
+                      <Route
                         path="customer/:id"
                         element={
                           <Suspense fallback={<>...</>}>
@@ -192,7 +190,7 @@ function App() {
                           </Suspense>
                         }
                       />
-                       <Route
+                      <Route
                         path="supplier/:id"
                         element={
                           <Suspense fallback={<>...</>}>
@@ -289,11 +287,19 @@ function App() {
                           </Suspense>
                         }
                       />
-                        <Route
+                      <Route
                         path="personList"
                         element={
                           <Suspense fallback={<>...</>}>
                             <PersonList />
+                          </Suspense>
+                        }
+                      />
+                      <Route
+                        path="grn/:id"
+                        element={
+                          <Suspense fallback={<>...</>}>
+                            <Grn />
                           </Suspense>
                         }
                       />

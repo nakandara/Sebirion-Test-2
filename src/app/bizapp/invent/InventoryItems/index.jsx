@@ -143,7 +143,7 @@ function InventoryItems() {
   ];
 
   return (
-    <Box m="20px" backgroundColor={colors.primary[400]}>
+    <Box m="5px" backgroundColor={colors.primary[400]}>
       <Header title="Inventory Items" subTitle="" />
 
       <Box
