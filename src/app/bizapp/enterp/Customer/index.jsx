@@ -338,7 +338,7 @@ function Customer() {
                 name="createdBy"
                 label="Created By"
                 type="text"
-                value={values.createdBy.userName}
+                value={values.createdBy && values.createdBy.userName}
                 onChange={(e) => onFormInputChange("createdBy", e.target.value)}
                 InputLabelProps={{ shrink: values.createdBy }}
                 disabled

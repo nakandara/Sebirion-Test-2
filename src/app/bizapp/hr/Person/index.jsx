@@ -1,4 +1,11 @@
-import { Box, Checkbox, useMediaQuery, useTheme } from "@mui/material";
+import {
+  Box,
+  Checkbox,
+  Grid,
+  Paper,
+  useMediaQuery,
+  useTheme,
+} from "@mui/material";
 import React, { useRef, useState, useEffect } from "react";
 import Header from "../../../components/Header";
 import { tokens } from "../../../../theme";
@@ -8,16 +15,15 @@ import "react-toastify/dist/ReactToastify.css";
 import useAxiosPrivate from "../../../../Application/fndbas/hooks/useAxiosPrivate";
 import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
-import AdapterDateFns from "@mui/lab/AdapterDateFns";
-import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
-import Select from '@mui/material/Select';
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import Select from "@mui/material/Select";
 import { useParams } from "react-router-dom";
 import DeleteModal from "../../../components/DeleteModal";
-
 
 const API_URL = "hr/v1/PersonaInfo/";
 
@@ -35,7 +41,7 @@ function Person() {
 
   const [newClicked, setNewClicked] = useState(false);
 
-  const [values, setValues] = useState(initialValues);
+  const [formValues, setFormValues] = useState(initialValues);
   const [value, setValue] = React.useState(new Date());
   const [checked, setChecked] = React.useState(false);
   const [gender, setGender] = React.useState("M");
@@ -58,13 +64,12 @@ function Person() {
   };
 
   const handleNew = (e) => {
-    setValues(initialValues);
+    setFormValues(initialValues);
     setNewClicked(true);
   };
   const handleEdit = (e) => {
     personIdRef.current.focus();
   };
-
 
   useEffect(() => {
     const fetchLatestObjId = async () => {
@@ -90,7 +95,7 @@ function Person() {
         },
       });
       console.log(response.data);
-      response.data && setValues(response.data);
+      response.data && setFormValues(response.data);
     } catch (err) {
       console.error(err);
     }
@@ -100,18 +105,17 @@ function Person() {
     reqObjId && reqObjId !== "null" && getObj();
   }, [reqObjId, axiosPrivate]);
 
-
   const handleSave = async (e) => {
-      setValues(initialValues);
+    setFormValues(initialValues);
     e.preventDefault();
     const controller = new AbortController();
     try {
-      values.dateOfBirth = value;
-      values.married = checked;
-      values.gender = gender;
+      formValues.dateOfBirth = value;
+      formValues.married = checked;
+      formValues.gender = gender;
       const response = await axiosPrivate.post(
         API_URL + "create",
-        JSON.stringify(values),
+        JSON.stringify(formValues),
         {
           headers: {
             "Content-Type": "application/json",
@@ -132,25 +136,25 @@ function Person() {
   const handleClose = () => {
     setOpenDel(false);
   };
-  
+
   const handleDelete = (e) => {
     setOpenDel(true);
   };
 
   const deleteObj = async () => {
     try {
-      await axiosPrivate.delete(API_URL + "delete/" + values.personId);
+      await axiosPrivate.delete(API_URL + "delete/" + formValues.personId);
       setOpenDel(false);
       showAllToasts("SUCCESS", "Successfully Deleted.");
 
-      setValues(initialValues);
+      setFormValues(initialValues);
     } catch (err) {}
   };
 
   const onFormInputChange = (key, value) => {
-    const updated = Object.assign({}, values);
+    const updated = Object.assign({}, formValues);
     updated[key] = value;
-    setValues(updated);
+    setFormValues(updated);
   };
 
   const showAllToasts = (type, msg) => {
@@ -200,248 +204,213 @@ function Person() {
   };
 
   return (
-    <Box m="20px" backgroundColor={colors.primary[400]}>
+    <Box m="5px" backgroundColor={colors.primary[400]} p="10px">
       <Header title="Person" subTitle="" />
-      <CrudActions
-        handleNew={handleNew}
-        isNewEnabled={isNewEnabled}
-        handleEdit={handleEdit}
-        isEditEnabled={isEditEnabled}
-        handleSave={handleSave}
-        isSaveEnabled={isSaveEnabled}
-        handleDelete={handleDelete}
-        isDeleteEnabled={isDeleteEnabled}
-      />
-      <form onSubmit={handleSave}>
-        <fieldset disabled={!newClicked} style={{ border: "0" }}>
-          <Box
-            display="grid"
-            gap="20px"
-            gridTemplateColumns="repeat(6, minmax(0, 1fr))"
-            sx={{
-              "& > div": { gridColumn: isNonMobile ? undefined : "span 6" },
-            }}
-          >
-            <TextField
-              fullWidth
-              variant="outlined"
-              ref={personIdRef}
-              type="text"
-              id="personId"
-              label="Person Id"
-              onChange={(e) => onFormInputChange("personId", e.target.value)}
-              value={values.personId}
-              InputProps={{ sx: { height: 40 } }}
-              name="personId"
-              size="small"
-              sx={{
-                gridColumn: "span 1",
-                "& .MuiInputBase-root": {
-                  height: 40,
-                  background: "#ffbaba",
-                },
-              }}
-            />
-            <TextField
-              fullWidth
-              variant="outlined"
-              type="text"
-              label="Nic No"
-              id="nicNo"
-              onChange={(e) => onFormInputChange("nicNo", e.target.value)}
-              value={values.nicNo}
-              name="nicNo"
-              sx={{
-                gridColumn: "span 2",
-                "& .MuiInputBase-root": {
-                  height: 40,
-                  background: "#ffbaba",
-                },
-              }}
-              size="small"
-            />
-            <TextField
-              fullWidth
-              variant="outlined"
-              type="text"
-              label="Name"
-              id="name"
-              onChange={(e) => onFormInputChange("name", e.target.value)}
-              value={values.name}
-              name="name"
-              sx={{
-                gridColumn: "span 1",
-                "& .MuiInputBase-root": {
-                  height: 40,
-                },
-              }}
-              size="small"
-            />
-            <TextField
-              fullWidth
-              variant="outlined"
-              type="text"
-              label="FullName"
-              id="fullName"
-              onChange={(e) => onFormInputChange("fullName", e.target.value)}
-              value={values.fullName}
-              name="fullName"
-              sx={{
-                gridColumn: "span 2",
-                "& .MuiInputBase-root": {
-                  height: 40,
-                },
-              }}
-              size="small"
-            />
-            <TextField
-              fullWidth
-              variant="outlined"
-              type="text"
-              label="Initials"
-              id="initials"
-              onChange={(e) => onFormInputChange("initials", e.target.value)}
-              value={values.initials}
-              name="initials"
-              sx={{
-                gridColumn: "span 2",
-                "& .MuiInputBase-root": {
-                  height: 40,
-                },
-              }}
-              size="small"
-            />
+      <Grid container spacing={2}>
+        <Grid item xs={6} md={8}>
+          <CrudActions
+            handleNew={handleNew}
+            isNewEnabled={isNewEnabled}
+            handleEdit={handleEdit}
+            isEditEnabled={isEditEnabled}
+            handleSave={handleSave}
+            isSaveEnabled={isSaveEnabled}
+            handleDelete={handleDelete}
+            isDeleteEnabled={isDeleteEnabled}
+          />
+        </Grid>
+        <Grid
+          item
+          xs={6}
+          md={4}
+          direction="row"
+          alignItems="center"
+          container
+          justifyContent="flex-end"
+        ></Grid>
+      </Grid>
+      <Paper elevation={2} style={{ padding: "5px" }}>
+        <form onSubmit={handleSave}>
+          <Grid container spacing={2}>
+            <Grid item xs={2}>
+              <TextField
+                variant="outlined"
+                size="small"
+                fullWidth
+                id="personId"
+                autoComplete="off"
+                name="personId"
+                label="Person ID"
+                type="text"
+                value={formValues.personId}
+                onChange={(e) => onFormInputChange("personId", e.target.value)}
+                required
+                margin="normal"
+                inputProps={{ style: { textTransform: "uppercase" } }}
+              />
+            </Grid>
+            <Grid item xs={2}>
+              <TextField
+                variant="outlined"
+                size="small"
+                fullWidth
+                id="nicNo"
+                autoComplete="off"
+                name="nicNo"
+                label="NIC"
+                type="text"
+                value={formValues.nicNo}
+                onChange={(e) => onFormInputChange("nicNo", e.target.value)}
+                required
+                margin="normal"
+              />
+            </Grid>
+            <Grid item xs={3}>
+              <TextField
+                variant="outlined"
+                size="small"
+                fullWidth
+                id="name"
+                autoComplete="off"
+                name="name"
+                label="Name"
+                type="text"
+                value={formValues.name}
+                onChange={(e) => onFormInputChange("name", e.target.value)}
+                required
+                margin="normal"
+              />
+            </Grid>
 
-            <TextField
-              fullWidth
-              variant="outlined"
-              type="text"
-              label="First Name"
-              id="firstName"
-              onChange={(e) => onFormInputChange("firstName", e.target.value)}
-              value={values.firstName}
-              name="firstName"
-              sx={{
-                gridColumn: "span 2",
-                "& .MuiInputBase-root": {
-                  height: 40,
-                },
-              }}
-              size="small"
-            />
-            <TextField
-              fullWidth
-              variant="outlined"
-              type="text"
-              label="Middle Name"
-              id="middleName"
-              onChange={(e) => onFormInputChange("middleName", e.target.value)}
-              value={values.middleName}
-              name="middleName"
-              sx={{
-                gridColumn: "span 2",
-                "& .MuiInputBase-root": {
-                  height: 40,
-                },
-              }}
-              size="small"
-            />
-            <TextField
-              fullWidth
-              variant="outlined"
-              type="text"
-              label="Last Name"
-              id="lastName"
-              onChange={(e) => onFormInputChange("lastName", e.target.value)}
-              value={values.lastName}
-              name="lastName"
-              sx={{
-                gridColumn: "span 2",
-                "& .MuiInputBase-root": {
-                  height: 40,
-                },
-              }}
-              size="small"
-            />
-
-            <LocalizationProvider dateAdapter={AdapterDateFns}>
-              <Stack
-                spacing={3}
-                sx={{
-                  gridColumn: "span 2",
-                  "& .MuiInputBase-root": {
-                    height: 40,
-                  },
-                }}
-              >
-                <DesktopDatePicker
-                  label="Date Of Birth"
-                  inputFormat="MM/DD/YYYY"
-                  id="dateOfBirth"
-                  onChange={handleChange}
+            <Grid item xs={2}>
+              <FormControl sx={{ m: 1, minWidth: 120 }}>
+                <InputLabel id="titlelbl">Title</InputLabel>
+                <Select
+                  size="small"
+                  margin="normal"
+                  labelId="titlelbl"
+                  id="title"
+                  value={formValues.title}
+                  label="Title"
+                  onChange={(e) => onFormInputChange("title", e.target.value)}
+                >
+                  <MenuItem value="MR">Mr.</MenuItem>
+                  <MenuItem value="MISS">Miss.</MenuItem>
+                  <MenuItem value="MRS">Mrs.</MenuItem>
+                </Select>
+              </FormControl>
+            </Grid>
+            <Grid item xs={3}>
+              <TextField
+                variant="outlined"
+                size="small"
+                fullWidth
+                id="firstName"
+                autoComplete="off"
+                name="firstName"
+                label="First Name"
+                type="text"
+                value={formValues.firstName}
+                onChange={(e) => onFormInputChange("firstName", e.target.value)}
+                required
+                margin="normal"
+              />
+            </Grid>
+            <Grid item xs={3}>
+              <TextField
+                variant="outlined"
+                size="small"
+                fullWidth
+                id="middleName"
+                autoComplete="off"
+                name="middleName"
+                label="Middle Name"
+                type="text"
+                value={formValues.middleName}
+                onChange={(e) =>
+                  onFormInputChange("middleName", e.target.value)
+                }
+                required
+                margin="normal"
+              />
+            </Grid>
+            <Grid item xs={3}>
+              <TextField
+                variant="outlined"
+                size="small"
+                fullWidth
+                id="lastName"
+                autoComplete="off"
+                name="lastName"
+                label="Last Name"
+                type="text"
+                value={formValues.lastName}
+                onChange={(e) => onFormInputChange("lastName", e.target.value)}
+                required
+                margin="normal"
+              />
+            </Grid>
+            <Grid item xs={5}>
+              <TextField
+                variant="outlined"
+                size="small"
+                fullWidth
+                id="fullName"
+                autoComplete="off"
+                name="fullName"
+                label="Full Name"
+                type="text"
+                value={formValues.fullName}
+                onChange={(e) => onFormInputChange("fullName", e.target.value)}
+                required
+                margin="normal"
+              />
+            </Grid>
+          </Grid>
+          <Grid container spacing={2}>
+            <Grid item xs={2}>
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <DatePicker
+                  label="Date of Birth"
+                  value={formValues.dateOfBirth}
+                  margin="normal"
+                  size="small"
+                  fullWidth
+                  onChange={(e) =>
+                    onFormInputChange("dateOfBirth", e.target.value)
+                  }
                   renderInput={(params) => <TextField {...params} />}
-                  value={value.dateOfBirth}
                 />
-              </Stack>
-            </LocalizationProvider>
-            <TextField
-              disabled
-              id="married"
-              defaultValue="Married"
-              variant="standard"
-              
-            />
-            <Checkbox
-              checked={checked}
-              onChange={handleChangecheck}
-              inputProps={{ "aria-label": "controlled" }}
-              value={values.married}
-            />
-            <FormControl
-              sx={{ minWidth: 120, gridColumn: "span 1" }}
-              size="small"
-            >
-              <InputLabel id="demo-select-small">Gender</InputLabel>
-              <Select
-                labelId="demo-select-small"
-                id="gender"
-                value={gender}
-                label="Gender"
-                onChange={handleSelect}
-              >
-                <MenuItem value={"M"}>Male</MenuItem>
-                <MenuItem value={"F"}>Female</MenuItem>
-                <MenuItem value={"N"}>Other</MenuItem>
-              </Select>
-            </FormControl>
-
-            <TextField
-              fullWidth
-              variant="outlined"
-              type="text"
-              label="Picture URL"
-              id="pictureURL"
-              onChange={(e) => onFormInputChange("pictureURL", e.target.value)}
-              value={values.pictureURL}
-              name="pictureURL"
-              sx={{
-                gridColumn: "span 2",
-                "& .MuiInputBase-root": {
-                  height: 40,
-                },
-              }}
-              size="small"
-            />
-          </Box>
-        </fieldset>
-      </form>
-      <DeleteModal
+              </LocalizationProvider>
+            </Grid>
+            <Grid item xs={2}>
+              <TextField
+                variant="outlined"
+                size="small"
+                fullWidth
+                id="createdBy"
+                autoComplete="off"
+                name="createdBy"
+                label="Created By"
+                type="text"
+                value={formValues.createdBy && formValues.createdBy.userName}
+                onChange={(e) => onFormInputChange("createdBy", e.target.value)}
+                InputLabelProps={{ shrink: formValues.createdBy }}
+                disabled
+                margin="normal"
+              />
+            </Grid>
+          </Grid>
+        </form>
+        <DeleteModal
           open={openDel}
           handleClose={handleClose}
           Delete={deleteObj}
         />
-
+        <ToastContainer />
+      </Paper>
       <ToastContainer />
+      {/* <OrderLine orderLines={orderLines} /> */}
     </Box>
   );
 }

@@ -44,7 +44,7 @@ function Customers() {
           id: idx + 1,
           customerId: item.customerId,
           customerName: item.customerName,
-          createdBy: item.createdBy.userName,
+          createdBy: item.createdBy && item.createdBy.userName,
           createdAt: item.createdAt,
           paymentTerm: item.paymentTerm.termId + "-" + item.paymentTerm.description,
           creditLimit: item.creditLimit,
