@@ -16,8 +16,8 @@ const AppHome = lazy(() => import("./components/pages/home/AppHome"));
 const Unauthorized = lazy(() => import("./components/pages/Unauthorized"));
 // const UserRole = lazy(() => import('./components/enterp/UserRole'));
 // const UserRoles = lazy(() => import('./components/enterp/UserRoles'));
-// const Project = lazy(() => import('./components/Application/Proj/Project/Project'));
-// const Material = lazy(() => import('./components/Application/Manufacturing/Material/Material'));
+const Suppliers = lazy(() => import('./app/bizapp/enterp/Supplier/supplierlist'));
+const Supplier = lazy(() => import('./app/bizapp/enterp/Supplier'));
 const Customers = lazy(() => import('./app/bizapp/enterp/Customer/customerlist'));
 const Customer = lazy(() => import('./app/bizapp/enterp/Customer'));
 const Login = lazy(() => import("./app/login/Login"));
@@ -189,6 +189,22 @@ function App() {
                         element={
                           <Suspense fallback={<>...</>}>
                             <Customers />
+                          </Suspense>
+                        }
+                      />
+                       <Route
+                        path="supplier/:id"
+                        element={
+                          <Suspense fallback={<>...</>}>
+                            <Supplier />
+                          </Suspense>
+                        }
+                      />
+                      <Route
+                        path="suppliers"
+                        element={
+                          <Suspense fallback={<>...</>}>
+                            <Suppliers />
                           </Suspense>
                         }
                       />

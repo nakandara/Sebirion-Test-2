@@ -14,9 +14,9 @@ import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-balham.css";
 import { Link } from "react-router-dom";
 
-const API_URL = "enterp/v1/CustomerInfo/";
+const API_URL = "enterp/v1/SupplierInfo/";
 
-function Customers() {
+function Suppliers() {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const axiosPrivate = useAxiosPrivate();
@@ -39,12 +39,12 @@ function Customers() {
           },
         });
         console.log(response.data);
-        let customers = response.data;
-        const dataArray = customers.map((item, idx) => ({
+        let suppliers = response.data;
+        const dataArray = suppliers.map((item, idx) => ({
           id: idx + 1,
-          customerId: item.customerId,
-          customerName: item.customerName,
-          createdBy: item.createdBy.userName,
+          supplierId: item.supplierId,
+          supplierName: item.supplierName,          
+          createdBy: item.createdBy && item.createdBy.userName,
           createdAt: item.createdAt,
           paymentTerm: item.paymentTerm.termId + "-" + item.paymentTerm.description,
           creditLimit: item.creditLimit,
@@ -65,26 +65,21 @@ function Customers() {
   const [columnDefs] = useState([
     { field: "id", headerName: "ID", width: 40, checkboxSelection: true },
     {
-      field: "customerId",
-      headerName: "Customer ID",
+      field: "supplierId",
+      headerName: "Supplier ID",
       flex: 1,
       cellRenderer: (params) => {
-        return <Link to={`/customer/${params.value}`}>{params.value}</Link>;
+        return <Link to={`/supplier/${params.value}`}>{params.value}</Link>;
       },
     },
     {
-      field: "customerName",
+      field: "supplierName",
       headerName: "Name",
       flex: 1,
     },
     {
       field: "paymentTerm",
       headerName: "Payment Term",
-      flex: 1,
-    },
-    {
-      field: "creditLimit",
-      headerName: "Credit Limit",
       flex: 1,
     },
     {
@@ -116,7 +111,7 @@ function Customers() {
 
   return (
     <Box m="5px" backgroundColor={colors.primary[400]}>
-      <Header title="Customers" subTitle="" />
+      <Header title="Suppliers" subTitle="" />
 
       <Box sx={{ height: 500, margin: "10px" }}>
         <div style={gridStyle} className="ag-theme-balham">
@@ -135,4 +130,4 @@ function Customers() {
   );
 }
 
-export default Customers;
+export default Suppliers;
