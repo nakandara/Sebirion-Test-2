@@ -367,9 +367,9 @@ function Person() {
                   label="Gender"
                   onChange={(e) => onFormInputChange("gender", e.target.value)}
                 >
-                  <MenuItem value="M">Male</MenuItem>
-                  <MenuItem value="F">Female</MenuItem>
-                  <MenuItem value="N">Not Mentioned</MenuItem>
+                  <MenuItem value="MALE">Male</MenuItem>
+                  <MenuItem value="FEMALE">Female</MenuItem>
+                  <MenuItem value="NOT_MENTIONED">Not Mentioned</MenuItem>
                 </Select>
               </FormControl>
             </Grid>
