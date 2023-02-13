@@ -62,12 +62,12 @@ function CatalogItems() {
   }, []);
 
   const [columnDefs] = useState([
-    { field: "id", headerName: "ID", width: 40, checkboxSelection: true, },
+    { field: "id", headerName: "ID", width: 40, checkboxSelection: true },
     {
       field: "itemCode",
       headerName: "Item Code",
       flex: 1,
-      cellRendererFramework: (params) => {
+      cellRenderer: (params) => {
         return <Link to={`/itemcatalog/${params.value}`}>{params.value}</Link>;
       },
     },

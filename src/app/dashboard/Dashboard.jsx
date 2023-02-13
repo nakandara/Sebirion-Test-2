@@ -11,7 +11,7 @@ import TrafficIcon from "@mui/icons-material/Traffic";
 import LineChart from '../components/LineChart';
 import { mockTransactions } from '../../data/mockData';
 import ProgressCircle from '../components/ProgressCircle';
-import BarChart from '../components/BarChart';
+// import BarChart from '../components/BarChart';
 import GeographyChart from '../components/GeographyChart';
 
 function Dashboard() {
@@ -26,7 +26,7 @@ function Dashboard() {
         <Box>
           <Button sx={{
             backgroundColor: colors.blueAccent[700],
-            color: colors.grey[100],
+            color: colors.grey[100].toString(),
             fontSize: "14px",
             fontWeight: "bold",
             padding: "10px 20px",
@@ -254,7 +254,7 @@ function Dashboard() {
             Sales Quantity
           </Typography>
           <Box height="250px" mt="-20px">
-            <BarChart isDashboard={true} />
+            {/* <BarChart isDashboard={true} /> */}
           </Box>
         </Box>
         <Box

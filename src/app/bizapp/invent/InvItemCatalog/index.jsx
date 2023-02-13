@@ -23,6 +23,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { useParams } from "react-router-dom";
 import DeleteModal from "../../../components/DeleteModal";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
+import CostHistory from "./costhistory";
 
 const API_URL = "invent/v1/ItemCatalog/";
 const UNITS_API_URL = "appsrv/v1/IsoUnit/";
@@ -40,7 +41,7 @@ const Itemcatalog = () => {
   const [isEditEnabled, setIsEditEnabled] = useState(true);
   const [isSaveEnabled, setIsSaveEnabled] = useState(true);
   const [isDeleteEnabled, setIsDeleteEnabled] = useState(true);
-  const [values, setValues] = useState(initialState);
+  const [values, setValues] = useState(initItemCatalog);
   const [newClicked, setNewClicked] = useState(false);
   const [tabValue, setTabValue] = useState("1");
 
@@ -62,6 +63,8 @@ const Itemcatalog = () => {
 
   const [uomForWeightNets, setUomForWeightNets] = useState([]);
   const [uomForVolumeNets, setUomForVolumeNets] = useState([]);
+
+  const [costItems,setCostItems]=useState([]);
 
   const [openDel, setOpenDel] = useState(false);
 
@@ -88,8 +91,10 @@ const Itemcatalog = () => {
           signal: controller.signal,
         },
       });
+
       console.log(response.data);
       response.data && setValues(response.data);
+      response.data && setCostItems(response.data.itemCosts);
       response.data && setIsDeleteEnabled(true);
       response.data && setIsEditEnabled(true);
     } catch (err) {
@@ -99,18 +104,18 @@ const Itemcatalog = () => {
 
   useEffect(() => {
     const setValues = () => {
-      setItemCode(values ? values.itemCode : initialState.itemCode);
-      setDescription(values ? values.description : initialState.description);
-      setInfoText(values ? values.infoText : initialState.infoText);
-      setUnitCode(values ? values.unitCode : initialState.unitCode);
-      setConfigurable(values ? values.configurable : initialState.configurable);
-      setWeightNet(values ? values.weightNet : initialState.weightNet);
+      setItemCode(values ? values.itemCode : initItemCatalog.itemCode);
+      setDescription(values ? values.description : initItemCatalog.description);
+      setInfoText(values ? values.infoText : initItemCatalog.infoText);
+      setUnitCode(values ? values.unitCode : initItemCatalog.unitCode);
+      setConfigurable(values ? values.configurable : initItemCatalog.configurable);
+      setWeightNet(values ? values.weightNet : initItemCatalog.weightNet);
       setUomForWeightNet(
-        values ? values.uomForWeightNet : initialState.uomForWeightNet
+        values ? values.uomForWeightNet : initItemCatalog.uomForWeightNet
       );
-      setVolumeNet(values ? values.volumeNet : initialState.volumeNet);
+      setVolumeNet(values ? values.volumeNet : initItemCatalog.volumeNet);
       setUomForVolumeNet(
-        values ? values.uomForVolumeNet : initialState.uomForVolumeNet
+        values ? values.uomForVolumeNet : initItemCatalog.uomForVolumeNet
       );
     };
     setValues();
@@ -136,11 +141,6 @@ const Itemcatalog = () => {
     };
     getUnits();
   }, []);
-
-  const defaultProps = {
-    options: unitCodes,
-    getOptionLabel: (option) => option.unitCode,
-  };
 
   const showAllToasts = (type, msg) => {
     type === "SUCCESS" &&
@@ -188,7 +188,7 @@ const Itemcatalog = () => {
       });
   };
   const handleNew = (e) => {
-    setValues(initialState);
+    setValues(initItemCatalog);
     setNewClicked(true);
   };
 
@@ -307,11 +307,11 @@ const Itemcatalog = () => {
                 variant="outlined"
                 disablePortal
                 isOptionEqualToValue={(option, value) =>
-                  option.unitCode === value.unitCode
+                  option.value === value.value
                 }
                 id="unitCode"
                 value={unitCode}
-                inputValue={inputUnitCode}
+                inputValue={inputUnitCode.itemCode}
                 onInputChange={(event, newInputValue) => {
                   setInputUnitCode(newInputValue);
                 }}
@@ -375,7 +375,7 @@ const Itemcatalog = () => {
                 variant="outlined"
                 disablePortal
                 isOptionEqualToValue={(option, value) =>
-                  option.uomForWeightNet === value.uomForWeightNet
+                  option.value === value.value
                 }
                 id="uomForWeightNet"
                 value={uomForWeightNet}
@@ -420,7 +420,7 @@ const Itemcatalog = () => {
                 variant="outlined"
                 disablePortal
                 isOptionEqualToValue={(option, value) =>
-                  option.uomForVolumeNet === value.uomForVolumeNet
+                  option.value === value.value
                 }
                 id="uomForVolumeNet"
                 value={uomForVolumeNet}
@@ -468,7 +468,7 @@ const Itemcatalog = () => {
               <Typography>asdfasf</Typography>
             </TabPanel>
             <TabPanel value="2">
-              <Typography>adasfasd</Typography>
+            <CostHistory itemCatalogId={values.itemCode} costItems={costItems} setCostItems={setCostItems}/>
             </TabPanel>
             <TabPanel value="3">
               <Typography>adasfasd</Typography>
@@ -491,7 +491,7 @@ const isoUnit = {
   unitType: "",
 };
 
-const initialState = {
+const initItemCatalog = {
   itemCode: "",
   description: "",
   infoText: "",
@@ -501,6 +501,7 @@ const initialState = {
   uomForWeightNet: isoUnit,
   volumeNet: "",
   uomForVolumeNet: isoUnit,
+  itemCosts:[],
   pictureUrl: "",
 };
 

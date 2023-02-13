@@ -48,7 +48,7 @@ function TopbarNew() {
           <PersonOutlinedIcon />
         </IconButton>
         <IconButton>
-          <Logout />
+          {/* <Logout /> */}
         </IconButton>
       </Box>
     </Box>
