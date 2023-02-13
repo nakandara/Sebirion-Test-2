@@ -1,0 +1,75 @@
+name: OZClient prod CI/CD
+
+on: [workflow_dispatch]
+
+env:
+  CI : false
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [16.x]
+        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+    steps:
+    - uses: actions/checkout@v3
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+    - run: npm install
+    - run: npm run build
+    - name: Build & push Docker image
+      uses: mr-smithers-excellent/docker-build-push@v5
+      with:
+        image: vijithakn/ozclient
+        tags: ${GITHUB_RUN_ID}, latest
+        registry: docker.io
+        dockerfile: Dockerfile
+        buildArgs: |
+          base_url=43.205.23.46
+        username: vijithakn
+        password: 0nly4@vijitha
+    - name: Deploy to EC2
+      uses: appleboy/ssh-action@v0.1.6
+      with:
+        host: 3.6.84.137
+        username: ec2-user
+        key: |
+          -----BEGIN RSA PRIVATE KEY-----
+          MIIEowIBAAKCAQEArae32HLERaJySaZJdAHS7k5ufrLgVzQ6nvS2bYunh4P9T9LR
+          OD5YVyfnZ9pixDffoT0pZ7plAn5lNdnY7LKDjCIAnP7jo6q4UqszNRNueeAO9lry
+          33uqrxH4mDgUjX+G4nRoAJwiVNsz1+Rlr9wVdrebSPnWaupgPsen1KW9o2b18qbW
+          KF6UFrwoOe/TT8pVx/1tZkK9GjQu39ifumvZGEPdp0yrIBIMQ6WtZ128tBz139U/
+          vC2rL6zaIM/djvKbOif/zIjFMej4TWf2uedtAlIB2UzZVMmKdZdanNt6KL1Y+PVp
+          /PCvdhXMC+w7nSaqpK04Xb6q3DI3wLa31buj7QIDAQABAoIBAF6LftOwgF2tOO4S
+          Q9GOIKowN4ZxmyS/Qd9DOoNf0oE8glDQZapqfyxMhHeNddKA3RdrNjzMRaxa5n2w
+          MqOD+Yz1AkJ3n7Z+/0W7AfE2uCJQs7S7BZpZOS+B6Efv2HjFYsmuOOWEHEj44zv6
+          lMZvW5w8EKZlp7CkFGx5xU1IQ3xPbu70R66db6x7Buf1bfUJyZg6UpeVTGH1ahmq
+          hnE9/hpWD9dET4ivo8c0KTYv10RGNmXFlhE0xrrZR3q4j6fE8O1v5Wlvo+72CgPv
+          +I8ZPhdA2QPZMB4+lNoYYENj0e5InICJdnsVqrNknTFByRuuzIhj3kW78PdX5spx
+          CpIYC4ECgYEA5D22PS4ChthvlPenwRwGBRx6O1UrPLmZmdNUtrTDl8pXobWVwDBg
+          NkF2tJCeQPUbQXnToMJD5JWnF8f1OIveqaKXBeDCg3EbHZFlBgScPm2YeQcpO7k+
+          wPLlo2MQI2gm38ahL0adVER68UomEx1y8LHySO3CK8JjPatV4GkqZaECgYEAwsZ5
+          Jhj+oMjCJOBfk3NqU14XTc4GC7Nk3WtcMpQi4AyU7JNQ6qgRiv+Qrlz1EV+WSaHO
+          tehzfLgro6AE/npd/Rj4YQEnlgP5RpsjHXwiZlFKUVWBlTBGinRbh+OL+hcpLQAX
+          lOMNMk4HXDt094G4A+kgquhebQpDDEpX0M7dAs0CgYB1hJDgz1/drnNFcH6fn545
+          43/MLP4mNiowWe+0Yz6SWUzlpmmEm2Pui6ZjMlNJfuqZu/CLRXtPpv5x8DMC+oGb
+          NmwsSp3cr9AWWVZ60sTgH+3x4w4IAkmdb3NtvQQCNw5NCijT/rfjO59Rvav9C5yy
+          8eyeQE1J2rzec+mzsnJyAQKBgHov+iY9PddtueVaYHrmx4ffGe10VnSWqKsCw8bz
+          CWHWYsJ6tCNRJhg1tPS9Wfv5JBWzDTMuzOwruSyfoSJnb3jsZjysdcH1Yja58fB4
+          RDg9vMqDQpRtwYLv9c+sns5YIzuYuDJtsYSiUJm6rujqFp9Va2nr9fifnGokZSyX
+          6SvtAoGBAJFVXNPmxUiEjvd/5UwTk7bDmXxxJBqNwNGKj7Ssi/vYCf2yOS73JhZX
+          BfKUp2jlUVwX0o+5ZTbnCCcg5TC48ZxhrkMmBRjgL3vLJm9vxiRQ/gBmseJgbOYR
+          I5/jBiA5O8mOMcy5YhpBNE0zChazucB9ucuZ55nlTAImBs5WpG1b
+          -----END RSA PRIVATE KEY-----
+        script: |
+          docker login
+          docker pull vijithakn/ozclient:latest
+          docker stop ozclient
+          docker rm ozclient
+          docker run -d --name ozclient -p 3000:80 vijithakn/ozclient:latest
