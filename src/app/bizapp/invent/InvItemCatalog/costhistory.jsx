@@ -19,10 +19,9 @@ function CostHistory({ itemCatalogId, costItems, setCostItems }) {
   const axiosPrivate = useAxiosPrivate();
 
   const [openCostItemDel, setCostItemDel] = useState(false);
-  const [rePopulate, setRePopulate] = useState(false);
 
   const containerStyle = useMemo(() => ({ width: "100%", height: "100%" }), []);
-  const [price, setPrice] = useState(initCostHist);
+  const [cost, setCost] = useState(initCostHist);
 
   const [columnDefs] = useState([
     {
@@ -40,8 +39,8 @@ function CostHistory({ itemCatalogId, costItems, setCostItems }) {
       },
     },
     {
-      field: "price",
-      headerName: "Price",
+      field: "cost",
+      headerName: "Cost",
       width: 150,
       cellStyle: { "text-align": "right" },  
       cellRenderer: CurrencyCellRenderer
@@ -67,7 +66,7 @@ function CostHistory({ itemCatalogId, costItems, setCostItems }) {
   );
 
   const handleCostItemNew = (e) => {
-    setPrice(initCostHist);
+    setCost(initCostHist);
   };
 
   const handleEdit = (e) => {};
@@ -80,7 +79,7 @@ function CostHistory({ itemCatalogId, costItems, setCostItems }) {
     try {
       const response = await axiosPrivate.post(
         API_URL + itemCatalogId + "/cost/create",
-        JSON.stringify(price),
+        JSON.stringify(cost),
         {
           headers: {
             "Content-Type": "application/json",
@@ -110,15 +109,15 @@ function CostHistory({ itemCatalogId, costItems, setCostItems }) {
   const deleteCostItemObj = async () => {
     try {
       await axiosPrivate.delete(
-        API_URL + itemCatalogId + "/delete/" + price.id
+        API_URL + itemCatalogId + "/cost/delete/" + cost.id
       );      
       setCostItems(
         costItems.filter(function (it) {
-          return it.id != price.id;
+          return it.id != cost.id;
         })
       );
       setCostItemDel(false);
-      setPrice(initCostHist);
+      setCost(initCostHist);
       showAllToasts("SUCCESS", "Successfully Deleted.");
     } catch (err) {}
   };
@@ -126,16 +125,16 @@ function CostHistory({ itemCatalogId, costItems, setCostItems }) {
   const onSelectionChanged = () => {
     const selectedRows = gridRef.current.api.getSelectedRows();
 
-    setPrice({
+    setCost({
       id: selectedRows[0].id,
-      price: selectedRows[0].price,
+      cost: selectedRows[0].cost,
     });
   };
 
   const onFormInputChange = (key, value) => {
-    const updated = Object.assign({}, price);
+    const updated = Object.assign({}, cost);
     updated[key] = value;
-    setPrice(updated);
+    setCost(updated);
   };
 
   const showAllToasts = (type, msg) => {
@@ -202,20 +201,20 @@ function CostHistory({ itemCatalogId, costItems, setCostItems }) {
                     id="id"
                     name="id"
                     type="number"
-                    value={price.id}
+                    value={cost.id}
                     onChange={(e) => onFormInputChange("id", e.target.value)}
                   />
                   <TextField
                     variant="outlined"
                     size="small"
                     fullWidth
-                    id="price"
+                    id="cost"
                     autoComplete="off"
-                    name="price"
+                    name="cost"
                     label="Cost Amount"
                     type="number"
-                    value={price.price}
-                    onChange={(e) => onFormInputChange("price", e.target.value)}
+                    value={cost.cost}
+                    onChange={(e) => onFormInputChange("cost", e.target.value)}
                     required
                     margin="normal"
                   />
@@ -249,7 +248,7 @@ function CostHistory({ itemCatalogId, costItems, setCostItems }) {
 
 const initCostHist = {
   id: "",
-  price: "",
+  cost: "",
 };
 
 export default CostHistory;

@@ -24,6 +24,7 @@ import { useParams } from "react-router-dom";
 import DeleteModal from "../../../components/DeleteModal";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
 import CostHistory from "./costhistory";
+import PriceHistory from "./pricehistory";
 
 const API_URL = "invent/v1/ItemCatalog/";
 const UNITS_API_URL = "appsrv/v1/IsoUnit/";
@@ -64,7 +65,8 @@ const Itemcatalog = () => {
   const [uomForWeightNets, setUomForWeightNets] = useState([]);
   const [uomForVolumeNets, setUomForVolumeNets] = useState([]);
 
-  const [costItems,setCostItems]=useState([]);
+  const [costItems, setCostItems] = useState([]);
+  const [priceItems, setPriceItems] = useState([]);
 
   const [openDel, setOpenDel] = useState(false);
 
@@ -95,6 +97,7 @@ const Itemcatalog = () => {
       console.log(response.data);
       response.data && setValues(response.data);
       response.data && setCostItems(response.data.itemCosts);
+      response.data && setPriceItems(response.data.itemPrices);
       response.data && setIsDeleteEnabled(true);
       response.data && setIsEditEnabled(true);
     } catch (err) {
@@ -108,7 +111,9 @@ const Itemcatalog = () => {
       setDescription(values ? values.description : initItemCatalog.description);
       setInfoText(values ? values.infoText : initItemCatalog.infoText);
       setUnitCode(values ? values.unitCode : initItemCatalog.unitCode);
-      setConfigurable(values ? values.configurable : initItemCatalog.configurable);
+      setConfigurable(
+        values ? values.configurable : initItemCatalog.configurable
+      );
       setWeightNet(values ? values.weightNet : initItemCatalog.weightNet);
       setUomForWeightNet(
         values ? values.uomForWeightNet : initItemCatalog.uomForWeightNet
@@ -195,7 +200,7 @@ const Itemcatalog = () => {
   const handleTabChange = (event, newValue) => {
     setTabValue(newValue);
   };
-  
+
   const handleEdit = (e) => {
     companyIdRef.current.focus();
   };
@@ -465,10 +470,18 @@ const Itemcatalog = () => {
               </TabList>
             </Box>
             <TabPanel value="1">
-              <Typography>asdfasf</Typography>
+              <PriceHistory
+                itemCatalogId={values.itemCode}
+                costItems={priceItems}
+                setCostItems={setPriceItems}
+              />
             </TabPanel>
             <TabPanel value="2">
-            <CostHistory itemCatalogId={values.itemCode} costItems={costItems} setCostItems={setCostItems}/>
+              <CostHistory
+                itemCatalogId={values.itemCode}
+                costItems={costItems}
+                setCostItems={setCostItems}
+              />
             </TabPanel>
             <TabPanel value="3">
               <Typography>adasfasd</Typography>
@@ -501,7 +514,7 @@ const initItemCatalog = {
   uomForWeightNet: isoUnit,
   volumeNet: "",
   uomForVolumeNet: isoUnit,
-  itemCosts:[],
+  itemCosts: [],
   pictureUrl: "",
 };
 
