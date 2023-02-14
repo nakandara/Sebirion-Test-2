@@ -194,6 +194,8 @@ const Itemcatalog = () => {
   };
   const handleNew = (e) => {
     setValues(initItemCatalog);
+    setCostItems([]);
+    setPriceItems([]);
     setNewClicked(true);
   };
 
@@ -231,6 +233,7 @@ const Itemcatalog = () => {
         }
       );
       console.log(response.data);
+      setValues(response.data);
       showAllToasts("SUCCESS", "Successfully Saved.");
     } catch (err) {
       showAllToasts("ERROR", err.response.data.apiError.message);
@@ -472,8 +475,8 @@ const Itemcatalog = () => {
             <TabPanel value="1">
               <PriceHistory
                 itemCatalogId={values.itemCode}
-                costItems={priceItems}
-                setCostItems={setPriceItems}
+                priceItems={priceItems}
+                setPriceItems={setPriceItems}
               />
             </TabPanel>
             <TabPanel value="2">
@@ -515,6 +518,7 @@ const initItemCatalog = {
   volumeNet: "",
   uomForVolumeNet: isoUnit,
   itemCosts: [],
+  itemPrices:[],
   pictureUrl: "",
 };
 

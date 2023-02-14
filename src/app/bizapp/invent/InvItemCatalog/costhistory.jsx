@@ -15,7 +15,7 @@ import moment from "moment";
 const API_URL = "invent/v1/ItemCatalog/";
 
 function CostHistory({ itemCatalogId, costItems, setCostItems }) {
-  const gridRef = useRef();
+  const costGridRef = useRef();
   const axiosPrivate = useAxiosPrivate();
 
   const [openCostItemDel, setCostItemDel] = useState(false);
@@ -42,18 +42,18 @@ function CostHistory({ itemCatalogId, costItems, setCostItems }) {
       field: "cost",
       headerName: "Cost",
       width: 150,
-      cellStyle: { "text-align": "right" },  
+      cellStyle: { "textAlign": "right" },  
       cellRenderer: CurrencyCellRenderer
     },
   ]);
 
   function CurrencyCellRenderer(params) {
-    var usdFormate = new Intl.NumberFormat('en-US', {
+    var lkrFormate = new Intl.NumberFormat('en-US', {
         style: 'currency',
         currency: 'LKR',
         minimumFractionDigits: 2
     });
-    return usdFormate.format(params.value);
+    return lkrFormate.format(params.value);
 }
 
   const defaultColDef = useMemo(
@@ -113,7 +113,7 @@ function CostHistory({ itemCatalogId, costItems, setCostItems }) {
       );      
       setCostItems(
         costItems.filter(function (it) {
-          return it.id != cost.id;
+          return it.id !== cost.id;
         })
       );
       setCostItemDel(false);
@@ -123,7 +123,7 @@ function CostHistory({ itemCatalogId, costItems, setCostItems }) {
   };
 
   const onSelectionChanged = () => {
-    const selectedRows = gridRef.current.api.getSelectedRows();
+    const selectedRows = costGridRef.current.api.getSelectedRows();
 
     setCost({
       id: selectedRows[0].id,
@@ -225,7 +225,7 @@ function CostHistory({ itemCatalogId, costItems, setCostItems }) {
         </Box>
         <Box sx={{ height: 400, margin: "5px" }}>
           <AgGridReact
-            ref={gridRef}
+            ref={costGridRef}
             className="ag-theme-balham"
             rowData={costItems}
             columnDefs={columnDefs}

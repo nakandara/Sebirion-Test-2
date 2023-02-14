@@ -15,7 +15,7 @@ import moment from "moment";
 const API_URL = "invent/v1/ItemCatalog/";
 
 function PriceHistory({ itemCatalogId, priceItems, setPriceItems }) {
-  const gridRef = useRef();
+  const priceGridRef = useRef();
   const axiosPrivate = useAxiosPrivate();
 
   const [openPriceItemDel, setPriceItemDel] = useState(false);
@@ -42,18 +42,18 @@ function PriceHistory({ itemCatalogId, priceItems, setPriceItems }) {
       field: "price",
       headerName: "Price",
       width: 150,
-      cellStyle: { "text-align": "right" },  
+      cellStyle: { "textAlign": "right" },  
       cellRenderer: CurrencyCellRenderer
     },
   ]);
 
   function CurrencyCellRenderer(params) {
-    var usdFormate = new Intl.NumberFormat('en-US', {
+    var lkrFormate = new Intl.NumberFormat('en-US', {
         style: 'currency',
         currency: 'LKR',
         minimumFractionDigits: 2
     });
-    return usdFormate.format(params.value);
+    return lkrFormate.format(params.value);
 }
 
   const defaultColDef = useMemo(
@@ -65,7 +65,7 @@ function PriceHistory({ itemCatalogId, priceItems, setPriceItems }) {
     []
   );
 
-  const handleCostItemNew = (e) => {
+  const handlePriceItemNew = (e) => {
     setPrice(initPriceHist);
   };
 
@@ -77,7 +77,7 @@ function PriceHistory({ itemCatalogId, priceItems, setPriceItems }) {
     let isMounted = true;
     const controller = new AbortController();
     try {
-      const response = await axiosPrivate.post(
+      const priceRes = await axiosPrivate.post(
         API_URL + itemCatalogId + "/price/create",
         JSON.stringify(price),
         {
@@ -87,12 +87,12 @@ function PriceHistory({ itemCatalogId, priceItems, setPriceItems }) {
           },
         }
       );
-      console.log(response.data);
+      console.log(priceRes.data);
 
-      isMounted && setPriceItems([...priceItems, response.data]);
+      isMounted && setPriceItems([...priceItems, priceRes.data]);
       showAllToasts("SUCCESS", "Successfully Saved.");
     } catch (err) {
-      showAllToasts("ERROR", err.response.data.apiError.message);
+      showAllToasts("ERROR", err.priceRes.data.apiError.message);
       console.log(err);
     }
   };
@@ -109,11 +109,11 @@ function PriceHistory({ itemCatalogId, priceItems, setPriceItems }) {
   const deletePriceItemObj = async () => {
     try {
       await axiosPrivate.delete(
-        API_URL + itemCatalogId + "/delete/" + price.id
+        API_URL + itemCatalogId + "/price/delete/" + price.id
       );      
       setPriceItems(
         priceItems.filter(function (it) {
-          return it.id != price.id;
+          return it.id !== price.id;
         })
       );
       setPriceItemDel(false);
@@ -123,7 +123,7 @@ function PriceHistory({ itemCatalogId, priceItems, setPriceItems }) {
   };
 
   const onSelectionChanged = () => {
-    const selectedRows = gridRef.current.api.getSelectedRows();
+    const selectedRows = priceGridRef.current.api.getSelectedRows();
 
     setPrice({
       id: selectedRows[0].id,
@@ -187,7 +187,7 @@ function PriceHistory({ itemCatalogId, priceItems, setPriceItems }) {
       <Paper elevation={2} style={{ padding: "5px", margin: "10px" }}>
         <Box m="10px">
           <ListCrudActions
-            addItems={handleCostItemNew}
+            addItems={handlePriceItemNew}
             handleSave={handleItemPriceSave}
             handleEdit={handleEdit}
             handleDelete={handleDeletePriceItem}
@@ -225,7 +225,7 @@ function PriceHistory({ itemCatalogId, priceItems, setPriceItems }) {
         </Box>
         <Box sx={{ height: 400, margin: "5px" }}>
           <AgGridReact
-            ref={gridRef}
+            ref={priceGridRef}
             className="ag-theme-balham"
             rowData={priceItems}
             columnDefs={columnDefs}
