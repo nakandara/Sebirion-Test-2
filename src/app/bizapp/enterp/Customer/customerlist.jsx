@@ -13,6 +13,7 @@ import { AgGridReact } from "ag-grid-react";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-balham.css";
 import { Link } from "react-router-dom";
+import moment from "moment";
 
 const API_URL = "enterp/v1/CustomerInfo/";
 
@@ -48,6 +49,7 @@ function Customers() {
           createdAt: item.createdAt,
           paymentTerm: item.paymentTerm.termId + "-" + item.paymentTerm.description,
           creditLimit: item.creditLimit,
+          creditBalance: item.creditBalance,
         }));
 
         console.log(dataArray);
@@ -67,7 +69,7 @@ function Customers() {
     {
       field: "customerId",
       headerName: "Customer ID",
-      flex: 1,
+      width: 150,
       cellRenderer: (params) => {
         return <Link to={`/customer/${params.value}`}>{params.value}</Link>;
       },
@@ -86,11 +88,23 @@ function Customers() {
       field: "creditLimit",
       headerName: "Credit Limit",
       flex: 1,
+      cellStyle: { "textAlign": "right" },  
+      cellRenderer: CurrencyCellRenderer,
+    },
+    {
+      field: "creditBalance",
+      headerName: "Credit Balance",
+      flex: 1,
+      cellStyle: { "textAlign": "right" },  
+      cellRenderer: CurrencyCellRenderer,
     },
     {
       field: "createdAt",
       headerName: "Created At",
       flex: 1,
+      cellRenderer: (data) => {
+        return moment(data.createdAt).format("MM/DD/YYYY HH:mm");
+      },
     },
     {
       field: "createdBy",
@@ -98,6 +112,15 @@ function Customers() {
       flex: 1,
     },
   ]);
+
+  function CurrencyCellRenderer(params) {
+    var lkrFormate = new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'LKR',
+        minimumFractionDigits: 2
+    });
+    return lkrFormate.format(params.value);
+  }
 
   const defaultColDef = useMemo(
     () => ({

@@ -289,7 +289,37 @@ function Customer() {
                 onChange={(e) =>
                   onFormInputChange("creditLimit", e.target.value)
                 }
-                required
+                sx={{
+                  "& .MuiInputBase-root": {
+                      "& input": {
+                          textAlign: "right"
+                      }
+                  }
+                }}
+                margin="normal"
+              />
+            </Grid>
+            <Grid item xs={2}>
+              <TextField
+                variant="outlined"
+                size="small"
+                fullWidth
+                id="creditBalance"
+                autoComplete="off"
+                name="creditBalance"
+                label="Credit Balance"
+                type="number"                
+                value={values.creditBalance}
+                onChange={(e) =>
+                  onFormInputChange("creditBalance", e.target.value)
+                }
+                sx={{
+                  "& .MuiInputBase-root": {
+                      "& input": {
+                          textAlign: "right"
+                      }
+                  }
+                }}
                 margin="normal"
               />
             </Grid>
@@ -385,6 +415,7 @@ const initialState = {
   customerId: "",
   customerName: "",
   creditLimit: "",
+  creditBalance: "",
   paymentTerm: [],
   createdAt: new Date(),
   createdBy: {},

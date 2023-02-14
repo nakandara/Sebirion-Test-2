@@ -13,6 +13,7 @@ import "ag-grid-community/styles/ag-theme-balham.css";
 import useAxiosPrivate from "../../../../Application/fndbas/hooks/useAxiosPrivate";
 import { tokens } from "../../../../theme";
 import { Link } from "react-router-dom";
+import moment from "moment";
 
 const API_URL = "hr/v1/PersonaInfo/";
 
@@ -43,11 +44,17 @@ const PersonList = () => {
           personId: item.personId,
           nicNo: item.nicNo,
           name: item.name,
-          fullName: item.fullName,
-          initials: item.initials,
-          firstName: item.firstName,
-          lastName: item.lastName,
-          middleName: item.middleName,
+          address:
+            item.address1 &&
+            item.address1.concat(
+              " , ",
+              item.address2,
+              " , ",
+              item.city
+            ),
+          contact1: item.contact1,
+          contact2: item.contact2,
+          email: item.email,
           dateOfBirth: item.dateOfBirth,
           gender: item.gender,
           married: item.married,
@@ -68,7 +75,7 @@ const PersonList = () => {
     {
       field: "id",
       headerName: "ID",
-      flex: 1,
+      width: 40,
       checkboxSelection: true,
     },
     {
@@ -90,29 +97,32 @@ const PersonList = () => {
       flex: 2,
     },
     {
-      field: "initials",
-      headerName: "Initials",
+      field: "address",
+      headerName: "Address",
+      flex: 2,
+    },
+    {
+      field: "contact1",
+      headerName: "Contact 1",
       flex: 1,
     },
     {
-      field: "firstName",
-      headerName: "First Name",
+      field: "contact2",
+      headerName: "Contact 2",
       flex: 1,
     },
     {
-      field: "middleName",
-      headerName: "Middle Name",
-      flex: 1,
-    },
-    {
-      field: "lastName",
-      headerName: "Last Name",
+      field: "email",
+      headerName: "Email",
       flex: 1,
     },
     {
       field: "dateOfBirth",
       headerName: "Date Of Birth",
       flex: 1,
+      cellRenderer: (data) => {
+        return moment(data.dateCreated).format("MM/DD/YYYY");
+      },
     },
     {
       field: "gender",
@@ -131,14 +141,14 @@ const PersonList = () => {
     },
   ]);
 
-  const defaultColDef = useMemo(() => {
-    return {
-      flex: 1,
-      minWidth: 100,
-      filter: true,
+  const defaultColDef = useMemo(
+    () => ({
+      resizable: true,
       sortable: true,
-    };
-  }, []);
+      filter: true,
+    }),
+    []
+  );
 
   const onSelectionChanged = useCallback(() => {
     const selectedRows = gridRef.current.api.getSelectedRows();

@@ -1,10 +1,4 @@
-import {
-  Box,
-  Grid,
-  Paper,
-  useMediaQuery,
-  useTheme,
-} from "@mui/material";
+import { Box, Grid, Paper, useMediaQuery, useTheme } from "@mui/material";
 import React, { useRef, useState, useEffect } from "react";
 import Header from "../../../components/Header";
 import { tokens } from "../../../../theme";
@@ -40,17 +34,11 @@ function Person() {
   const [newClicked, setNewClicked] = useState(false);
 
   const [formValues, setFormValues] = useState(initialValues);
-  const [value, setValue] = React.useState(new Date());
 
   const { id } = useParams();
   const [reqObjId, setReqObjId] = useState(id);
 
-  const [openDel, setOpenDel] = useState(false);  
-
-  const handleChange = (newValue) => {
-    setValue(newValue);
-  };
-
+  const [openDel, setOpenDel] = useState(false);
 
   const handleNew = (e) => {
     setFormValues(initialValues);
@@ -109,9 +97,8 @@ function Person() {
           },
         }
       );
-      // console.log(response.data);
       console.log(response.data);
-      //  response.data && setFormValues(response.data);
+      response.data && setFormValues(response.data);
       showAllToasts("SUCCESS", "Successfully Saved.");
     } catch (err) {
       showAllToasts("ERROR", err.response.data.apiError.message);
@@ -390,6 +377,111 @@ function Person() {
               </LocalizationProvider>
             </Grid>
           </Grid>
+          <hr />
+          <Grid container spacing={2}>
+            <Grid item xs={4} direction="column">
+              <Grid item xs={2}>
+                <TextField
+                  variant="outlined"
+                  size="small"
+                  fullWidth
+                  id="address1"
+                  autoComplete="off"
+                  name="address1"
+                  label="Address 1"
+                  type="text"
+                  value={formValues.address1}
+                  onChange={(e) =>
+                    onFormInputChange("address1", e.target.value)
+                  }
+                  margin="normal"
+                />
+              </Grid>
+              <Grid item xs={2}>
+                <TextField
+                  variant="outlined"
+                  size="small"
+                  fullWidth
+                  id="address2"
+                  autoComplete="off"
+                  name="address2"
+                  label="Address 2"
+                  type="text"
+                  value={formValues.address2}
+                  onChange={(e) =>
+                    onFormInputChange("address2", e.target.value)
+                  }
+                  margin="normal"
+                />
+              </Grid>
+              <Grid item xs={2}>
+                <TextField
+                  variant="outlined"
+                  size="small"
+                  fullWidth
+                  id="city"
+                  autoComplete="off"
+                  name="city"
+                  label="City"
+                  type="text"
+                  value={formValues.city}
+                  onChange={(e) => onFormInputChange("city", e.target.value)}
+                  margin="normal"
+                />
+              </Grid>
+            </Grid>
+            <Grid item xs={4} direction="column">
+              <Grid item xs={2}>
+                <TextField
+                  variant="outlined"
+                  size="small"
+                  fullWidth
+                  id="contact1"
+                  autoComplete="off"
+                  name="contact1"
+                  label="Contact 1"
+                  type="text"
+                  value={formValues.contact1}
+                  onChange={(e) =>
+                    onFormInputChange("contact1", e.target.value)
+                  }
+                  margin="normal"
+                />
+              </Grid>
+              <Grid item xs={2}>
+                <TextField
+                  variant="outlined"
+                  size="small"
+                  fullWidth
+                  id="contact2"
+                  autoComplete="off"
+                  name="contact2"
+                  label="Contact 2"
+                  type="text"
+                  value={formValues.contact2}
+                  onChange={(e) =>
+                    onFormInputChange("contact2", e.target.value)
+                  }
+                  margin="normal"
+                />
+              </Grid>
+              <Grid item xs={3}>
+                <TextField
+                  variant="outlined"
+                  size="small"
+                  fullWidth
+                  id="email"
+                  autoComplete="off"
+                  name="email"
+                  label="Email"
+                  type="text"
+                  value={formValues.email}
+                  onChange={(e) => onFormInputChange("email", e.target.value)}                  
+                  margin="normal"
+                />
+              </Grid>
+            </Grid>
+          </Grid>
         </form>
         <DeleteModal
           open={openDel}
@@ -414,6 +506,7 @@ const initialValues = {
   middleName: "",
   dateOfBirth: new Date(),
   gender: "",
+  title: "",
   married: false,
   pictureURL: "",
 };
