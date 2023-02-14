@@ -80,30 +80,7 @@ function GrnItems({ grnId, lineItems, setLineItems }) {
     []
   );
 
-  //   useEffect(() => {
-  //     let isMounted = true;
-  //     const controller = new AbortController();
-
-  //     const getPayTerms = async () => {
-  //       try {
-  //         const response = await axiosPrivate.get(API_URL + "get_all", {
-  //           headers: {
-  //             signal: controller.signal,
-  //           },
-  //         });
-
-  //         rePopulate || (isMounted && setPaymentTerms)(response.data);
-  //       } catch (err) {}
-  //     };
-  //     getPayTerms();
-  //     return () => {
-  //       isMounted = false;
-  //       controller.abort();
-  //       setRePopulate(false);
-  //     };
-  //   }, [rePopulate]);
-
-  const handleNew = (e) => {
+   const handleNew = (e) => {
     setValues(initState);
   };
 
@@ -270,7 +247,7 @@ function GrnItems({ grnId, lineItems, setLineItems }) {
                     variant="outlined"
                     disablePortal
                     isOptionEqualToValue={(option, value) =>
-                      option.site === value.site
+                      option.value === value.value                      
                     }
                     id="site"
                     value={values.site}
@@ -301,7 +278,7 @@ function GrnItems({ grnId, lineItems, setLineItems }) {
                     variant="outlined"
                     disablePortal
                     isOptionEqualToValue={(option, value) =>
-                      option.itemCatalog === value.itemCatalog
+                      option.value === value.value
                     }
                     id="itemCatalog"
                     value={values.itemCatalog}

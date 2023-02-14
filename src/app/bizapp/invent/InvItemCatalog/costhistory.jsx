@@ -14,14 +14,14 @@ import moment from "moment";
 
 const API_URL = "invent/v1/ItemCatalog/";
 
-function PriceHistory({ itemCatalogId, priceItems, setPriceItems }) {
-  const priceGridRef = useRef();
+function CostHistory({ itemCatalogId, costItems, setCostItems }) {
+  const costGridRef = useRef();
   const axiosPrivate = useAxiosPrivate();
 
-  const [openPriceItemDel, setPriceItemDel] = useState(false);
+  const [openCostItemDel, setCostItemDel] = useState(false);
 
   const containerStyle = useMemo(() => ({ width: "100%", height: "100%" }), []);
-  const [price, setPrice] = useState(initPriceHist);
+  const [cost, setCost] = useState(initCostHist);
 
   const [columnDefs] = useState([
     {
@@ -39,8 +39,8 @@ function PriceHistory({ itemCatalogId, priceItems, setPriceItems }) {
       },
     },
     {
-      field: "price",
-      headerName: "Price",
+      field: "cost",
+      headerName: "Cost",
       width: 150,
       cellStyle: { "textAlign": "right" },  
       cellRenderer: CurrencyCellRenderer
@@ -65,21 +65,21 @@ function PriceHistory({ itemCatalogId, priceItems, setPriceItems }) {
     []
   );
 
-  const handlePriceItemNew = (e) => {
-    setPrice(initPriceHist);
+  const handleCostItemNew = (e) => {
+    setCost(initCostHist);
   };
 
   const handleEdit = (e) => {};
 
-  const handleItemPriceSave = async (e) => {
+  const handleItemCostSave = async (e) => {
     e.preventDefault();
 
     let isMounted = true;
     const controller = new AbortController();
     try {
-      const priceRes = await axiosPrivate.post(
-        API_URL + itemCatalogId + "/price/create",
-        JSON.stringify(price),
+      const response = await axiosPrivate.post(
+        API_URL + itemCatalogId + "/cost/create",
+        JSON.stringify(cost),
         {
           headers: {
             "Content-Type": "application/json",
@@ -87,54 +87,54 @@ function PriceHistory({ itemCatalogId, priceItems, setPriceItems }) {
           },
         }
       );
-      console.log(priceRes.data);
+      console.log(response.data);
 
-      isMounted && setPriceItems([...priceItems, priceRes.data]);
+      isMounted && setCostItems([...costItems, response.data]);
       showAllToasts("SUCCESS", "Successfully Saved.");
     } catch (err) {
-      showAllToasts("ERROR", err.priceRes.data.apiError.message);
+      showAllToasts("ERROR", err.response.data.apiError.message);
       console.log(err);
     }
   };
 
-  const handleDeletePriceItem = (e) => {
+  const handleDeleteCostItem = (e) => {
     e.preventDefault();
-    setPriceItemDel(true);
+    setCostItemDel(true);
   };
 
-  const handlePriceItemClose = (e) => {
-    setPriceItemDel(false);
+  const handleCostItemClose = (e) => {
+    setCostItemDel(false);
   };
 
-  const deletePriceItemObj = async () => {
+  const deleteCostItemObj = async () => {
     try {
       await axiosPrivate.delete(
-        API_URL + itemCatalogId + "/price/delete/" + price.id
+        API_URL + itemCatalogId + "/cost/delete/" + cost.id
       );      
-      setPriceItems(
-        priceItems.filter(function (it) {
-          return it.id !== price.id;
+      setCostItems(
+        costItems.filter(function (it) {
+          return it.id !== cost.id;
         })
       );
-      setPriceItemDel(false);
-      setPrice(initPriceHist);
+      setCostItemDel(false);
+      setCost(initCostHist);
       showAllToasts("SUCCESS", "Successfully Deleted.");
     } catch (err) {}
   };
 
   const onSelectionChanged = () => {
-    const selectedRows = priceGridRef.current.api.getSelectedRows();
+    const selectedRows = costGridRef.current.api.getSelectedRows();
 
-    setPrice({
+    setCost({
       id: selectedRows[0].id,
-      price: selectedRows[0].price,
+      cost: selectedRows[0].cost,
     });
   };
 
   const onFormInputChange = (key, value) => {
-    const updated = Object.assign({}, price);
+    const updated = Object.assign({}, cost);
     updated[key] = value;
-    setPrice(updated);
+    setCost(updated);
   };
 
   const showAllToasts = (type, msg) => {
@@ -187,12 +187,12 @@ function PriceHistory({ itemCatalogId, priceItems, setPriceItems }) {
       <Paper elevation={2} style={{ padding: "5px", margin: "10px" }}>
         <Box m="10px">
           <ListCrudActions
-            addItems={handlePriceItemNew}
-            handleSave={handleItemPriceSave}
+            addItems={handleCostItemNew}
+            handleSave={handleItemCostSave}
             handleEdit={handleEdit}
-            handleDelete={handleDeletePriceItem}
+            handleDelete={handleDeleteCostItem}
           />
-          <form onSubmit={handleItemPriceSave}>
+          <form onSubmit={handleItemCostSave}>
             <fieldset style={{ border: "0" }}>
               <Grid container spacing={2}>
                 <Grid item xs={2}>
@@ -201,20 +201,20 @@ function PriceHistory({ itemCatalogId, priceItems, setPriceItems }) {
                     id="id"
                     name="id"
                     type="number"
-                    value={price.id}
+                    value={cost.id}
                     onChange={(e) => onFormInputChange("id", e.target.value)}
                   />
                   <TextField
                     variant="outlined"
                     size="small"
                     fullWidth
-                    id="price"
+                    id="cost"
                     autoComplete="off"
-                    name="price"
-                    label="Price Amount"
+                    name="cost"
+                    label="Cost Amount"
                     type="number"
-                    value={price.price}
-                    onChange={(e) => onFormInputChange("price", e.target.value)}
+                    value={cost.cost}
+                    onChange={(e) => onFormInputChange("cost", e.target.value)}
                     required
                     margin="normal"
                   />
@@ -225,9 +225,9 @@ function PriceHistory({ itemCatalogId, priceItems, setPriceItems }) {
         </Box>
         <Box sx={{ height: 400, margin: "5px" }}>
           <AgGridReact
-            ref={priceGridRef}
+            ref={costGridRef}
             className="ag-theme-balham"
-            rowData={priceItems}
+            rowData={costItems}
             columnDefs={columnDefs}
             defaultColDef={defaultColDef}
             rowSelection={"single"}
@@ -238,17 +238,17 @@ function PriceHistory({ itemCatalogId, priceItems, setPriceItems }) {
       </Paper>
       <ToastContainer />
       <DeleteModal
-        open={openPriceItemDel}
-        handleClose={handlePriceItemClose}
-        Delete={deletePriceItemObj}
+        open={openCostItemDel}
+        handleClose={handleCostItemClose}
+        Delete={deleteCostItemObj}
       />
     </Box>
   );
 }
 
-const initPriceHist = {
+const initCostHist = {
   id: "",
-  price: "",
+  cost: "",
 };
 
-export default PriceHistory;
+export default CostHistory;

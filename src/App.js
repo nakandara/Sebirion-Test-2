@@ -25,11 +25,8 @@ const Customers = lazy(() =>
 );
 const Customer = lazy(() => import("./app/bizapp/enterp/Customer"));
 const Login = lazy(() => import("./app/login/Login"));
-const FndUser = lazy(() => import("./Application/Enterprise/User/FndUser"));
 const PersonInfo = lazy(() => import("./Application/Pageinfo/PersonInfo"));
-const FndUsers = lazy(() =>
-  import("./Application/Enterprise/FndUsers/FndUsers")
-);
+
 const InventoryItem = lazy(() =>
   import("./Application/Inventory/InventoryItem/InventoryItem")
 );
@@ -133,15 +130,7 @@ function App() {
                             <ItemType />
                           </Suspense>
                         }
-                      />
-                      <Route
-                        path="user"
-                        element={
-                          <Suspense fallback={<>...</>}>
-                            <FndUser />
-                          </Suspense>
-                        }
-                      />
+                      />                      
                       <Route
                         path="association/:id"
                         element={
