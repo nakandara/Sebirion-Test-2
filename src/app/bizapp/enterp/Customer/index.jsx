@@ -16,15 +16,12 @@ import { useParams } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import DeleteModal from "../../../components/DeleteModal";
-import {
-  TabContext,
-  TabList,
-  TabPanel,
-} from "@mui/lab";
+import { TabContext, TabList, TabPanel } from "@mui/lab";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import CustomerAddressList from "./addresslist";
+import AssociationList from "./associationlist";
 
 const API_URL = "enterp/v1/CustomerInfo/";
 const PAYTERM_API_URL = "accrul/v1/PaymentTerm/";
@@ -34,6 +31,7 @@ function Customer() {
 
   const [values, setValues] = useState(initialState);
   const [addressList, setAddressList] = useState([]);
+  const [associationList, setAssociationList] = useState([]);
 
   const { id } = useParams();
   const [reqObjId, setReqObjId] = useState(id);
@@ -81,7 +79,7 @@ function Customer() {
   const getObj = async () => {
     const controller = new AbortController();
     try {
-      const response = await axiosPrivate.get(API_URL + "get/" + reqObjId, {
+      const response = await axiosPrivate.get(API_URL + "get?itemId=" +encodeURIComponent(reqObjId), {
         headers: {
           signal: controller.signal,
         },
@@ -89,6 +87,7 @@ function Customer() {
       console.log(response.data);
       response.data && setValues(response.data);
       response.data && setAddressList(response.data.addressList);
+      response.data && setAssociationList(response.data.associationSet);
     } catch (err) {
       console.error(err);
     }
@@ -310,7 +309,7 @@ function Customer() {
                 autoComplete="off"
                 name="creditBalance"
                 label="Credit Balance"
-                type="number"            
+                type="number"
                 value={values.creditBalance}
                 onChange={(e) =>
                   onFormInputChange("creditBalance", e.target.value)
@@ -394,7 +393,11 @@ function Customer() {
               <Typography>adasfasd</Typography>
             </TabPanel>
             <TabPanel value="3">
-              <Typography>adasfasd</Typography>
+              <AssociationList
+                customerId={values.customerId}
+                associationList={associationList}
+                setAssociationList={setAssociationList}
+              />
             </TabPanel>
           </TabContext>
         </Box>

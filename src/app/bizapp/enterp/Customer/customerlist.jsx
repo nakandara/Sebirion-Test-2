@@ -71,7 +71,7 @@ function Customers() {
       headerName: "Customer ID",
       width: 150,
       cellRenderer: (params) => {
-        return <Link to={`/customer/${params.value}`}>{params.value}</Link>;
+        return <Link to={`/customer/${encodeURIComponent(params.value)}`}>{params.value}</Link>;
       },
     },
     {
