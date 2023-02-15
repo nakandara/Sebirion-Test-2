@@ -17,13 +17,14 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import DeleteModal from "../../../components/DeleteModal";
 import {
-  DatePicker,
-  LocalizationProvider,
   TabContext,
   TabList,
   TabPanel,
 } from "@mui/lab";
-import AdapterDateFns from "@mui/lab/AdapterDateFns";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import CustomerAddressList from "./addresslist";
 
 const API_URL = "enterp/v1/CustomerInfo/";
 const PAYTERM_API_URL = "accrul/v1/PaymentTerm/";
@@ -31,8 +32,8 @@ const PAYTERM_API_URL = "accrul/v1/PaymentTerm/";
 function Customer() {
   const axiosPrivate = useAxiosPrivate();
 
-  const [newClicked, setNewClicked] = useState(false);
   const [values, setValues] = useState(initialState);
+  const [addressList, setAddressList] = useState([]);
 
   const { id } = useParams();
   const [reqObjId, setReqObjId] = useState(id);
@@ -87,6 +88,7 @@ function Customer() {
       });
       console.log(response.data);
       response.data && setValues(response.data);
+      response.data && setAddressList(response.data.addressList);
     } catch (err) {
       console.error(err);
     }
@@ -291,10 +293,10 @@ function Customer() {
                 }
                 sx={{
                   "& .MuiInputBase-root": {
-                      "& input": {
-                          textAlign: "right"
-                      }
-                  }
+                    "& input": {
+                      textAlign: "right",
+                    },
+                  },
                 }}
                 margin="normal"
               />
@@ -308,17 +310,17 @@ function Customer() {
                 autoComplete="off"
                 name="creditBalance"
                 label="Credit Balance"
-                type="number"                
+                type="number"            
                 value={values.creditBalance}
                 onChange={(e) =>
                   onFormInputChange("creditBalance", e.target.value)
                 }
                 sx={{
                   "& .MuiInputBase-root": {
-                      "& input": {
-                          textAlign: "right"
-                      }
-                  }
+                    "& input": {
+                      textAlign: "right",
+                    },
+                  },
                 }}
                 margin="normal"
               />
@@ -326,25 +328,11 @@ function Customer() {
           </Grid>
           <Grid container spacing={2}>
             <Grid item xs={2}>
-              <TextField
-                variant="outlined"
-                size="small"
-                fullWidth
-                id="createdAt"
-                autoComplete="off"
-                name="createdAt"
-                label="Created At"
-                type="date"
-                value={values.createdAt}
-                onChange={(e) => onFormInputChange("createdAt", e.target.value)}
-                InputLabelProps={{ shrink: values.createdAt }}
-                disabled
-                margin="normal"
-              />
-              <LocalizationProvider dataAdapter={AdapterDateFns}>
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DatePicker
                   label="Created"
                   value={values.createdAt}
+                  onChange={(e) => onFormInputChange("createdAt", e)}
                   renderInput={(params) => (
                     <TextField
                       {...params}
@@ -352,9 +340,9 @@ function Customer() {
                       size="small"
                       fullWidth
                       margin="normal"
+                      disabled
                     />
                   )}
-                  disabled
                 />
               </LocalizationProvider>
             </Grid>
@@ -396,7 +384,11 @@ function Customer() {
               </TabList>
             </Box>
             <TabPanel value="1">
-              <Typography>adasfasd</Typography>
+              <CustomerAddressList
+                customerId={values.customerId}
+                addressList={addressList}
+                setAddressList={setAddressList}
+              />
             </TabPanel>
             <TabPanel value="2">
               <Typography>adasfasd</Typography>
@@ -416,9 +408,9 @@ const initialState = {
   customerName: "",
   creditLimit: "",
   creditBalance: "",
-  paymentTerm: [],
+  paymentTerm: "",
   createdAt: new Date(),
-  createdBy: {},
+  createdBy: "",
 };
 
 export default Customer;

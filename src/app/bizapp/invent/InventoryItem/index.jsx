@@ -23,9 +23,9 @@ import InventoryAddress from "./InventoryAddress";
 import InventoryContactInfo from "./InventoryContactInfo";
 import DeleteModal from "../../../components/DeleteModal";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
-import AdapterDateFns from "@mui/lab/AdapterDateFns";
-import LocalizationProvider from "@mui/lab/LocalizationProvider";
-import DatePicker from "@mui/lab/DatePicker";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -220,7 +220,7 @@ const InventoryItem = () => {
                 variant="outlined"
                 disablePortal
                 isOptionEqualToValue={(option, value) =>
-                  option.site === value.site
+                  option.value === value.value
                 }
                 id="site"
                 value={values.site}
@@ -249,7 +249,7 @@ const InventoryItem = () => {
                 variant="outlined"
                 disablePortal
                 isOptionEqualToValue={(option, value) =>
-                  option.itemCatalog === value.itemCatalog
+                  option.value === value.value
                 }
                 id="itemCatalog"
                 value={values.itemCatalog}
@@ -289,6 +289,13 @@ const InventoryItem = () => {
                 onChange={(e) =>
                   onFormInputChange("reorderLevel", e.target.value)
                 }
+                sx={{
+                  "& .MuiInputBase-root": {
+                    "& input": {
+                      textAlign: "right",
+                    },
+                  },
+                }}
                 margin="normal"
               />
             </Grid>
@@ -306,6 +313,13 @@ const InventoryItem = () => {
                 onChange={(e) =>
                   onFormInputChange("availableQuantity", e.target.value)
                 }
+                sx={{
+                  "& .MuiInputBase-root": {
+                    "& input": {
+                      textAlign: "right",
+                    },
+                  },
+                }}
                 margin="normal"
               />
             </Grid>
@@ -346,19 +360,24 @@ const InventoryItem = () => {
               />
             </Grid>
             <Grid item xs={2}>
-              <TextField
-                variant="outlined"
-                size="small"
-                fullWidth
-                id="createdAt"
-                name="createdAt"
-                label="Created"
-                type="date"
-                value={createdAt}
-                disabled
-                InputLabelProps={{ shrink: createdAt }}
-                margin="normal"
-              />
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <DatePicker
+                  label="Created"
+                  value={createdAt}
+                  onChange={(e) => onFormInputChange("createdAt", e)}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      variant="outlined"
+                      size="small"
+                      fullWidth
+                      margin="normal"
+                      disabled
+                    />
+                  )}
+                />
+              </LocalizationProvider>
+              
             </Grid>
             <Grid item xs={2}>
               <TextField
@@ -376,10 +395,11 @@ const InventoryItem = () => {
               />
             </Grid>
             <Grid item xs={2}>
-              <LocalizationProvider dateAdapter={AdapterDateFns}>
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DatePicker
-                  label="Created"
+                  label="Modified"
                   value={modifiedAt}
+                  onChange={(e) => onFormInputChange("modifiedAt", e)}
                   renderInput={(params) => (
                     <TextField
                       {...params}
@@ -387,24 +407,11 @@ const InventoryItem = () => {
                       size="small"
                       fullWidth
                       margin="normal"
+                      disabled
                     />
                   )}
                 />
-              </LocalizationProvider>
-              <TextField
-                variant="outlined"
-                size="small"
-                fullWidth
-                id="modifiedAt"
-                autoComplete="off"
-                name="modifiedAt"
-                label="Modified At"
-                type="date"
-                value={modifiedAt}
-                InputLabelProps={{ shrink: modifiedAt }}
-                disabled
-                margin="normal"
-              />
+              </LocalizationProvider>              
             </Grid>
           </Grid>
         </form>
@@ -461,8 +468,8 @@ const initialItemCatalog = {
 const initialState = {
   site: initialSite,
   itemCatalog: initialItemCatalog,
-  reorderLevel: 0,
-  availableQuantity: 0,
+  reorderLevel: "",
+  availableQuantity: "",
   status: "",
 };
 

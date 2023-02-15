@@ -463,10 +463,7 @@ const Itemcatalog = () => {
         <Box sx={{ width: "100%", typography: "body1", pt: "10px" }}>
           <TabContext value={tabValue}>
             <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-              <TabList
-                onChange={handleTabChange}
-                aria-label="lab API tabs example"
-              >
+              <TabList onChange={handleTabChange} aria-label="Item Catalog">
                 <Tab label="Price Hist." value="1" />
                 <Tab label="Cost Hist" value="2" />
                 <Tab label="Batches" value="3" />
@@ -518,7 +515,7 @@ const initItemCatalog = {
   volumeNet: "",
   uomForVolumeNet: isoUnit,
   itemCosts: [],
-  itemPrices:[],
+  itemPrices: [],
   pictureUrl: "",
 };
 
