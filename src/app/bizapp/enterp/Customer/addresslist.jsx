@@ -41,7 +41,12 @@ function CustomerAddressList({ customerId, addressList, setAddressList }) {
       width: 200,
     },
     {
-      field: "address",
+      field: "address1",
+      headerName: "Address",
+      width: 400,
+    },
+    {
+      field: "address2",
       headerName: "Address",
       width: 400,
     },
