@@ -1,138 +1,136 @@
-import {
-  Box,
-  useTheme,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  Slide,
-  Grid,
-  TextField,
-  Button,
-  Paper,
-} from "@mui/material";
-import React, { useState, useRef, useMemo, useCallback } from "react";
-import { tokens } from "../../../../theme";
-import { axiosPrivate } from "../../../../Application/fndbas/api/axios";
-import "ag-grid-community/dist/styles/ag-grid.css";
-import "ag-grid-community/dist/styles/ag-theme-alpine.css";
-import CrudActions from "../../../../Application/fndbas/CrudActions/CrudActions";
-import useAxiosPrivate from "../../../../Application/fndbas/hooks/useAxiosPrivate";
-import { ToastContainer, toast } from "react-toastify";
+import { Box, Grid, Paper, TextField } from "@mui/material";
+import React, { useState, useRef, useMemo } from "react";
+
 import { AgGridReact } from "ag-grid-react";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-balham.css";
 
-const API_URL = "enterp/v1/Company/";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import ListCrudActions from "../../../components/ListCrudActions";
+import useAxiosPrivate from "../../../../Application/fndbas/hooks/useAxiosPrivate";
+import DeleteModal from "../../../components/DeleteModal";
 
-const Transition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction="left" ref={ref} {...props} />;
-});
+const API_URL = "enterp/v1/CustomerInfo/";
 
-// export default function CompanyAddress({
-
-// })
-
-function CompanyAddress({ addCompanyAddressForm, setAddCompanyAddressForm }) {
-  const theme = useTheme();
-  const gridRef = useRef();
-  const colors = tokens(theme.palette.mode);
+function CustomerAddressList({ companyId, addressList, setAddressList }) {
+  const compGridRef = useRef();
   const axiosPrivate = useAxiosPrivate();
 
+  const [openPriceItemDel, setPriceItemDel] = useState(false);
+
   const containerStyle = useMemo(() => ({ width: "100%", height: "100%" }), []);
-  const gridStyle = useMemo(() => ({ height: "100%", width: "100%" }), []);
-
-  const [isEditEnabled, setIsEditEnabled] = useState(true);
-  const [isSaveEnabled, setIsSaveEnabled] = useState(true);
-  const [isDeleteEnabled, setIsDeleteEnabled] = useState(true);
-
-  const [address, setAddress] = useState([]);
-  const [isItemKeyDisabled, setIsItemKeyDisabled] = useState(false);
-
-  const [openNewItemDlg, setOpenNewItemDlg] = useState(false);
-
-  const [addressId, setAddressId] = useState("");
-  const [address1, setAddress1] = useState("");
-  const [address2, setAddress2] = useState("");
-  const [city, setCity] = useState("");
-  const [province, setProvince] = useState("");
-
-  let idCounter = 0;
-  const initialValue = () => {
-    idCounter += 1;
-    return {
-      id: "",
-      addressId: "",
-      address1: "",
-      address2: "",
-      city: "",
-      district: "",
-      province: "",
-      country: "",
-    };
-  };
-
-  const [tableValues, setTableValues] = useState(initialValue);
-  const [newClicked, setNewClicked] = useState(false);
+  const [address, setAddress] = useState(initAddress);
 
   const [columnDefs] = useState([
     {
+      field: "id",
+      headerName: "ID",
+      width: 40,
+      checkboxSelection: true,
+    },
+    {
       field: "addressId",
-      headerName: "Address ID",
-      flex: 1,
-      cellClassName: "name-column--cell",
-      editable: true,
+      headerName: "Addr. ID",
+      width: 150,
     },
     {
-      field: "address1",
-      headerName: "Address 1",
-      flex: 1,
+      field: "addressType",
+      headerName: "Addr. Type",
+      width: 200,
     },
     {
-      field: "address2",
-      headerName: "Address 2",
-      flex: 1,
-      editable: true,
+      field: "address",
+      headerName: "Address",
+      width: 400,
     },
     {
-      field: "city",
-      headerName: "City",
-      flex: 1,
-      editable: true,
-    },
-    {
-      field: "province",
-      headerName: "Province",
-      flex: 1,
-      editable: true,
+      field: "defaultMethod",
+      headerName: "Default",
+      width: 100,
     },
   ]);
 
-  const addItems = useCallback((addIndex) => {
-    const newItems = [{}];
-    gridRef.current.api.applyTransaction({
-      add: newItems,
-      addIndex: addIndex,
-    });
-  }, []);
+  const defaultColDef = useMemo(
+    () => ({
+      resizable: true,
+      sortable: true,
+      filter: true,
+    }),
+    []
+  );
 
-  const defaultColDef = useMemo(() => {
-    return {
-      flex: 1,
-      minWidth: 100,
-      editable: true,
-    };
-  }, []);
-
-  const handleNewItemClose = () => {
-    setOpenNewItemDlg(false);
+  const handlePriceItemNew = (e) => {
+    setAddress(initAddress);
   };
 
-  const onSelectionChanged = useCallback(() => {
-    const selectedRows = gridRef.current.api.getSelectedRows();
-    document.querySelector("#selectedRows").innerHTML =
-      selectedRows.length === 1 ? selectedRows[0].athlete : "";
-  }, []);
+  const handleEdit = (e) => {};
+
+  const handleItemPriceSave = async (e) => {
+    e.preventDefault();
+
+    let isMounted = true;
+    const controller = new AbortController();
+    try {
+      const response = await axiosPrivate.post(
+        API_URL + companyId + "/address/create",
+        JSON.stringify(address),
+        {
+          headers: {
+            "Content-Type": "application/json",
+            signal: controller.signal,
+          },
+        }
+      );
+      console.log(response.data);
+
+      isMounted && setAddressList([...addressList, response.data]);
+      showAllToasts("SUCCESS", "Successfully Saved.");
+    } catch (err) {
+      showAllToasts("ERROR", err.response.data.apiError.message);
+      console.log(err);
+    }
+  };
+
+  const handleDeletePriceItem = (e) => {
+    e.preventDefault();
+    setPriceItemDel(true);
+  };
+
+  const handlePriceItemClose = (e) => {
+    setPriceItemDel(false);
+  };
+
+  const deletePriceItemObj = async () => {
+    try {
+      await axiosPrivate.delete(
+        API_URL + companyId + "/address/delete/" + address.id
+      );      
+      setAddressList(
+        addressList.filter(function (it) {
+          return it.id !== address.id;
+        })
+      );
+      setPriceItemDel(false);
+      setAddress(initAddress);
+      showAllToasts("SUCCESS", "Successfully Deleted.");
+    } catch (err) {}
+  };
+
+  const onSelectionChanged = () => {
+    const selectedRows = compGridRef.current.api.getSelectedRows();
+
+    setAddress({
+      id: selectedRows[0].id,
+      address: selectedRows[0].address,
+    });
+  };
+
+  const onFormInputChange = (key, value) => {
+    const updated = Object.assign({}, address);
+    updated[key] = value;
+    setAddress(updated);
+  };
 
   const showAllToasts = (type, msg) => {
     type === "SUCCESS" &&
@@ -179,219 +177,124 @@ function CompanyAddress({ addCompanyAddressForm, setAddCompanyAddressForm }) {
         progress: undefined,
       });
   };
-
-  const handleNew = (e) => {
-    e.preventDefault();
-    setOpenNewItemDlg(true);
-
-  };
-
-  const handleAddressForm = async (e) => {
-    e.preventDefault();
-    const controller = new AbortController();
-    try {
-      const itemResponse = await axiosPrivate.post(
-        API_URL + "save",
-        JSON.stringify({
-          addressId: addressId,
-          address1: address1,
-          address2: address2,
-          city: city,
-          province: province,
-        }),
-        {
-          headers: {
-            "Content-Type": "application/json",
-            signal: controller.signal,
-          },
-        }
-      );
-
-      const item = itemResponse.data;
-      const responseItem = {
-        addressId: item.addressId,
-        address1: item.address1,
-        address2: item.address2,
-        city: item.city,
-        province: item.province,
-      };
-
-      setAddCompanyAddressForm([...addCompanyAddressForm, responseItem]);
-
-      setOpenNewItemDlg(false);
-    } catch (err) {}
-  };
-
-  const handleEdit = (e) => {};
-
-  // const handleSave = async (e) => {
-  //   // addrList(initialValue);
-  //   e.preventDefault();
-  //   const controller = new AbortController();
-  //   try {
-  //     const response = await axiosPrivate.post(
-  //       API_URL + "create",
-  //       // JSON.stringify(addrList),
-
-  //       {
-  //         headers: {
-  //           "Content-Type": "application/json",
-  //           signal: controller.signal,
-  //         },
-  //       }
-  //     );
-  //     console.log(response.data);
-  //     // response.data && setCurrentObject(response.data);
-  //     showAllToasts("SUCCESS", "Successfully Saved.");
-  //   } catch (err) {
-  //     showAllToasts("ERROR", err.response.data.apiError.message);
-  //     console.log(err);
-  //   }
-  // };
-
-  const handleDelete = (e) => {};
-
   return (
-    <div className="mt-5">
-      <Paper elevation={0}>
-        <div className="p-2 d-flex w-100 align-items-center">
-          <CrudActions
-            handleNew={handleNew}
-            isNewEnabled={true}
+    <Box>
+      <Paper elevation={2} style={{ padding: "2px" }}>
+        <Box m="5px">
+          <ListCrudActions
+            addItems={handlePriceItemNew}
+            handleSave={handleItemPriceSave}
             handleEdit={handleEdit}
-            // handleSave={handleSave}
-            handleDelete={handleDelete}
+            handleDelete={handleDeletePriceItem}
           />
-        </div>
-        <Box sx={{ height: 500, margin: "10px" }}>
-          <div
-            className="ag-theme-alpine"
-            style={{ height: 500, width: "100%" }}
-          >
-            <AgGridReact
-              ref={gridRef}
-              rowData={address}
-              columnDefs={columnDefs}
-              defaultColDef={defaultColDef}
-              rowSelection={"single"}
-              animateRows={true}
-              onSelectionChanged={onSelectionChanged}
-            ></AgGridReact>
-          </div>
+          <form onSubmit={handleItemPriceSave}>
+            <fieldset style={{ border: "0" }}>
+              <Grid container spacing={2}>
+                <Grid item xs={2}>
+                  <TextField
+                    sx={{ display: { xl: "none", xs: "block" } }}
+                    id="id"
+                    name="id"
+                    type="number"
+                    value={address.id}
+                    onChange={(e) => onFormInputChange("id", e.target.value)}
+                  />
+                  <TextField
+                    variant="outlined"
+                    size="small"
+                    fullWidth
+                    id="addressId"
+                    autoComplete="off"
+                    name="addressId"
+                    label="Addr. ID"
+                    type="text"
+                    value={address.addressId}
+                    onChange={(e) => onFormInputChange("addressId", e.target.value)}
+                    required
+                    margin="normal"
+                  />
+                </Grid>
+                <Grid item xs={2}>
+                <TextField
+                    variant="outlined"
+                    size="small"
+                    fullWidth
+                    id="address1"
+                    autoComplete="off"
+                    name="address1"
+                    label="Address 1"
+                    type="text"
+                    value={address.address1}
+                    onChange={(e) => onFormInputChange("address1", e.target.value)}
+                    margin="normal"
+                  />
+                </Grid>
+                <Grid item xs={2}>
+                <TextField
+                    variant="outlined"
+                    size="small"
+                    fullWidth
+                    id="address2"
+                    autoComplete="off"
+                    name="address2"
+                    label="Address 2"
+                    type="text"
+                    value={address.address2}
+                    onChange={(e) => onFormInputChange("address2", e.target.value)}
+                    margin="normal"
+                  />
+                </Grid>
+                <Grid item xs={2}>
+                <TextField
+                    variant="outlined"
+                    size="small"
+                    fullWidth
+                    id="city"
+                    autoComplete="off"
+                    name="city"
+                    label="City"
+                    type="text"
+                    value={address.city}
+                    onChange={(e) => onFormInputChange("city", e.target.value)}
+                    margin="normal"
+                  />
+                </Grid>
+                
+              </Grid>
+            </fieldset>
+          </form>
+        </Box>
+        <Box sx={{ height: 400, margin: "5px" }}>
+          <AgGridReact
+            ref={compGridRef}
+            className="ag-theme-balham"
+            rowData={addressList}
+            columnDefs={columnDefs}
+            defaultColDef={defaultColDef}
+            rowSelection={"single"}
+            animateRows={true}
+            onSelectionChanged={onSelectionChanged}
+          ></AgGridReact>
         </Box>
       </Paper>
-      <Dialog
-        open={openNewItemDlg}
-        onClose={handleNewItemClose}
-        TransitionComponent={Transition}
-        sx={{
-          "& .MuiDialog-container": {
-            "& .MuiPaper-root": {
-              width: "100%",
-              maxWidth: "750px", // Set your width here
-            },
-          },
-        }}
-      >
-        <DialogTitle>Add Company Address</DialogTitle>
-        <DialogContent>
-          <form className="inquiry-item-form" onClick={handleAddressForm}>
-            <Grid container spacing={1} direction="row">
-              <Grid item xs={3}>
-                <TextField
-                  variant="outlined"
-                  disabled={isItemKeyDisabled}
-                  size="small"
-                  fullWidth
-                  id="addressId"
-                  autoComplete="off"
-                  name="addressId"
-                  label="Address ID"
-                  type="text"
-                  value={addressId}
-                  onChange={(e) => setAddressId(e.target.value)}
-                  required
-                  margin="normal"
-                />
-              </Grid>
-              <Grid item xs={3}>
-                <TextField
-                  variant="outlined"
-                  disabled={isItemKeyDisabled}
-                  size="small"
-                  fullWidth
-                  id="address1"
-                  autoComplete="off"
-                  name="address1"
-                  label="Address 1"
-                  type="text"
-                  value={address1}
-                  onChange={(e) => setAddress1(e.target.value)}
-                  required
-                  margin="normal"
-                />
-              </Grid>
-              <Grid item xs={3}>
-                <TextField
-                  variant="outlined"
-                  disabled={isItemKeyDisabled}
-                  size="small"
-                  fullWidth
-                  id="address2"
-                  autoComplete="off"
-                  name="address2"
-                  label="Address 2"
-                  type="text"
-                  value={address2}
-                  onChange={(e) => setAddress2(e.target.value)}
-                  required
-                  margin="normal"
-                />
-              </Grid>
-              <Grid item xs={3}>
-                <TextField
-                  variant="outlined"
-                  disabled={isItemKeyDisabled}
-                  size="small"
-                  fullWidth
-                  id="city"
-                  autoComplete="off"
-                  name="city"
-                  label="City"
-                  type="text"
-                  value={city}
-                  onChange={(e) => setCity(e.target.value)}
-                  required
-                  margin="normal"
-                />
-              </Grid>
-              <Grid item xs={3}>
-                <TextField
-                  variant="outlined"
-                  disabled={isItemKeyDisabled}
-                  size="small"
-                  fullWidth
-                  id="province"
-                  autoComplete="off"
-                  name="province"
-                  label="Province"
-                  type="text"
-                  value={province}
-                  onChange={(e) => setProvince(e.target.value)}
-                  required
-                  margin="normal"
-                />
-              </Grid>
-            </Grid>
-          </form>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleNewItemClose}>Cancel</Button>
-          <Button onClick={handleAddressForm}>Save</Button>
-        </DialogActions>
-      </Dialog>
-    </div>
+      <ToastContainer />
+      <DeleteModal
+        open={openPriceItemDel}
+        handleClose={handlePriceItemClose}
+        Delete={deletePriceItemObj}
+      />
+    </Box>
   );
 }
 
-export default CompanyAddress;
+const initAddress = {
+  id: "",
+  addressId:"",
+  address1: "",
+  address2: "",
+  city: "",
+  defaultMethod: true,
+  addressType:"DOCUMENT"
+};
+
+export default CustomerAddressList;

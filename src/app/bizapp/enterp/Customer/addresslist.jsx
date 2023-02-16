@@ -10,7 +10,6 @@ import "react-toastify/dist/ReactToastify.css";
 import ListCrudActions from "../../../components/ListCrudActions";
 import useAxiosPrivate from "../../../../Application/fndbas/hooks/useAxiosPrivate";
 import DeleteModal from "../../../components/DeleteModal";
-import moment from "moment";
 
 const API_URL = "enterp/v1/CustomerInfo/";
 

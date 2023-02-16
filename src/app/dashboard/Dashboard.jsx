@@ -1,22 +1,54 @@
-import DownloadOutlinedIcon from '@mui/icons-material/DownloadOutlined';
-import { Box, Button, IconButton, Typography, useTheme } from '@mui/material'
-import React from 'react'
-import { tokens } from '../../theme';
-import Header from '../components/Header';
-import StatBox from '../components/StatBox';
-import EmailIcon from "@mui/icons-material/Email";
+import DownloadOutlinedIcon from "@mui/icons-material/DownloadOutlined";
+import { Box, Button, IconButton, Typography, useTheme } from "@mui/material";
+import React, { useEffect, useState } from "react";
+import { tokens } from "../../theme";
+import Header from "../components/Header";
+import StatBox from "../components/StatBox";
+import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
 import PointOfSaleIcon from "@mui/icons-material/PointOfSale";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import TrafficIcon from "@mui/icons-material/Traffic";
-import LineChart from '../components/LineChart';
-import { mockTransactions } from '../../data/mockData';
-import ProgressCircle from '../components/ProgressCircle';
+import LineChart from "../components/LineChart";
+import { mockTransactions } from "../../data/mockData";
+import ProgressCircle from "../components/ProgressCircle";
 // import BarChart from '../components/BarChart';
-import GeographyChart from '../components/GeographyChart';
+import GeographyChart from "../components/GeographyChart";
+import useAxiosPrivate from "../../Application/fndbas/hooks/useAxiosPrivate";
+
+const API_URL = "util/v1/Dashboard/admin";
 
 function Dashboard() {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
+
+  const axiosPrivate = useAxiosPrivate();
+
+  const [values, setValues] = useState([]);
+
+  useEffect(() => {
+    const fetchDashboardValues = async () => {
+      const controller = new AbortController();
+      try {
+        const dashValues = await axiosPrivate.get(API_URL, {
+          headers: {
+            signal: controller.signal,
+          },
+        });
+        
+        setValues(dashValues.data);
+      } catch (err) {}
+    };
+    fetchDashboardValues();
+  }, []);
+
+  const formatter = new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'LKR',
+  
+    // These options are needed to round to whole numbers if that's what you want.
+    //minimumFractionDigits: 0, // (this suffices for whole numbers, but will print 2500.10 as $2,500.1)
+    //maximumFractionDigits: 0, // (causes 2500.99 to be printed as $2,501)
+  });
 
   return (
     <Box m="20px">
@@ -24,13 +56,14 @@ function Dashboard() {
       <Box display="flex" justifyContent="space-between" alignItems="center">
         <Header title="DASHBOARD" subTitle="Admin Dashboard" />
         <Box>
-          <Button sx={{
-            backgroundColor: colors.blueAccent[700],
-            color: colors.grey[100].toString(),
-            fontSize: "14px",
-            fontWeight: "bold",
-            padding: "10px 20px",
-          }}
+          <Button
+            sx={{
+              backgroundColor: colors.blueAccent[700],
+              color: colors.grey[100].toString(),
+              fontSize: "14px",
+              fontWeight: "bold",
+              padding: "10px 20px",
+            }}
           >
             <DownloadOutlinedIcon sx={{ mr: "10px" }} />
             Download Reports
@@ -54,13 +87,13 @@ function Dashboard() {
           justifyContent="center"
         >
           <StatBox
-            title="12,361"
-            subtitle="Emails Sent"
+            title={formatter.format(values.artotal)}
+            subtitle="Total Recievables"
             progress="0.75"
             increase="+14%"
             icon={
-              <EmailIcon
-                sx={{ color: colors.greenAccent[600], fontSize: "26px" }}
+              <AccountBalanceWalletIcon
+                sx={{ color: colors.greenAccent[600], fontSize: "32px" }}
               />
             }
           />
@@ -178,12 +211,12 @@ function Dashboard() {
             p="15px"
           >
             <Typography color={colors.grey[100]} variant="h5" fontWeight="600">
-              Recent Transactions
+              Top 10 Credit Customers
             </Typography>
           </Box>
-          {mockTransactions.map((transaction, i) => (
+          {values.topCreditors.map((transaction, i) => (
             <Box
-              key={`${transaction.txId}-${i}`}
+              key={`${transaction.id}-${i}`}
               display="flex"
               justifyContent="space-between"
               alignItems="center"
@@ -196,19 +229,19 @@ function Dashboard() {
                   variant="h5"
                   fontWeight="600"
                 >
-                  {transaction.txId}
+                  {transaction.customerId}
                 </Typography>
                 <Typography color={colors.grey[100]}>
-                  {transaction.user}
+                  {transaction.customerName}
                 </Typography>
               </Box>
-              <Box color={colors.grey[100]}>{transaction.date}</Box>
+              <Box color={colors.grey[100]}>{transaction.paymentTerm.termId}</Box>
               <Box
                 backgroundColor={colors.greenAccent[500]}
                 p="5px 10px"
                 borderRadius="4px"
               >
-                ${transaction.cost}
+                LKR {transaction.creditBalance}
               </Box>
             </Box>
           ))}
@@ -275,10 +308,8 @@ function Dashboard() {
           </Box>
         </Box>
       </Box>
-
-
     </Box>
-  )
+  );
 }
 
-export default Dashboard
+export default Dashboard;
