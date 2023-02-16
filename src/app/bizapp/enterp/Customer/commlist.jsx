@@ -1,4 +1,4 @@
-import { Box, Grid, Paper, TextField } from "@mui/material";
+import { Box, FormControl, Grid, InputLabel, MenuItem, Paper, Select, TextField } from "@mui/material";
 import React, { useState, useRef, useMemo } from "react";
 
 import { AgGridReact } from "ag-grid-react";
@@ -10,18 +10,17 @@ import "react-toastify/dist/ReactToastify.css";
 import ListCrudActions from "../../../components/ListCrudActions";
 import useAxiosPrivate from "../../../../Application/fndbas/hooks/useAxiosPrivate";
 import DeleteModal from "../../../components/DeleteModal";
-import moment from "moment";
 
 const API_URL = "enterp/v1/CustomerInfo/";
 
-function CustomerAddressList({ customerId, addressList, setAddressList }) {
-  const priceGridRef = useRef();
+function CommMethodList({ customerId, commList, setCommList }) {
+  const custContactGridRef = useRef();
   const axiosPrivate = useAxiosPrivate();
 
-  const [openPriceItemDel, setPriceItemDel] = useState(false);
+  const [openCommDel, setCommDel] = useState(false);
 
   const containerStyle = useMemo(() => ({ width: "100%", height: "100%" }), []);
-  const [address, setAddress] = useState(initAddress);
+  const [custContact, setCustContact] = useState(initCustContact);
 
   const [columnDefs] = useState([
     {
@@ -31,18 +30,18 @@ function CustomerAddressList({ customerId, addressList, setAddressList }) {
       checkboxSelection: true,
     },
     {
-      field: "addressId",
-      headerName: "Addr. ID",
+      field: "commId",
+      headerName: "Comm. ID",
       width: 150,
     },
     {
-      field: "addressType",
-      headerName: "Addr. Type",
+      field: "commType",
+      headerName: "Comm. Type",
       width: 200,
     },
     {
-      field: "address",
-      headerName: "Address",
+      field: "commValue",
+      headerName: "Value",
       width: 400,
     },
     {
@@ -61,21 +60,21 @@ function CustomerAddressList({ customerId, addressList, setAddressList }) {
     []
   );
 
-  const handlePriceItemNew = (e) => {
-    setAddress(initAddress);
+  const handleCustContactNew = (e) => {
+    setCustContact(initCustContact);
   };
 
-  const handleEdit = (e) => {};
+  const handleCustContactEdit = (e) => {};
 
-  const handleItemPriceSave = async (e) => {
+  const handleCustContactSave = async (e) => {
     e.preventDefault();
 
     let isMounted = true;
     const controller = new AbortController();
     try {
       const response = await axiosPrivate.post(
-        API_URL + customerId + "/address/create",
-        JSON.stringify(address),
+        API_URL + customerId + "/contact/create",
+        JSON.stringify(custContact),
         {
           headers: {
             "Content-Type": "application/json",
@@ -85,7 +84,7 @@ function CustomerAddressList({ customerId, addressList, setAddressList }) {
       );
       console.log(response.data);
 
-      isMounted && setAddressList([...addressList, response.data]);
+      isMounted && setCommList([...commList, response.data]);
       showAllToasts("SUCCESS", "Successfully Saved.");
     } catch (err) {
       showAllToasts("ERROR", err.response.data.apiError.message);
@@ -93,44 +92,48 @@ function CustomerAddressList({ customerId, addressList, setAddressList }) {
     }
   };
 
-  const handleDeletePriceItem = (e) => {
+  const handleDeleteCustContact = (e) => {
     e.preventDefault();
-    setPriceItemDel(true);
+    setCommDel(true);
   };
 
-  const handlePriceItemClose = (e) => {
-    setPriceItemDel(false);
+  const handleCommDeleteClose = (e) => {
+    setCommDel(false);
   };
 
-  const deletePriceItemObj = async () => {
+  const deleteCustCommObj = async () => {
     try {
       await axiosPrivate.delete(
-        API_URL + customerId + "/address/delete/" + address.id
-      );      
-      setAddressList(
-        addressList.filter(function (it) {
-          return it.id !== address.id;
+        API_URL + customerId + "/contact/delete/" + custContact.id
+      );
+      setCommList(
+        commList.filter(function (it) {
+          return it.id !== custContact.id;
         })
       );
-      setPriceItemDel(false);
-      setAddress(initAddress);
+      setCommDel(false);
+      setCustContact(initCustContact);
       showAllToasts("SUCCESS", "Successfully Deleted.");
     } catch (err) {}
   };
 
   const onSelectionChanged = () => {
-    const selectedRows = priceGridRef.current.api.getSelectedRows();
+    const selectedRows = custContactGridRef.current.api.getSelectedRows();
 
-    setAddress({
+    setCustContact({
       id: selectedRows[0].id,
-      address: selectedRows[0].address,
+      commId: selectedRows[0].commId,
+      commType: (selectedRows[0].commType).toUpperCase(),
+      commValue: selectedRows[0].commValue,
+      description: selectedRows[0].description,
+      defaultMethod: selectedRows[0].defaultMethod,
     });
   };
 
   const onFormInputChange = (key, value) => {
-    const updated = Object.assign({}, address);
+    const updated = Object.assign({}, custContact);
     updated[key] = value;
-    setAddress(updated);
+    setCustContact(updated);
   };
 
   const showAllToasts = (type, msg) => {
@@ -180,15 +183,15 @@ function CustomerAddressList({ customerId, addressList, setAddressList }) {
   };
   return (
     <Box>
-      <Paper elevation={2} style={{ padding: "2px" }}>
+      <Paper elevation={2} style={{ padding: "5px"}}>
         <Box m="5px">
           <ListCrudActions
-            addItems={handlePriceItemNew}
-            handleSave={handleItemPriceSave}
-            handleEdit={handleEdit}
-            handleDelete={handleDeletePriceItem}
+            addItems={handleCustContactNew}
+            handleSave={handleCustContactSave}
+            handleEdit={handleCustContactEdit}
+            handleDelete={handleDeleteCustContact}
           />
-          <form onSubmit={handleItemPriceSave}>
+          <form onSubmit={handleCustContactSave}>
             <fieldset style={{ border: "0" }}>
               <Grid container spacing={2}>
                 <Grid item xs={2}>
@@ -197,79 +200,91 @@ function CustomerAddressList({ customerId, addressList, setAddressList }) {
                     id="id"
                     name="id"
                     type="number"
-                    value={address.id}
+                    value={custContact.id}
                     onChange={(e) => onFormInputChange("id", e.target.value)}
                   />
                   <TextField
                     variant="outlined"
                     size="small"
                     fullWidth
-                    id="addressId"
+                    id="commId"
                     autoComplete="off"
-                    name="addressId"
-                    label="Addr. ID"
+                    name="commId"
+                    label="Comm. ID"
                     type="text"
-                    value={address.addressId}
-                    onChange={(e) => onFormInputChange("addressId", e.target.value)}
+                    value={custContact.commId}
+                    onChange={(e) =>
+                      onFormInputChange("commId", e.target.value)
+                    }
                     required
                     margin="normal"
+                    inputProps={{ style: { textTransform: "uppercase" } }}
                   />
                 </Grid>
                 <Grid item xs={2}>
-                <TextField
+                  <FormControl sx={{ mt: 2, minWidth: 120 }}>
+                    <InputLabel id="commTypelbl">Comm. Type</InputLabel>
+                    <Select
+                      size="small"
+                      margin="normal"
+                      labelId="commTypelbl"
+                      id="commType"
+                      value={custContact.commType}
+                      label="Comm. Type"
+                      onChange={(e) =>
+                        onFormInputChange("commType", e.target.value)
+                      }
+                    >
+                      <MenuItem value="PHONE">Phone</MenuItem>
+                      <MenuItem value="EMAIL">Email</MenuItem>
+                      <MenuItem value="WHATSAPP">Whats App</MenuItem>
+                      <MenuItem value="OTHER">Other</MenuItem>
+                    </Select>
+                  </FormControl>
+                </Grid>
+                <Grid item xs={3}>
+                  <TextField
                     variant="outlined"
                     size="small"
                     fullWidth
-                    id="address1"
+                    id="commValue"
                     autoComplete="off"
-                    name="address1"
-                    label="Address 1"
+                    name="commValue"
+                    label="Value"
                     type="text"
-                    value={address.address1}
-                    onChange={(e) => onFormInputChange("address1", e.target.value)}
+                    value={custContact.commValue}
+                    onChange={(e) =>
+                      onFormInputChange("commValue", e.target.value)
+                    }
                     margin="normal"
                   />
                 </Grid>
-                <Grid item xs={2}>
-                <TextField
+                <Grid item xs={4}>
+                  <TextField
                     variant="outlined"
                     size="small"
                     fullWidth
-                    id="address2"
+                    id="description"
                     autoComplete="off"
-                    name="address2"
-                    label="Address 2"
+                    name="description"
+                    label="Description"
                     type="text"
-                    value={address.address2}
-                    onChange={(e) => onFormInputChange("address2", e.target.value)}
+                    value={custContact.description}
+                    onChange={(e) =>
+                      onFormInputChange("description", e.target.value)
+                    }
                     margin="normal"
                   />
-                </Grid>
-                <Grid item xs={2}>
-                <TextField
-                    variant="outlined"
-                    size="small"
-                    fullWidth
-                    id="city"
-                    autoComplete="off"
-                    name="city"
-                    label="City"
-                    type="text"
-                    value={address.city}
-                    onChange={(e) => onFormInputChange("city", e.target.value)}
-                    margin="normal"
-                  />
-                </Grid>
-                
+                </Grid>                
               </Grid>
             </fieldset>
           </form>
         </Box>
         <Box sx={{ height: 400, margin: "5px" }}>
           <AgGridReact
-            ref={priceGridRef}
+            ref={custContactGridRef}
             className="ag-theme-balham"
-            rowData={addressList}
+            rowData={commList}
             columnDefs={columnDefs}
             defaultColDef={defaultColDef}
             rowSelection={"single"}
@@ -280,22 +295,21 @@ function CustomerAddressList({ customerId, addressList, setAddressList }) {
       </Paper>
       <ToastContainer />
       <DeleteModal
-        open={openPriceItemDel}
-        handleClose={handlePriceItemClose}
-        Delete={deletePriceItemObj}
+        open={openCommDel}
+        handleClose={handleCommDeleteClose}
+        Delete={deleteCustCommObj}
       />
     </Box>
   );
 }
 
-const initAddress = {
+const initCustContact = {
   id: "",
-  addressId:"",
-  address1: "",
-  address2: "",
-  city: "",
+  commId: "",
+  commType: "",
+  commValue: "",
+  description: "",
   defaultMethod: true,
-  addressType:"DOCUMENT"
 };
 
-export default CustomerAddressList;
+export default CommMethodList;

@@ -209,8 +209,8 @@ function AssociationList({ customerId, associationList, setAssociationList }) {
   };
   return (
     <Box>
-      <Paper elevation={2} style={{ padding: "5px", margin: "10px" }}>
-        <Box m="10px">
+      <Paper elevation={2} style={{ padding: "5px"}}>
+        <Box m="5px">
           <ListCrudActions
             addItems={handleAssociationNew}
             handleSave={handleAssociationSave}

@@ -1,13 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-  Autocomplete,
-  Box,
-  Grid,
-  Paper,
-  Tab,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { Autocomplete, Box, Grid, Paper, Tab, TextField } from "@mui/material";
 import useAxiosPrivate from "../../../../Application/fndbas/hooks/useAxiosPrivate";
 import Header from "../../../components/Header";
 import ListCrudActions from "../../../components/ListCrudActions";
@@ -22,6 +14,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import CustomerAddressList from "./addresslist";
 import AssociationList from "./associationlist";
+import CommMethodList from "./commlist";
 
 const API_URL = "enterp/v1/CustomerInfo/";
 const PAYTERM_API_URL = "accrul/v1/PaymentTerm/";
@@ -32,6 +25,7 @@ function Customer() {
   const [values, setValues] = useState(initialState);
   const [addressList, setAddressList] = useState([]);
   const [associationList, setAssociationList] = useState([]);
+  const [commList, setCommList] = useState([]);
 
   const { id } = useParams();
   const [reqObjId, setReqObjId] = useState(id);
@@ -79,15 +73,19 @@ function Customer() {
   const getObj = async () => {
     const controller = new AbortController();
     try {
-      const response = await axiosPrivate.get(API_URL + "get?itemId=" +encodeURIComponent(reqObjId), {
-        headers: {
-          signal: controller.signal,
-        },
-      });
+      const response = await axiosPrivate.get(
+        API_URL + "get?itemId=" + encodeURIComponent(reqObjId),
+        {
+          headers: {
+            signal: controller.signal,
+          },
+        }
+      );
       console.log(response.data);
       response.data && setValues(response.data);
       response.data && setAddressList(response.data.addressList);
       response.data && setAssociationList(response.data.associationSet);
+      response.data && setCommList(response.data.contactInfoList);
     } catch (err) {
       console.error(err);
     }
@@ -390,7 +388,11 @@ function Customer() {
               />
             </TabPanel>
             <TabPanel value="2">
-              <Typography>adasfasd</Typography>
+              <CommMethodList
+                customerId={values.customerId}
+                commList={commList}
+                setCommList={setCommList}
+              />
             </TabPanel>
             <TabPanel value="3">
               <AssociationList
