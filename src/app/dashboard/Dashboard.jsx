@@ -214,7 +214,7 @@ function Dashboard() {
               Top 10 Credit Customers
             </Typography>
           </Box>
-          {values.topCreditors.map((transaction, i) => (
+          {values.topCreditors && values.topCreditors.map((transaction, i) => (
             <Box
               key={`${transaction.id}-${i}`}
               display="flex"

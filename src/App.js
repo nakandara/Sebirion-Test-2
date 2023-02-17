@@ -14,7 +14,7 @@ import Dashboard from "./app/dashboard/Dashboard";
 const Page404 = lazy(() => import("./components/pages/page404/Page404"));
 const AppHome = lazy(() => import("./components/pages/home/AppHome"));
 const Unauthorized = lazy(() => import("./components/pages/Unauthorized"));
-// const UserRole = lazy(() => import('./components/enterp/UserRole'));
+const UserRoles = lazy(() => import('./app/bizapp/fndbas/UerRole'));
 const Grn = lazy(() => import('./app/bizapp/purch/Grn'));
 const Suppliers = lazy(() =>
   import("./app/bizapp/enterp/Supplier/supplierlist")
@@ -289,6 +289,14 @@ function App() {
                         element={
                           <Suspense fallback={<>...</>}>
                             <Grn />
+                          </Suspense>
+                        }
+                      />
+                      <Route
+                        path="user_roles"
+                        element={
+                          <Suspense fallback={<>...</>}>
+                            <UserRoles />
                           </Suspense>
                         }
                       />

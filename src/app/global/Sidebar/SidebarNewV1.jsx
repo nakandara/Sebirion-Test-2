@@ -33,6 +33,8 @@ import {
   FaUserAlt,
   FaBuilding,
   FaUserFriends,
+  FaCogs,
+  FaUsersCog,
 } from "react-icons/fa";
 
 import { AutoAwesome, ViewAgenda } from "@mui/icons-material";
@@ -175,6 +177,7 @@ const SidebarNewV1 = ({
                 <Link to="/catalogitems" />
               </MenuItem>
             </SubMenu>
+
             {/* HR */}
             <SubMenu title={"HR"} icon={<FaBuilding />}>
               <MenuItem icon={<FaUserAlt />}>
@@ -193,6 +196,13 @@ const SidebarNewV1 = ({
               </MenuItem>
             </SubMenu>
             
+            {/* Solution Mgt  */}
+            <SubMenu title={"Solution Mgt"} icon={<FaCogs />}>
+              <MenuItem icon={<FaUsersCog />}>
+                User Roles <Link to="/user_roles" />
+              </MenuItem>              
+            </SubMenu>
+
             {/* <SubMenu title={"Multi Level"} icon={<FaList />}>
               <MenuItem>Submenu 1 </MenuItem>
               <MenuItem>Submenu 2 </MenuItem>
