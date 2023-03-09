@@ -11,6 +11,8 @@ import Dashboard from "./app/dashboard/Dashboard";
 
 // import IsoUnit from './components/Application/AppBase/IsoUnit/IsoUnit';
 
+import UseRef from "./intervew/UseRef"
+
 const Page404 = lazy(() => import("./components/pages/page404/Page404"));
 const AppHome = lazy(() => import("./components/pages/home/AppHome"));
 const Unauthorized = lazy(() => import("./components/pages/Unauthorized"));
@@ -82,7 +84,7 @@ function App() {
                       </Suspense>
                     }
                   />
-                  <Route element={<RequireAuth allowedRoles={["ADMIN"]} />}>
+                  <Route >
                     <Route
                       path="/"
                       element={
@@ -130,7 +132,7 @@ function App() {
                             <ItemType />
                           </Suspense>
                         }
-                      />                      
+                      />
                       <Route
                         path="association/:id"
                         element={
@@ -327,6 +329,7 @@ function App() {
         </AuthProvider>
       </ThemeProvider>
     </ColorModeContext.Provider>
+
   );
 }
 export default App;
