@@ -86,23 +86,14 @@ function Dashboard() {
               <MainCard />
               {/* Recent Deposits */}
               <Grid item xs={12} md={4} lg={3}>
-                <Paper
-                  sx={{
-                    p: 2,
-                    margin: "1px",
-                    display: "flex",
-                    flexDirection: "column",
-                    height: 600,
-                    minWidth: 340,
-                  }}
-                >
+                <div className="rounded">
+                  {DebitCArd}
+                  <Divider />
                   {SideCardAlert}
                   <Divider />
                   {EnjoyCart}
                   <Divider />
-                  {DebitCArd}
-                  <Divider />
-                </Paper>
+                </div>
               </Grid>
 
               {/* Recent Orders */}
