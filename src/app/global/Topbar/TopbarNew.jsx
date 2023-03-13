@@ -8,6 +8,7 @@ import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import PersonOutlinedIcon from "@mui/icons-material/PersonOutlined";
 // import SearchIcon from "@mui/icons-material/Search";
 import Logout from "../../logout/Logout";
+import AppBar from "../../dashboard/Home/AppBar";
 
 function TopbarNew() {
   const theme = useTheme();
@@ -16,40 +17,15 @@ function TopbarNew() {
 
   return (
     <Box
-      display="flex"
+      className="drop-shadow-2xl"
       position="sticky"
       justifyContent="space-between"
       backgroundColor={colors.primary[400]}
+      sx={{ height: "80px" }}
     >
-      <Box
-        display="flex"
-        backgroundColor={colors.primary[400]}
-        borderRadius="3px"
-      ></Box>
-      <Box
-        display="flex"
-        backgroundColor={colors.primary[400]}
-        borderRadius="310px"
-      >
-        <IconButton onClick={colorMode.toggleColorMode}>
-          {theme.palette.mode === "dark" ? (
-            <DarkModeOutlinedIcon />
-          ) : (
-            <LightModeOutlinedIcon />
-          )}
-        </IconButton>
-        <IconButton>
-          <NotificationsOutlinedIcon />
-        </IconButton>
-        <IconButton>
-          <SettingsOutlinedIcon />
-        </IconButton>
-        <IconButton>
-          <PersonOutlinedIcon />
-        </IconButton>
-        <IconButton>
-          {/* <Logout /> */}
-        </IconButton>
+      <Box display="flex" backgroundColor={colors.primary[400]}></Box>
+      <Box display="flex" backgroundColor={colors.primary[400]}>
+        <AppBar />
       </Box>
     </Box>
   );

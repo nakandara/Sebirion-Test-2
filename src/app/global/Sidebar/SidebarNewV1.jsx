@@ -1,10 +1,11 @@
 import { useState } from "react";
 
-import { Box, useTheme } from "@mui/material";
+import { Avatar, Box, CardMedia, ListItemIcon, useTheme } from "@mui/material";
 import { Link, NavLink } from "react-router-dom";
 import "react-pro-sidebar/dist/css/styles.css";
 import { tokens } from "../../../theme";
 import useAuth from "../../../Application/fndbas/hooks/useAuth";
+import image1 from "../../accets/mmg.PNG";
 
 //import { userAuthContext } from "../../base/context/UserAuthContext";
 import {
@@ -37,7 +38,15 @@ import {
   FaUsersCog,
 } from "react-icons/fa";
 
-import { AutoAwesome, ViewAgenda } from "@mui/icons-material";
+import {
+  AutoAwesome,
+  Grid4x4,
+  Home,
+  NearMe,
+  Person4,
+  Style,
+  ViewAgenda,
+} from "@mui/icons-material";
 
 const SidebarNewV1 = ({
   image,
@@ -54,6 +63,7 @@ const SidebarNewV1 = ({
   return (
     <>
       <Box
+        className="font-ui-sans-serif "
         sx={{
           "& .pro-sidebar-inner": {
             background: `${colors.primary[400]} !important`,
@@ -73,6 +83,7 @@ const SidebarNewV1 = ({
         }}
       >
         <ProSidebar
+          className="drop-shadow-2xl"
           collapsed={collapsed}
           toggled={toggled}
           onToggle={handleToggleSidebar}
@@ -96,16 +107,13 @@ const SidebarNewV1 = ({
                   suffix={<FaAngleDoubleLeft />}
                   onClick={handleCollapsedChange}
                 >
-                  <div
-                    style={{
-                      padding: "9px",
-                      textTransform: "uppercase",
-                      fontWeight: "bold",
-                      fontSize: 15,
-                      letterSpacing: "1px",
-                    }}
-                  >
-                    {auth.username}
+                  <div style={{ height: "80px" }}>
+                    <CardMedia
+                      component="img"
+                      height="10%"
+                      image={image1}
+                      alt="scene"
+                    />
                   </div>
                 </MenuItem>
               )}
@@ -122,107 +130,50 @@ const SidebarNewV1 = ({
                 letterSpacing: "1px",
               }}
             >
-              <MenuItem style={{ fontSize: 14 }} icon={<FaTachometerAlt />}>
-                Dashboard
+              <MenuItem style={{ fontSize: 14 }} icon={<Home />}>
+                Home
                 <NavLink to="/" />
               </MenuItem>
-              <SubMenu
-                style={{ fontSize: 14 }}
-                title={"Basic Data"}
-                icon={<FaDatabase />}
-              >
-                <MenuItem icon={<FaUnity />}>
-                  Units <Link to="/units" />
-                </MenuItem>
-              </SubMenu>
 
-              <SubMenu title={"Accounting Rules"} icon={<FaArchway />}>
-                <MenuItem icon={<FaLaptopHouse />}>
-                  Payment Terms <Link to="/paymentterms" />
-                </MenuItem>
-              </SubMenu>
-              <SubMenu title={"Enterprise"} icon={<FaArchway />}>
-                <MenuItem icon={<FaLaptopHouse />}>
-                  Association <Link to="/association/null" />
-                </MenuItem>
-                <MenuItem icon={<FaLaptopHouse />}>
-                  Associations <Link to="/associations" />
-                </MenuItem>
-                <MenuItem icon={<FaRegBuilding />}>
-                  company <Link to="/company" />
-                </MenuItem>
-                <MenuItem icon={<FaRegBuilding />}>
-                  companies <Link to="/companies" />
-                </MenuItem>
-                <MenuItem icon={<FaRegBuilding />}>
-                  Site <Link to="/site/null" />
-                </MenuItem>
-                <MenuItem icon={<FaRegBuilding />}>
-                  Sites <Link to="/sites" />
-                </MenuItem>
-                <MenuItem icon={<FaRegBuilding />}>
-                  Customer <Link to="/customer/null" />
-                </MenuItem>
-                <MenuItem icon={<FaRegBuilding />}>
-                  Customers <Link to="/customers" />
-                </MenuItem>
-                <MenuItem icon={<FaRegBuilding />}>
-                  Supplier <Link to="/supplier/null" />
-                </MenuItem>
-                <MenuItem icon={<FaRegBuilding />}>
-                  Suppliers <Link to="/suppliers" />
-                </MenuItem>
-              </SubMenu>
-              {/* Order  */}
-              <SubMenu title={"Order"} icon={<FaRegLaughWink />}>
-                <MenuItem>
-                  Sales Rep Order <Link to="/Salesreporder" />
-                </MenuItem>
-                <MenuItem>
-                  Issue Note <Link to="/Issuenote" />
-                </MenuItem>
-              </SubMenu>
-              {/* Inventory  */}
-              <SubMenu title={"Inventory"} icon={<ViewAgenda />}>
-                <MenuItem icon={<AutoAwesome />}>
-                  Inventory Item <Link to="/inventory_item" />
-                </MenuItem>
-                <MenuItem icon={<AutoAwesome />}>
-                  Inventory Items <Link to="/inventory_items" />
-                </MenuItem>
-                <MenuItem icon={<AutoAwesome />}>
-                  Item Catalog <Link to="/itemcatalog/null" />
-                </MenuItem>
-                <MenuItem icon={<AutoAwesome />}>
-                  Catalog Items
-                  <Link to="/catalogitems" />
-                </MenuItem>
-              </SubMenu>
+              <MenuItem style={{ fontSize: 14 }} icon={<NearMe />}>
+                Actions
+                <NavLink to="/Actions" />
+              </MenuItem>
 
-              {/* HR */}
-              <SubMenu title={"HR"} icon={<FaBuilding />}>
-                <MenuItem icon={<FaUserAlt />}>
-                  Person <Link to="/person/null" />
-                </MenuItem>
-                <MenuItem icon={<FaUserFriends />}>
-                  Person List <Link to="/personList" />
-                </MenuItem>
-              </SubMenu>
-              <SubMenu title={"Purchase"} icon={<FaBuilding />}>
-                <MenuItem icon={<FaUserAlt />}>
-                  GRN <Link to="/grn/null" />
-                </MenuItem>
-                <MenuItem icon={<FaUserFriends />}>
-                  GRNs <Link to="/grns" />
-                </MenuItem>
-              </SubMenu>
+              <MenuItem style={{ fontSize: 14 }} icon={<Grid4x4 />}>
+                Spaces
+                <NavLink to="/Spaces" />
+              </MenuItem>
 
-              {/* Solution Mgt  */}
-              <SubMenu title={"Solution Mgt"} icon={<FaCogs />}>
-                <MenuItem icon={<FaUsersCog />}>
-                  User Roles <Link to="/user_roles" />
-                </MenuItem>
-              </SubMenu>
+              <MenuItem style={{ fontSize: 14 }} icon={<Style />}>
+                Cards
+                <NavLink to="/Cards" />
+              </MenuItem>
+
+              <MenuItem style={{ fontSize: 14 }} icon={<Style />}>
+                Products
+                <NavLink to="/Products" />
+              </MenuItem>
+
+              <MenuItem style={{ fontSize: 14 }} icon={<Person4 />}>
+                spendings
+                <NavLink to="/spendings" />
+              </MenuItem>
+              <MenuItem style={{ fontSize: 14 }} icon={<Person4 />}>
+                My Account
+                <NavLink to="/spendings" />
+              </MenuItem>
+
+              <MenuItem style={{ fontSize: 14 }}>
+                <ListItemIcon>
+                  <Avatar
+                    alt="Remy Sharp"
+                    src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQeeUl9IZDN97pBQNgeunx6dD1df-4g7vkPFw&usqp=CAU"
+                  />
+                  <div className="m-2"> John Doe</div>
+                  <NavLink to="/My Account" />
+                </ListItemIcon>
+              </MenuItem>
 
               {/* <SubMenu title={"Multi Level"} icon={<FaList />}>
               <MenuItem>Submenu 1 </MenuItem>
